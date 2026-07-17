@@ -1,0 +1,722 @@
+﻿[
+    {
+        "id":  "c99b3142-2aa2-4126-8b50-63bc098ef401",
+        "merchant_id":  "70d78d39-c5f6-462c-9c51-cf58b5d7cebf",
+        "agreement_type":  "product_selection",
+        "selected_products":  [
+
+                              ],
+        "monthly_rental_cost":  0.00,
+        "one_time_cost":  0.00,
+        "agreement_text":  null,
+        "signed":  true,
+        "signed_at":  "2025-12-24T06:10:56.406+00:00",
+        "signature_name":  "Harshit",
+        "ip_address":  "::1",
+        "user_agent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0",
+        "created_at":  "2025-12-24T06:10:55.802517+00:00",
+        "updated_at":  "2025-12-24T06:10:55.802517+00:00",
+        "total_integration_cost":  0.00,
+        "total_monthly_cost":  0.00,
+        "total_onetime_cost":  0.00
+    },
+    {
+        "id":  "7990bb93-c83a-49cd-8459-6193e4f63a32",
+        "merchant_id":  "70d78d39-c5f6-462c-9c51-cf58b5d7cebf",
+        "agreement_type":  "product_selection",
+        "selected_products":  [
+                                  {
+                                      "price":  599,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_009",
+                                      "product_name":  "Unsecured Lending"
+                                  }
+                              ],
+        "monthly_rental_cost":  599.00,
+        "one_time_cost":  0.00,
+        "agreement_text":  null,
+        "signed":  true,
+        "signed_at":  "2025-12-24T06:48:24.56+00:00",
+        "signature_name":  "Harshit",
+        "ip_address":  "::1",
+        "user_agent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0",
+        "created_at":  "2025-12-24T06:48:23.931182+00:00",
+        "updated_at":  "2025-12-24T06:48:23.931182+00:00",
+        "total_integration_cost":  0.00,
+        "total_monthly_cost":  599.00,
+        "total_onetime_cost":  0.00
+    },
+    {
+        "id":  "21444207-79d4-4d91-96a9-26c3873071fe",
+        "merchant_id":  "a4616e57-9a22-41b8-9228-c0d701e05522",
+        "agreement_type":  "product_selection",
+        "selected_products":  [
+
+                              ],
+        "monthly_rental_cost":  0.00,
+        "one_time_cost":  0.00,
+        "agreement_text":  null,
+        "signed":  true,
+        "signed_at":  "2025-12-24T11:00:06.529+00:00",
+        "signature_name":  "Full Execution",
+        "ip_address":  "::1",
+        "user_agent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0",
+        "created_at":  "2025-12-24T11:00:07.89007+00:00",
+        "updated_at":  "2025-12-24T11:00:07.89007+00:00",
+        "total_integration_cost":  0.00,
+        "total_monthly_cost":  0.00,
+        "total_onetime_cost":  0.00
+    },
+    {
+        "id":  "500e7aa0-c424-48e1-9449-c929cda70f7b",
+        "merchant_id":  "a4616e57-9a22-41b8-9228-c0d701e05522",
+        "agreement_type":  "product_selection",
+        "selected_products":  [
+                                  {
+                                      "price":  99,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_002",
+                                      "product_name":  "UPI QR + Soundbox"
+                                  }
+                              ],
+        "monthly_rental_cost":  99.00,
+        "one_time_cost":  0.00,
+        "agreement_text":  null,
+        "signed":  true,
+        "signed_at":  "2025-12-24T11:05:18.491+00:00",
+        "signature_name":  "Full Execution",
+        "ip_address":  "::1",
+        "user_agent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0",
+        "created_at":  "2025-12-24T11:05:19.832901+00:00",
+        "updated_at":  "2025-12-24T11:05:19.832901+00:00",
+        "total_integration_cost":  0.00,
+        "total_monthly_cost":  99.00,
+        "total_onetime_cost":  0.00
+    },
+    {
+        "id":  "6fc73d8c-c2fc-4e60-81d0-95b8e3dbd5e8",
+        "merchant_id":  "4351822b-d5ef-41ca-bd18-aecc15daa885",
+        "agreement_type":  "product_selection",
+        "selected_products":  [
+
+                              ],
+        "monthly_rental_cost":  0.00,
+        "one_time_cost":  0.00,
+        "agreement_text":  null,
+        "signed":  true,
+        "signed_at":  "2025-12-26T05:40:11.485+00:00",
+        "signature_name":  "varun",
+        "ip_address":  "::1",
+        "user_agent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+        "created_at":  "2025-12-26T05:39:51.58104+00:00",
+        "updated_at":  "2025-12-26T05:39:51.58104+00:00",
+        "total_integration_cost":  0.00,
+        "total_monthly_cost":  0.00,
+        "total_onetime_cost":  0.00
+    },
+    {
+        "id":  "31efbb25-5a0d-4221-b195-da174e41731a",
+        "merchant_id":  "4351822b-d5ef-41ca-bd18-aecc15daa885",
+        "agreement_type":  "product_selection",
+        "selected_products":  [
+                                  {
+                                      "price":  99,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_002",
+                                      "product_name":  "UPI QR + Soundbox"
+                                  },
+                                  {
+                                      "price":  450,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_003",
+                                      "product_name":  "POS Terminal"
+                                  },
+                                  {
+                                      "price":  60000,
+                                      "pricing_type":  "integration",
+                                      "product_code":  "PROD_004",
+                                      "product_name":  "Payment Gateway"
+                                  }
+                              ],
+        "monthly_rental_cost":  549.00,
+        "one_time_cost":  0.00,
+        "agreement_text":  null,
+        "signed":  true,
+        "signed_at":  "2025-12-26T05:46:49.435+00:00",
+        "signature_name":  "varun",
+        "ip_address":  "::1",
+        "user_agent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+        "created_at":  "2025-12-26T05:46:29.719037+00:00",
+        "updated_at":  "2025-12-26T05:46:29.719037+00:00",
+        "total_integration_cost":  60000.00,
+        "total_monthly_cost":  549.00,
+        "total_onetime_cost":  0.00
+    },
+    {
+        "id":  "fe84d38e-9167-4285-95e9-46631ade7789",
+        "merchant_id":  "f496d0c6-da80-4144-8d7f-83837d8df80f",
+        "agreement_type":  "product_selection",
+        "selected_products":  [
+                                  {
+                                      "price":  99,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_002",
+                                      "product_name":  "UPI QR + Soundbox"
+                                  },
+                                  {
+                                      "price":  450,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_003",
+                                      "product_name":  "POS Terminal"
+                                  },
+                                  {
+                                      "price":  60000,
+                                      "pricing_type":  "integration",
+                                      "product_code":  "PROD_004",
+                                      "product_name":  "Payment Gateway"
+                                  }
+                              ],
+        "monthly_rental_cost":  549.00,
+        "one_time_cost":  0.00,
+        "agreement_text":  null,
+        "signed":  true,
+        "signed_at":  "2025-12-26T09:57:55.599+00:00",
+        "signature_name":  "Test",
+        "ip_address":  "::1",
+        "user_agent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+        "created_at":  "2025-12-26T09:57:35.933385+00:00",
+        "updated_at":  "2025-12-26T09:57:35.933385+00:00",
+        "total_integration_cost":  60000.00,
+        "total_monthly_cost":  549.00,
+        "total_onetime_cost":  0.00
+    },
+    {
+        "id":  "b2429d7b-400a-4711-ad80-219a9551a758",
+        "merchant_id":  "3f06d471-506e-471a-a40f-47d9854a12a5",
+        "agreement_type":  "product_selection",
+        "selected_products":  [
+                                  {
+                                      "price":  99,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_002",
+                                      "product_name":  "UPI QR + Soundbox"
+                                  },
+                                  {
+                                      "price":  450,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_003",
+                                      "product_name":  "POS Terminal"
+                                  },
+                                  {
+                                      "price":  60000,
+                                      "pricing_type":  "integration",
+                                      "product_code":  "PROD_004",
+                                      "product_name":  "Payment Gateway"
+                                  }
+                              ],
+        "monthly_rental_cost":  549.00,
+        "one_time_cost":  0.00,
+        "agreement_text":  null,
+        "signed":  true,
+        "signed_at":  "2025-12-26T14:59:04.289+00:00",
+        "signature_name":  "Test",
+        "ip_address":  "::1",
+        "user_agent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+        "created_at":  "2025-12-26T14:58:45.0014+00:00",
+        "updated_at":  "2025-12-26T14:58:45.0014+00:00",
+        "total_integration_cost":  60000.00,
+        "total_monthly_cost":  549.00,
+        "total_onetime_cost":  0.00
+    },
+    {
+        "id":  "7e69ad35-c12d-40d2-85ef-2fbb741c054b",
+        "merchant_id":  "91e6cfe4-557d-4ec1-a518-4a7ba66e7fa2",
+        "agreement_type":  "product_selection",
+        "selected_products":  [
+
+                              ],
+        "monthly_rental_cost":  0.00,
+        "one_time_cost":  0.00,
+        "agreement_text":  null,
+        "signed":  true,
+        "signed_at":  "2025-12-26T15:23:51.638+00:00",
+        "signature_name":  "Test",
+        "ip_address":  "::ffff:192.168.60.47",
+        "user_agent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+        "created_at":  "2025-12-26T15:23:51.703007+00:00",
+        "updated_at":  "2025-12-26T15:23:51.703007+00:00",
+        "total_integration_cost":  0.00,
+        "total_monthly_cost":  0.00,
+        "total_onetime_cost":  0.00
+    },
+    {
+        "id":  "7763c667-4bf7-46a1-8b02-cd268a999ed8",
+        "merchant_id":  "f496d0c6-da80-4144-8d7f-83837d8df80f",
+        "agreement_type":  "product_selection",
+        "selected_products":  [
+                                  {
+                                      "price":  99,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_002",
+                                      "product_name":  "UPI QR + Soundbox"
+                                  },
+                                  {
+                                      "price":  450,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_003",
+                                      "product_name":  "POS Terminal"
+                                  },
+                                  {
+                                      "price":  60000,
+                                      "pricing_type":  "integration",
+                                      "product_code":  "PROD_004",
+                                      "product_name":  "Payment Gateway"
+                                  }
+                              ],
+        "monthly_rental_cost":  549.00,
+        "one_time_cost":  0.00,
+        "agreement_text":  null,
+        "signed":  true,
+        "signed_at":  "2025-12-27T05:58:54.607+00:00",
+        "signature_name":  "Test",
+        "ip_address":  "::1",
+        "user_agent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+        "created_at":  "2025-12-27T05:58:34.754825+00:00",
+        "updated_at":  "2025-12-27T05:58:34.754825+00:00",
+        "total_integration_cost":  60000.00,
+        "total_monthly_cost":  549.00,
+        "total_onetime_cost":  0.00
+    },
+    {
+        "id":  "fcbfcea0-8734-4a6d-8b56-5e7bfcd6d21c",
+        "merchant_id":  "4351822b-d5ef-41ca-bd18-aecc15daa885",
+        "agreement_type":  "product_selection",
+        "selected_products":  [
+                                  {
+                                      "price":  99,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_002",
+                                      "product_name":  "UPI QR + Soundbox"
+                                  },
+                                  {
+                                      "price":  450,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_003",
+                                      "product_name":  "POS Terminal"
+                                  },
+                                  {
+                                      "price":  30000,
+                                      "pricing_type":  "integration",
+                                      "product_code":  "PROD_007",
+                                      "product_name":  "Payout"
+                                  }
+                              ],
+        "monthly_rental_cost":  549.00,
+        "one_time_cost":  0.00,
+        "agreement_text":  null,
+        "signed":  true,
+        "signed_at":  "2025-12-27T07:06:31.977+00:00",
+        "signature_name":  "Test",
+        "ip_address":  "::ffff:192.168.60.55",
+        "user_agent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+        "created_at":  "2025-12-27T07:06:32.777593+00:00",
+        "updated_at":  "2025-12-27T07:06:32.777593+00:00",
+        "total_integration_cost":  30000.00,
+        "total_monthly_cost":  549.00,
+        "total_onetime_cost":  0.00
+    },
+    {
+        "id":  "68379681-7f47-439c-91bf-30b426bb8bc8",
+        "merchant_id":  "4351822b-d5ef-41ca-bd18-aecc15daa885",
+        "agreement_type":  "product_selection",
+        "selected_products":  [
+                                  {
+                                      "price":  99,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_002",
+                                      "product_name":  "UPI QR + Soundbox"
+                                  },
+                                  {
+                                      "price":  450,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_003",
+                                      "product_name":  "POS Terminal"
+                                  },
+                                  {
+                                      "price":  60000,
+                                      "pricing_type":  "integration",
+                                      "product_code":  "PROD_004",
+                                      "product_name":  "Payment Gateway"
+                                  }
+                              ],
+        "monthly_rental_cost":  549.00,
+        "one_time_cost":  0.00,
+        "agreement_text":  null,
+        "signed":  true,
+        "signed_at":  "2025-12-27T09:05:04.694+00:00",
+        "signature_name":  "Test",
+        "ip_address":  "::ffff:192.168.60.55",
+        "user_agent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+        "created_at":  "2025-12-27T09:05:04.731309+00:00",
+        "updated_at":  "2025-12-27T09:05:04.731309+00:00",
+        "total_integration_cost":  60000.00,
+        "total_monthly_cost":  549.00,
+        "total_onetime_cost":  0.00
+    },
+    {
+        "id":  "31c1894e-f642-49c1-8ac3-d639002589db",
+        "merchant_id":  "4351822b-d5ef-41ca-bd18-aecc15daa885",
+        "agreement_type":  "product_selection",
+        "selected_products":  [
+                                  {
+                                      "price":  99,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_002",
+                                      "product_name":  "UPI QR + Soundbox"
+                                  },
+                                  {
+                                      "price":  450,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_003",
+                                      "product_name":  "POS Terminal"
+                                  },
+                                  {
+                                      "price":  30000,
+                                      "pricing_type":  "integration",
+                                      "product_code":  "PROD_007",
+                                      "product_name":  "Payout"
+                                  }
+                              ],
+        "monthly_rental_cost":  549.00,
+        "one_time_cost":  0.00,
+        "agreement_text":  null,
+        "signed":  true,
+        "signed_at":  "2025-12-27T09:49:15.737+00:00",
+        "signature_name":  "Test",
+        "ip_address":  "::1",
+        "user_agent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+        "created_at":  "2025-12-27T09:48:55.866256+00:00",
+        "updated_at":  "2025-12-27T09:48:55.866256+00:00",
+        "total_integration_cost":  30000.00,
+        "total_monthly_cost":  549.00,
+        "total_onetime_cost":  0.00
+    },
+    {
+        "id":  "855ac326-0cfa-4f48-a0b7-a090d83d2a1b",
+        "merchant_id":  "4351822b-d5ef-41ca-bd18-aecc15daa885",
+        "agreement_type":  "product_selection",
+        "selected_products":  [
+                                  {
+                                      "price":  99,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_002",
+                                      "product_name":  "UPI QR + Soundbox"
+                                  },
+                                  {
+                                      "price":  450,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_003",
+                                      "product_name":  "POS Terminal"
+                                  },
+                                  {
+                                      "price":  30000,
+                                      "pricing_type":  "integration",
+                                      "product_code":  "PROD_007",
+                                      "product_name":  "Payout"
+                                  }
+                              ],
+        "monthly_rental_cost":  549.00,
+        "one_time_cost":  0.00,
+        "agreement_text":  null,
+        "signed":  true,
+        "signed_at":  "2025-12-27T10:22:41.819+00:00",
+        "signature_name":  "Test",
+        "ip_address":  "::1",
+        "user_agent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+        "created_at":  "2025-12-27T10:22:21.870752+00:00",
+        "updated_at":  "2025-12-27T10:22:21.870752+00:00",
+        "total_integration_cost":  30000.00,
+        "total_monthly_cost":  549.00,
+        "total_onetime_cost":  0.00
+    },
+    {
+        "id":  "d7085f86-fbc6-433e-b1fc-65da1e85b688",
+        "merchant_id":  "4351822b-d5ef-41ca-bd18-aecc15daa885",
+        "agreement_type":  "product_selection",
+        "selected_products":  [
+                                  {
+                                      "price":  99,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_002",
+                                      "product_name":  "UPI QR + Soundbox"
+                                  },
+                                  {
+                                      "price":  450,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_003",
+                                      "product_name":  "POS Terminal"
+                                  },
+                                  {
+                                      "price":  60000,
+                                      "pricing_type":  "integration",
+                                      "product_code":  "PROD_004",
+                                      "product_name":  "Payment Gateway"
+                                  }
+                              ],
+        "monthly_rental_cost":  549.00,
+        "one_time_cost":  0.00,
+        "agreement_text":  null,
+        "signed":  true,
+        "signed_at":  "2025-12-27T10:25:46.214+00:00",
+        "signature_name":  "Test",
+        "ip_address":  "::1",
+        "user_agent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+        "created_at":  "2025-12-27T10:25:26.262548+00:00",
+        "updated_at":  "2025-12-27T10:25:26.262548+00:00",
+        "total_integration_cost":  60000.00,
+        "total_monthly_cost":  549.00,
+        "total_onetime_cost":  0.00
+    },
+    {
+        "id":  "1bce9fa6-933b-4012-ad19-4ffb1a013c8a",
+        "merchant_id":  "4351822b-d5ef-41ca-bd18-aecc15daa885",
+        "agreement_type":  "product_selection",
+        "selected_products":  [
+                                  {
+                                      "price":  99,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_002",
+                                      "product_name":  "UPI QR + Soundbox"
+                                  },
+                                  {
+                                      "price":  450,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_003",
+                                      "product_name":  "POS Terminal"
+                                  },
+                                  {
+                                      "price":  60000,
+                                      "pricing_type":  "integration",
+                                      "product_code":  "PROD_004",
+                                      "product_name":  "Payment Gateway"
+                                  }
+                              ],
+        "monthly_rental_cost":  549.00,
+        "one_time_cost":  0.00,
+        "agreement_text":  null,
+        "signed":  true,
+        "signed_at":  "2025-12-27T11:44:26.69+00:00",
+        "signature_name":  "Test",
+        "ip_address":  "::1",
+        "user_agent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+        "created_at":  "2025-12-27T11:44:06.912277+00:00",
+        "updated_at":  "2025-12-27T11:44:06.912277+00:00",
+        "total_integration_cost":  60000.00,
+        "total_monthly_cost":  549.00,
+        "total_onetime_cost":  0.00
+    },
+    {
+        "id":  "c21d6b16-fbe3-443a-ada5-7d2b1ad43c9e",
+        "merchant_id":  "e485d1d5-3ab9-4bc0-86b0-526e759aad7d",
+        "agreement_type":  "product_selection",
+        "selected_products":  [
+
+                              ],
+        "monthly_rental_cost":  0.00,
+        "one_time_cost":  0.00,
+        "agreement_text":  null,
+        "signed":  true,
+        "signed_at":  "2025-12-27T12:55:52.121+00:00",
+        "signature_name":  "Test",
+        "ip_address":  "::1",
+        "user_agent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+        "created_at":  "2025-12-27T12:55:32.38212+00:00",
+        "updated_at":  "2025-12-27T12:55:32.38212+00:00",
+        "total_integration_cost":  0.00,
+        "total_monthly_cost":  0.00,
+        "total_onetime_cost":  0.00
+    },
+    {
+        "id":  "4ca9e6ed-2078-40a4-8ee2-7233c13144ac",
+        "merchant_id":  "e485d1d5-3ab9-4bc0-86b0-526e759aad7d",
+        "agreement_type":  "product_selection",
+        "selected_products":  [
+                                  {
+                                      "price":  99,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_002",
+                                      "product_name":  "UPI QR + Soundbox"
+                                  },
+                                  {
+                                      "price":  450,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_003",
+                                      "product_name":  "POS Terminal"
+                                  },
+                                  {
+                                      "price":  30000,
+                                      "pricing_type":  "integration",
+                                      "product_code":  "PROD_007",
+                                      "product_name":  "Payout"
+                                  }
+                              ],
+        "monthly_rental_cost":  549.00,
+        "one_time_cost":  0.00,
+        "agreement_text":  null,
+        "signed":  true,
+        "signed_at":  "2025-12-27T13:07:20.562+00:00",
+        "signature_name":  "Test",
+        "ip_address":  "::1",
+        "user_agent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+        "created_at":  "2025-12-27T13:07:00.837061+00:00",
+        "updated_at":  "2025-12-27T13:07:00.837061+00:00",
+        "total_integration_cost":  30000.00,
+        "total_monthly_cost":  549.00,
+        "total_onetime_cost":  0.00
+    },
+    {
+        "id":  "0c7f2eb2-4cac-429a-84f8-847698c63411",
+        "merchant_id":  "c91278f1-d1fc-41f1-a476-11ebbcce5b66",
+        "agreement_type":  "product_selection",
+        "selected_products":  [
+                                  {
+                                      "price":  99,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_002",
+                                      "product_name":  "UPI QR + Soundbox"
+                                  },
+                                  {
+                                      "price":  450,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_003",
+                                      "product_name":  "POS Terminal"
+                                  },
+                                  {
+                                      "price":  60000,
+                                      "pricing_type":  "integration",
+                                      "product_code":  "PROD_004",
+                                      "product_name":  "Payment Gateway"
+                                  }
+                              ],
+        "monthly_rental_cost":  549.00,
+        "one_time_cost":  0.00,
+        "agreement_text":  null,
+        "signed":  true,
+        "signed_at":  "2025-12-27T13:12:42.359+00:00",
+        "signature_name":  "Test",
+        "ip_address":  "::1",
+        "user_agent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+        "created_at":  "2025-12-27T13:12:22.687379+00:00",
+        "updated_at":  "2025-12-27T13:12:22.687379+00:00",
+        "total_integration_cost":  60000.00,
+        "total_monthly_cost":  549.00,
+        "total_onetime_cost":  0.00
+    },
+    {
+        "id":  "61f24c48-24b7-495d-a8ea-5118940c4a8a",
+        "merchant_id":  "acd5ecd7-63ff-49ca-a5dd-10ca93cff68f",
+        "agreement_type":  "product_selection",
+        "selected_products":  [
+                                  {
+                                      "price":  99,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_002",
+                                      "product_name":  "UPI QR + Soundbox"
+                                  },
+                                  {
+                                      "price":  450,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_003",
+                                      "product_name":  "POS Terminal"
+                                  },
+                                  {
+                                      "price":  60000,
+                                      "pricing_type":  "integration",
+                                      "product_code":  "PROD_004",
+                                      "product_name":  "Payment Gateway"
+                                  },
+                                  {
+                                      "price":  599,
+                                      "pricing_type":  "monthly",
+                                      "product_code":  "PROD_005",
+                                      "product_name":  "Current Account"
+                                  }
+                              ],
+        "monthly_rental_cost":  1148.00,
+        "one_time_cost":  0.00,
+        "agreement_text":  null,
+        "signed":  true,
+        "signed_at":  "2025-12-27T13:57:12.806+00:00",
+        "signature_name":  "Test",
+        "ip_address":  "::ffff:192.168.60.55",
+        "user_agent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+        "created_at":  "2025-12-27T13:57:12.833706+00:00",
+        "updated_at":  "2025-12-27T13:57:12.833706+00:00",
+        "total_integration_cost":  60000.00,
+        "total_monthly_cost":  1148.00,
+        "total_onetime_cost":  0.00
+    },
+    {
+        "id":  "e59972e7-beb0-4837-be2f-1a0a86e5ed2d",
+        "merchant_id":  "e5eb1ace-bc2d-48a0-8438-0cc8ca6ba220",
+        "agreement_type":  "product_selection",
+        "selected_products":  [
+
+                              ],
+        "monthly_rental_cost":  0.00,
+        "one_time_cost":  0.00,
+        "agreement_text":  null,
+        "signed":  true,
+        "signed_at":  "2026-01-08T07:41:36.172+00:00",
+        "signature_name":  "Shubhang",
+        "ip_address":  "::ffff:192.168.60.59",
+        "user_agent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0",
+        "created_at":  "2026-01-08T07:41:36.237468+00:00",
+        "updated_at":  "2026-01-08T07:41:36.237468+00:00",
+        "total_integration_cost":  0.00,
+        "total_monthly_cost":  0.00,
+        "total_onetime_cost":  0.00
+    },
+    {
+        "id":  "0ba35ec0-b067-48a8-a0d2-a2ca921b25c8",
+        "merchant_id":  "66ce1487-025d-4fd3-a646-8c4b12d3eab1",
+        "agreement_type":  "product_selection",
+        "selected_products":  [
+
+                              ],
+        "monthly_rental_cost":  0.00,
+        "one_time_cost":  0.00,
+        "agreement_text":  null,
+        "signed":  true,
+        "signed_at":  "2026-01-16T10:55:21.277+00:00",
+        "signature_name":  "Renju",
+        "ip_address":  "::ffff:192.168.60.59",
+        "user_agent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0",
+        "created_at":  "2026-01-16T10:55:21.605655+00:00",
+        "updated_at":  "2026-01-16T10:55:21.605655+00:00",
+        "total_integration_cost":  0.00,
+        "total_monthly_cost":  0.00,
+        "total_onetime_cost":  0.00
+    },
+    {
+        "id":  "fe67f84b-5324-4697-a7c0-55a4f5b236ab",
+        "merchant_id":  "f1edd3e9-bfa2-4f0c-ab39-a8fc9d0a8cb2",
+        "agreement_type":  "product_selection",
+        "selected_products":  [
+
+                              ],
+        "monthly_rental_cost":  0.00,
+        "one_time_cost":  0.00,
+        "agreement_text":  null,
+        "signed":  true,
+        "signed_at":  "2026-03-15T12:38:52.284+00:00",
+        "signature_name":  "Shubhang",
+        "ip_address":  "::1",
+        "user_agent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0",
+        "created_at":  "2026-03-15T12:38:56.404592+00:00",
+        "updated_at":  "2026-03-15T12:38:56.404592+00:00",
+        "total_integration_cost":  0.00,
+        "total_monthly_cost":  0.00,
+        "total_onetime_cost":  0.00
+    }
+]

@@ -1,0 +1,86 @@
+﻿[
+    {
+        "id":  "e7178c14-b313-4ff7-bbde-e0f1f0de4490",
+        "merchant_profile_id":  "de389a40-72b0-470d-bf2e-9959044df373",
+        "parent_product_code":  "PROD_004",
+        "sub_product_code":  "PG_SUB_004",
+        "selected_at":  "2026-04-16T09:12:18.458019+00:00"
+    },
+    {
+        "id":  "cf25ef8b-79f1-46c0-9142-756f88d55483",
+        "merchant_profile_id":  "2762b6c7-e731-4067-b008-be0cdd4b471f",
+        "parent_product_code":  "PROD_004",
+        "sub_product_code":  "PG_SUB_004",
+        "selected_at":  "2026-04-16T10:42:09.973593+00:00"
+    },
+    {
+        "id":  "9b3d40d1-5c21-42df-ab04-62bafbbef44c",
+        "merchant_profile_id":  "b7a2beca-1a87-4f39-8987-b01fe233cbcd",
+        "parent_product_code":  "PROD_004",
+        "sub_product_code":  "PG_SUB_006",
+        "selected_at":  "2026-04-29T13:10:14.449178+00:00"
+    },
+    {
+        "id":  "910cf508-2d41-45e9-ba9c-dca7c73337a0",
+        "merchant_profile_id":  "d8e2e7b4-fa39-4902-8831-cddf19a04d87",
+        "parent_product_code":  "PROD_004",
+        "sub_product_code":  "PG_SUB_001",
+        "selected_at":  "2026-05-23T06:11:57.608522+00:00"
+    },
+    {
+        "id":  "f0e56981-85ef-494c-ab91-0551a17f37c3",
+        "merchant_profile_id":  "d8e2e7b4-fa39-4902-8831-cddf19a04d87",
+        "parent_product_code":  "PROD_004",
+        "sub_product_code":  "PG_SUB_002",
+        "selected_at":  "2026-05-23T06:11:57.608522+00:00"
+    },
+    {
+        "id":  "d883a89c-9cf1-423e-9014-4eb81dcb2ec5",
+        "merchant_profile_id":  "d8e2e7b4-fa39-4902-8831-cddf19a04d87",
+        "parent_product_code":  "PROD_004",
+        "sub_product_code":  "PG_SUB_003",
+        "selected_at":  "2026-05-23T06:11:57.608522+00:00"
+    },
+    {
+        "id":  "d078043d-11f8-4a10-8332-09bff76a8c2f",
+        "merchant_profile_id":  "d8e2e7b4-fa39-4902-8831-cddf19a04d87",
+        "parent_product_code":  "PROD_004",
+        "sub_product_code":  "PG_SUB_004",
+        "selected_at":  "2026-05-23T06:11:57.608522+00:00"
+    },
+    {
+        "id":  "52f57ce6-208f-4c7e-9e7c-9593862699a5",
+        "merchant_profile_id":  "d8e2e7b4-fa39-4902-8831-cddf19a04d87",
+        "parent_product_code":  "PROD_004",
+        "sub_product_code":  "PG_SUB_006",
+        "selected_at":  "2026-05-23T06:11:57.608522+00:00"
+    },
+    {
+        "id":  "48f87f68-1c6b-4206-aa4c-10d25925ea12",
+        "merchant_profile_id":  "d8e2e7b4-fa39-4902-8831-cddf19a04d87",
+        "parent_product_code":  "PROD_004",
+        "sub_product_code":  "PG_SUB_005",
+        "selected_at":  "2026-05-23T06:11:57.608522+00:00"
+    },
+    {
+        "id":  "b85403b6-368e-4c36-8791-7cab1dbdc907",
+        "merchant_profile_id":  "d8e2e7b4-fa39-4902-8831-cddf19a04d87",
+        "parent_product_code":  "PROD_004",
+        "sub_product_code":  "PG_SUB_007",
+        "selected_at":  "2026-05-23T06:11:57.608522+00:00"
+    },
+    {
+        "id":  "32944a74-5042-4732-bbff-dda8ebe3a1dc",
+        "merchant_profile_id":  "d8e2e7b4-fa39-4902-8831-cddf19a04d87",
+        "parent_product_code":  "PROD_004",
+        "sub_product_code":  "PG_SUB_008",
+        "selected_at":  "2026-05-23T06:11:57.608522+00:00"
+    },
+    {
+        "id":  "59608da7-9f52-453e-a0e9-425cdb0f2857",
+        "merchant_profile_id":  "7e003165-e3db-4c0e-9b54-d6ce712a88b2",
+        "parent_product_code":  "PROD_004",
+        "sub_product_code":  "PG_SUB_002",
+        "selected_at":  "2026-05-30T05:12:02.297749+00:00"
+    }
+]

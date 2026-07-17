@@ -1,0 +1,211 @@
+{
+  "info": {
+    "_postman_id": "c8f7d9d6-8a59-4dc6-9a8a-3d4f5ff1a111",
+    "name": "SabbPe Payment API",
+    "description": "Postman collection for login, transaction storage, and SabbPe callback testing.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "email",
+      "value": "merchant@sabbpe.com"
+    },
+    {
+      "key": "password",
+      "value": "merchant123"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "userId",
+      "value": ""
+    },
+    {
+      "key": "transactionId",
+      "value": "TXN123456"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}"
+            },
+            "description": "Sign in and save the returned token to the environment."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const json = pm.response.json();",
+                  "  const token = json?.data?.token;",
+                  "  const userId = json?.data?.user?.user_id;",
+                  "  if (token) {",
+                  "    pm.collectionVariables.set('token', token);",
+                  "  }",
+                  "  if (userId) {",
+                  "    pm.collectionVariables.set('userId', userId);",
+                  "  }",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Transactions",
+      "item": [
+        {
+          "name": "Get Transaction ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/transaction/get",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "transaction", "get"]
+            },
+            "description": "Fetch the stored Transaction Id for the authenticated merchant."
+          }
+        },
+        {
+          "name": "Store Transaction ID",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/transaction/store-transaction-id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "transaction", "store-transaction-id"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transactionId\": \"{{transactionId}}\"\n}"
+            },
+            "description": "Store the transaction_id returned by SabbPe token generation."
+          }
+        },
+        {
+          "name": "Store Txn Details",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/transaction/store-txn-details",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "transaction", "store-txn-details"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"master_transaction_id\": \"{{transactionId}}\",\n  \"status\": \"SUCCESS\",\n  \"gateway\": \"SABBPE\",\n  \"amount\": \"100.00\",\n  \"currency\": \"INR\",\n  \"payment_completed_at\": \"2026-05-23 10:00:00\",\n  \"payment_method\": \"UPI\",\n  \"merchant_order_ref\": \"ORDER-123\"\n}"
+            },
+            "description": "Store the decrypted SabbPe payment response payload."
+          }
+        },
+        {
+          "name": "Update Transaction (Alias)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/transaction/update",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "transaction", "update"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transactionId\": \"{{transactionId}}\"\n}"
+            },
+            "description": "Backward-compatible alias for storing the transaction id."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payment",
+      "item": [
+        {
+          "name": "SabbPe Callback",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/payment/sabbpe/callback",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payment", "sabbpe", "callback"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transaction_id\": \"{{transactionId}}\",\n  \"master_transaction_id\": \"{{transactionId}}\",\n  \"status\": \"SUCCESS\",\n  \"gateway\": \"SABBPE\",\n  \"amount\": \"100.00\",\n  \"currency\": \"INR\",\n  \"payment_completed_at\": \"2026-05-23 10:00:00\",\n  \"payment_method\": \"UPI\",\n  \"merchant_order_ref\": \"ORDER-123\"\n}"
+            },
+            "description": "Simulate the SabbPe backend callback payload."
+          }
+        }
+      ]
+    }
+  ]
+}

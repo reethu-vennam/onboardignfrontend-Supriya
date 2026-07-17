@@ -1,0 +1,377 @@
+﻿[
+    {
+        "id":  "3de11ca4-d1bb-497f-8cb7-25fe8e1d57d4",
+        "merchant_id":  "2f309e05-3e9a-45c1-bd66-a4953855b85d",
+        "amount":  99.99,
+        "currency":  "INR",
+        "reason":  "Testing",
+        "status":  "pending",
+        "chargeback_date":  "2026-06-24T09:41:06.67+00:00",
+        "recovered_at":  null,
+        "recovery_source":  null,
+        "metadata":  {
+
+                     },
+        "created_at":  "2026-06-24T09:41:06.67+00:00",
+        "updated_at":  "2026-06-24T09:41:06.67+00:00",
+        "recovery_steps":  [
+
+                           ],
+        "transaction_id":  null
+    },
+    {
+        "id":  "46d27df3-5570-4256-b608-08b3e6270a82",
+        "merchant_id":  "f496d0c6-da80-4144-8d7f-83837d8df80f",
+        "amount":  1000.00,
+        "currency":  "INR",
+        "reason":  "testing",
+        "status":  "recovered",
+        "chargeback_date":  "2026-06-24T09:50:48.439+00:00",
+        "recovered_at":  "2026-06-24T09:54:35.112+00:00",
+        "recovery_source":  "merchant_balance",
+        "metadata":  {
+
+                     },
+        "created_at":  "2026-06-24T09:50:48.439+00:00",
+        "updated_at":  "2026-06-24T09:54:35.112+00:00",
+        "recovery_steps":  [
+                               {
+                                   "amount":  1000,
+                                   "source":  "merchant_balance",
+                                   "timestamp":  "2026-06-24T09:54:35.112Z",
+                                   "description":  "Negative merchant balance"
+                               }
+                           ],
+        "transaction_id":  null
+    },
+    {
+        "id":  "7c3be1f5-7631-465c-be59-8b23d2386d22",
+        "merchant_id":  "2f309e05-3e9a-45c1-bd66-a4953855b85d",
+        "amount":  10000.00,
+        "currency":  "INR",
+        "reason":  " Distributor Recovery Test",
+        "status":  "recovered",
+        "chargeback_date":  "2026-06-24T10:16:07.119+00:00",
+        "recovered_at":  "2026-06-24T10:19:14.448+00:00",
+        "recovery_source":  "rolling_reserve",
+        "metadata":  {
+
+                     },
+        "created_at":  "2026-06-24T10:16:07.119+00:00",
+        "updated_at":  "2026-06-24T10:19:14.448+00:00",
+        "recovery_steps":  [
+                               {
+                                   "amount":  100,
+                                   "source":  "rolling_reserve",
+                                   "timestamp":  "2026-06-24T10:19:14.448Z",
+                                   "description":  "Held rolling reserve"
+                               },
+                               {
+                                   "amount":  1900,
+                                   "source":  "pending_settlement",
+                                   "timestamp":  "2026-06-24T10:19:14.448Z",
+                                   "description":  "Pending settlement amount"
+                               },
+                               {
+                                   "amount":  8000,
+                                   "source":  "merchant_balance",
+                                   "timestamp":  "2026-06-24T10:19:14.448Z",
+                                   "description":  "Negative merchant balance"
+                               }
+                           ],
+        "transaction_id":  null
+    },
+    {
+        "id":  "18201423-acfa-44d3-8d22-5dcb262d3104",
+        "merchant_id":  "b56ccc9b-b9e8-4177-8c93-7508f30b67fd",
+        "amount":  7999.99,
+        "currency":  "INR",
+        "reason":  "Settlement Recovery Test",
+        "status":  "recovered",
+        "chargeback_date":  "2026-06-25T05:47:03.499+00:00",
+        "recovered_at":  "2026-06-25T05:47:51.186+00:00",
+        "recovery_source":  "rolling_reserve",
+        "metadata":  {
+
+                     },
+        "created_at":  "2026-06-25T05:47:03.499+00:00",
+        "updated_at":  "2026-06-25T05:47:51.186+00:00",
+        "recovery_steps":  [
+                               {
+                                   "amount":  425,
+                                   "source":  "rolling_reserve",
+                                   "timestamp":  "2026-06-25T05:47:51.186Z",
+                                   "description":  "Held rolling reserve"
+                               },
+                               {
+                                   "amount":  7574.99,
+                                   "source":  "pending_settlement",
+                                   "timestamp":  "2026-06-25T05:47:51.186Z",
+                                   "description":  "Pending settlement amount"
+                               }
+                           ],
+        "transaction_id":  null
+    },
+    {
+        "id":  "088244ef-db57-4415-927e-49f0159d6c1a",
+        "merchant_id":  "b56ccc9b-b9e8-4177-8c93-7508f30b67fd",
+        "amount":  2000.00,
+        "currency":  "INR",
+        "reason":  "Distributor Recovery Test",
+        "status":  "recovered",
+        "chargeback_date":  "2026-06-25T06:19:10.809+00:00",
+        "recovered_at":  "2026-06-25T06:21:00.79+00:00",
+        "recovery_source":  "pending_settlement",
+        "metadata":  {
+
+                     },
+        "created_at":  "2026-06-25T06:19:10.809+00:00",
+        "updated_at":  "2026-06-25T06:21:00.79+00:00",
+        "recovery_steps":  [
+                               {
+                                   "amount":  2000,
+                                   "source":  "pending_settlement",
+                                   "timestamp":  "2026-06-25T06:21:00.790Z",
+                                   "description":  "Pending settlement amount"
+                               }
+                           ],
+        "transaction_id":  null
+    },
+    {
+        "id":  "80cb9bbf-e0c9-4cd8-83b2-45ea7847e368",
+        "merchant_id":  "b56ccc9b-b9e8-4177-8c93-7508f30b67fd",
+        "amount":  10000.00,
+        "currency":  "INR",
+        "reason":  "Distributor Recovery Final Test",
+        "status":  "recovered",
+        "chargeback_date":  "2026-06-25T06:22:55.413+00:00",
+        "recovered_at":  "2026-06-25T06:23:03.042+00:00",
+        "recovery_source":  "pending_settlement",
+        "metadata":  {
+
+                     },
+        "created_at":  "2026-06-25T06:22:55.413+00:00",
+        "updated_at":  "2026-06-25T06:23:03.042+00:00",
+        "recovery_steps":  [
+                               {
+                                   "amount":  7165.01,
+                                   "source":  "pending_settlement",
+                                   "timestamp":  "2026-06-25T06:23:03.042Z",
+                                   "description":  "Pending settlement amount"
+                               },
+                               {
+                                   "amount":  2834.99,
+                                   "source":  "merchant_balance",
+                                   "timestamp":  "2026-06-25T06:23:03.042Z",
+                                   "description":  "Negative merchant balance"
+                               }
+                           ],
+        "transaction_id":  null
+    },
+    {
+        "id":  "f9b59bd5-623b-4852-a020-3bf06b704d80",
+        "merchant_id":  "b56ccc9b-b9e8-4177-8c93-7508f30b67fd",
+        "amount":  5000.00,
+        "currency":  "INR",
+        "reason":  "final disty",
+        "status":  "recovered",
+        "chargeback_date":  "2026-06-25T06:32:14.506+00:00",
+        "recovered_at":  "2026-06-25T06:32:25.257+00:00",
+        "recovery_source":  "merchant_balance",
+        "metadata":  {
+
+                     },
+        "created_at":  "2026-06-25T06:32:14.506+00:00",
+        "updated_at":  "2026-06-25T06:32:25.257+00:00",
+        "recovery_steps":  [
+                               {
+                                   "amount":  5000,
+                                   "source":  "merchant_balance",
+                                   "timestamp":  "2026-06-25T06:32:25.257Z",
+                                   "description":  "Negative merchant balance"
+                               }
+                           ],
+        "transaction_id":  null
+    },
+    {
+        "id":  "e82aa03a-ae1a-4857-a86d-a4ea35ecda2b",
+        "merchant_id":  "b56ccc9b-b9e8-4177-8c93-7508f30b67fd",
+        "amount":  5000.00,
+        "currency":  "INR",
+        "reason":  "final1",
+        "status":  "recovered",
+        "chargeback_date":  "2026-06-25T06:46:25.237+00:00",
+        "recovered_at":  "2026-06-25T06:46:32.877+00:00",
+        "recovery_source":  "rolling_reserve",
+        "metadata":  {
+
+                     },
+        "created_at":  "2026-06-25T06:46:25.237+00:00",
+        "updated_at":  "2026-06-25T06:46:32.877+00:00",
+        "recovery_steps":  [
+                               {
+                                   "amount":  150,
+                                   "source":  "rolling_reserve",
+                                   "timestamp":  "2026-06-25T06:46:32.877Z",
+                                   "description":  "Held rolling reserve"
+                               },
+                               {
+                                   "amount":  2790,
+                                   "source":  "pending_settlement",
+                                   "timestamp":  "2026-06-25T06:46:32.877Z",
+                                   "description":  "Pending settlement amount"
+                               },
+                               {
+                                   "amount":  2060,
+                                   "source":  "merchant_balance",
+                                   "timestamp":  "2026-06-25T06:46:32.877Z",
+                                   "description":  "Negative merchant balance"
+                               }
+                           ],
+        "transaction_id":  null
+    },
+    {
+        "id":  "fe6021f3-a2c5-431d-bd60-73566416f292",
+        "merchant_id":  "b56ccc9b-b9e8-4177-8c93-7508f30b67fd",
+        "amount":  5000.00,
+        "currency":  "INR",
+        "reason":  "final 2",
+        "status":  "recovered",
+        "chargeback_date":  "2026-06-25T07:05:35.939+00:00",
+        "recovered_at":  "2026-06-25T07:05:46.544+00:00",
+        "recovery_source":  "rolling_reserve",
+        "metadata":  {
+
+                     },
+        "created_at":  "2026-06-25T07:05:35.939+00:00",
+        "updated_at":  "2026-06-25T07:05:46.544+00:00",
+        "recovery_steps":  [
+                               {
+                                   "amount":  150,
+                                   "source":  "rolling_reserve",
+                                   "timestamp":  "2026-06-25T07:05:46.544Z",
+                                   "description":  "Held rolling reserve"
+                               },
+                               {
+                                   "amount":  2790,
+                                   "source":  "pending_settlement",
+                                   "timestamp":  "2026-06-25T07:05:46.544Z",
+                                   "description":  "Pending settlement amount"
+                               },
+                               {
+                                   "amount":  2060,
+                                   "source":  "distributor_balance",
+                                   "timestamp":  "2026-06-25T07:05:46.544Z",
+                                   "description":  "Distributor recovery balance"
+                               }
+                           ],
+        "transaction_id":  null
+    },
+    {
+        "id":  "4af5a4ea-23e6-44f2-af48-92f822e9e3cf",
+        "merchant_id":  "b56ccc9b-b9e8-4177-8c93-7508f30b67fd",
+        "amount":  5000.00,
+        "currency":  "INR",
+        "reason":  "histiry\n",
+        "status":  "failed",
+        "chargeback_date":  "2026-06-25T07:21:25.756+00:00",
+        "recovered_at":  null,
+        "recovery_source":  null,
+        "metadata":  {
+
+                     },
+        "created_at":  "2026-06-25T07:21:25.756+00:00",
+        "updated_at":  "2026-06-25T07:21:33.737+00:00",
+        "recovery_steps":  [
+
+                           ],
+        "transaction_id":  null
+    },
+    {
+        "id":  "747523d4-75b3-4724-8d0d-196b950fb2a5",
+        "merchant_id":  "b56ccc9b-b9e8-4177-8c93-7508f30b67fd",
+        "amount":  5000.00,
+        "currency":  "INR",
+        "reason":  "final3\n",
+        "status":  "recovered",
+        "chargeback_date":  "2026-06-25T07:27:30.201+00:00",
+        "recovered_at":  "2026-06-25T07:27:37.857+00:00",
+        "recovery_source":  "merchant_balance",
+        "metadata":  {
+
+                     },
+        "created_at":  "2026-06-25T07:27:30.201+00:00",
+        "updated_at":  "2026-06-25T07:27:37.857+00:00",
+        "recovery_steps":  [
+                               {
+                                   "amount":  5000,
+                                   "source":  "merchant_balance",
+                                   "timestamp":  "2026-06-25T07:27:37.857Z",
+                                   "description":  "Negative merchant balance"
+                               }
+                           ],
+        "transaction_id":  null
+    },
+    {
+        "id":  "0f7b6b81-e45a-4299-a742-0927abf85fcc",
+        "merchant_id":  "b6b880f1-9b3a-4a1d-b481-24196625ace4",
+        "amount":  1000.00,
+        "currency":  "INR",
+        "reason":  "customer appeared",
+        "status":  "recovered",
+        "chargeback_date":  "2026-06-27T07:19:36.531+00:00",
+        "recovered_at":  "2026-06-27T07:21:22.191+00:00",
+        "recovery_source":  "rolling_reserve",
+        "metadata":  {
+
+                     },
+        "created_at":  "2026-06-27T07:19:36.531+00:00",
+        "updated_at":  "2026-06-27T07:21:22.191+00:00",
+        "recovery_steps":  [
+                               {
+                                   "amount":  250,
+                                   "source":  "rolling_reserve",
+                                   "timestamp":  "2026-06-27T07:21:22.191Z",
+                                   "description":  "Held rolling reserve"
+                               },
+                               {
+                                   "amount":  750,
+                                   "source":  "pending_settlement",
+                                   "timestamp":  "2026-06-27T07:21:22.191Z",
+                                   "description":  "Pending settlement amount"
+                               }
+                           ],
+        "transaction_id":  null
+    },
+    {
+        "id":  "152b2cda-0e4d-4945-b6bb-5b7965e278b8",
+        "merchant_id":  "8fa25a50-cec8-4cd4-9fc7-69f2fed1c8a8",
+        "amount":  500.00,
+        "currency":  "INR",
+        "reason":  "test",
+        "status":  "recovered",
+        "chargeback_date":  "2026-06-29T11:20:57.644+00:00",
+        "recovered_at":  "2026-06-29T11:21:12.764+00:00",
+        "recovery_source":  "rolling_reserve",
+        "metadata":  {
+
+                     },
+        "created_at":  "2026-06-29T11:20:57.644+00:00",
+        "updated_at":  "2026-06-29T11:21:12.764+00:00",
+        "recovery_steps":  [
+                               {
+                                   "amount":  249.5,
+                                   "source":  "rolling_reserve",
+                                   "timestamp":  "2026-06-29T11:21:12.764Z",
+                                   "description":  "Held rolling reserve"
+                               },
+                               {
+                                   "amount":  250.5,
+                                   "source":  "pending_settlement",
+                                   "timestamp":  "2026-06-29T11:21:12.764Z",
+                                   "description":  "Pending settlement amount"
+                               }
+                           ],
+        "transaction_id":  null
+    }
+]

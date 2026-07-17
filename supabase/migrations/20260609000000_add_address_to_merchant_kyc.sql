@@ -1,0 +1,8 @@
+-- Add address columns to merchant_kyc table
+ALTER TABLE public.merchant_kyc
+ADD COLUMN IF NOT EXISTS full_address TEXT,
+ADD COLUMN IF NOT EXISTS area TEXT,
+ADD COLUMN IF NOT EXISTS city TEXT,
+ADD COLUMN IF NOT EXISTS state TEXT,
+ADD COLUMN IF NOT EXISTS pincode TEXT,
+ADD COLUMN IF NOT EXISTS country TEXT;

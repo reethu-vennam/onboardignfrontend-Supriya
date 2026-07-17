@@ -1,0 +1,1448 @@
+﻿[
+    {
+        "id":  "a6a11a86-7abc-4086-a938-c5930e907531",
+        "merchant_id":  "2f309e05-3e9a-45c1-bd66-a4953855b85d",
+        "distributor_id":  "4ade24b2-a291-4c86-8378-cc3095ef186c",
+        "settlement_batch_ref":  "SETL-20260623-070357-ATE98Z",
+        "settlement_date":  "2026-06-23",
+        "settlement_cycle_days":  1,
+        "gross_amount":  2000.00,
+        "mdr_deduction":  0.00,
+        "rolling_reserve_held":  100.00,
+        "net_settlement_amount":  1900.00,
+        "transaction_count":  1,
+        "transaction_refs":  [
+                                 {
+                                     "amount":  2000,
+                                     "mariaDB_id":  "4fb5a02a-6ed1-11f1-88ab-4201c0a81e02",
+                                     "completed_at":  "2026-06-21T07:01:08.000Z",
+                                     "order_reference":  "ORD-M39-001"
+                                 }
+                             ],
+        "status":  "processed",
+        "processed_at":  "2026-06-23T07:03:57.446+00:00",
+        "failure_reason":  null,
+        "created_at":  "2026-06-23T07:03:58.485812+00:00",
+        "updated_at":  "2026-06-23T07:03:58.485812+00:00"
+    },
+    {
+        "id":  "dfc64356-2baf-4095-b4aa-d3cd667b49d8",
+        "merchant_id":  "b56ccc9b-b9e8-4177-8c93-7508f30b67fd",
+        "distributor_id":  "4ade24b2-a291-4c86-8378-cc3095ef186c",
+        "settlement_batch_ref":  "SETL-20260625-054324-72L3YK",
+        "settlement_date":  "2026-06-25",
+        "settlement_cycle_days":  1,
+        "gross_amount":  8500.00,
+        "mdr_deduction":  155.00,
+        "rolling_reserve_held":  425.00,
+        "net_settlement_amount":  7920.00,
+        "transaction_count":  3,
+        "transaction_refs":  [
+                                 {
+                                     "amount":  1000,
+                                     "mariaDB_id":  "70ca88c8-7058-11f1-88ab-4201c0a81e02",
+                                     "completed_at":  "2026-06-23T05:40:57.000Z",
+                                     "order_reference":  "ORD-SETTLE-250625-001"
+                                 },
+                                 {
+                                     "amount":  2500,
+                                     "mariaDB_id":  "70dd8a6c-7058-11f1-88ab-4201c0a81e02",
+                                     "completed_at":  "2026-06-23T05:40:57.000Z",
+                                     "order_reference":  "ORD-SETTLE-250625-002"
+                                 },
+                                 {
+                                     "amount":  5000,
+                                     "mariaDB_id":  "70f188ba-7058-11f1-88ab-4201c0a81e02",
+                                     "completed_at":  "2026-06-23T05:40:57.000Z",
+                                     "order_reference":  "ORD-SETTLE-250625-003"
+                                 }
+                             ],
+        "status":  "processed",
+        "processed_at":  "2026-06-25T05:43:24.459+00:00",
+        "failure_reason":  null,
+        "created_at":  "2026-06-25T05:43:24.017442+00:00",
+        "updated_at":  "2026-06-25T05:43:24.017442+00:00"
+    },
+    {
+        "id":  "e90f6043-f1f4-4a29-b79a-90523f374dd9",
+        "merchant_id":  "b56ccc9b-b9e8-4177-8c93-7508f30b67fd",
+        "distributor_id":  "4ade24b2-a291-4c86-8378-cc3095ef186c",
+        "settlement_batch_ref":  "SETL-20260625-055924-D8RYO8",
+        "settlement_date":  "2026-06-25",
+        "settlement_cycle_days":  1,
+        "gross_amount":  9000.00,
+        "mdr_deduction":  180.00,
+        "rolling_reserve_held":  450.00,
+        "net_settlement_amount":  8370.00,
+        "transaction_count":  3,
+        "transaction_refs":  [
+                                 {
+                                     "amount":  3000,
+                                     "mariaDB_id":  "d1302970-7059-11f1-88ab-4201c0a81e02",
+                                     "completed_at":  "2026-06-23T05:50:48.000Z",
+                                     "order_reference":  "ORD-SETTLE-250625-004"
+                                 },
+                                 {
+                                     "amount":  4000,
+                                     "mariaDB_id":  "d14687f7-7059-11f1-88ab-4201c0a81e02",
+                                     "completed_at":  "2026-06-23T05:50:49.000Z",
+                                     "order_reference":  "ORD-SETTLE-250625-005"
+                                 },
+                                 {
+                                     "amount":  2000,
+                                     "mariaDB_id":  "d15f4103-7059-11f1-88ab-4201c0a81e02",
+                                     "completed_at":  "2026-06-23T05:50:49.000Z",
+                                     "order_reference":  "ORD-SETTLE-250625-006"
+                                 }
+                             ],
+        "status":  "processed",
+        "processed_at":  "2026-06-25T05:59:24.152+00:00",
+        "failure_reason":  null,
+        "created_at":  "2026-06-25T05:59:23.697054+00:00",
+        "updated_at":  "2026-06-25T05:59:23.697054+00:00"
+    },
+    {
+        "id":  "f945bab7-6155-435d-ae20-91c00ed48e07",
+        "merchant_id":  "b56ccc9b-b9e8-4177-8c93-7508f30b67fd",
+        "distributor_id":  "4ade24b2-a291-4c86-8378-cc3095ef186c",
+        "settlement_batch_ref":  "SETL-20260625-064454-UH2Q1E",
+        "settlement_date":  "2026-06-25",
+        "settlement_cycle_days":  1,
+        "gross_amount":  3000.00,
+        "mdr_deduction":  60.00,
+        "rolling_reserve_held":  150.00,
+        "net_settlement_amount":  2790.00,
+        "transaction_count":  1,
+        "transaction_refs":  [
+                                 {
+                                     "amount":  3000,
+                                     "mariaDB_id":  "c046dd47-7060-11f1-88ab-4201c0a81e02",
+                                     "completed_at":  "2026-06-23T06:40:27.000Z",
+                                     "order_reference":  "ORD-DIST-TEST-001"
+                                 }
+                             ],
+        "status":  "processed",
+        "processed_at":  "2026-06-25T06:44:54.871+00:00",
+        "failure_reason":  null,
+        "created_at":  "2026-06-25T06:44:54.409268+00:00",
+        "updated_at":  "2026-06-25T06:44:54.409268+00:00"
+    },
+    {
+        "id":  "c1deb331-1c57-4781-90f2-2eced5830c55",
+        "merchant_id":  "b56ccc9b-b9e8-4177-8c93-7508f30b67fd",
+        "distributor_id":  "4ade24b2-a291-4c86-8378-cc3095ef186c",
+        "settlement_batch_ref":  "SETL-20260625-070412-TEK7BG",
+        "settlement_date":  "2026-06-25",
+        "settlement_cycle_days":  1,
+        "gross_amount":  3000.00,
+        "mdr_deduction":  60.00,
+        "rolling_reserve_held":  150.00,
+        "net_settlement_amount":  2790.00,
+        "transaction_count":  1,
+        "transaction_refs":  [
+                                 {
+                                     "amount":  3000,
+                                     "mariaDB_id":  "d95810af-7063-11f1-88ab-4201c0a81e02",
+                                     "completed_at":  "2026-06-23T07:02:37.000Z",
+                                     "order_reference":  "ORD-DIST-FIX-001"
+                                 }
+                             ],
+        "status":  "processed",
+        "processed_at":  "2026-06-25T07:04:12.159+00:00",
+        "failure_reason":  null,
+        "created_at":  "2026-06-25T07:04:11.652248+00:00",
+        "updated_at":  "2026-06-25T07:04:11.652248+00:00"
+    },
+    {
+        "id":  "b7157674-c8da-4ac6-a319-1b7532e1299c",
+        "merchant_id":  "b56ccc9b-b9e8-4177-8c93-7508f30b67fd",
+        "distributor_id":  "4ade24b2-a291-4c86-8378-cc3095ef186c",
+        "settlement_batch_ref":  "SETL-20260626-054821-MO4CJJ",
+        "settlement_date":  "2026-06-26",
+        "settlement_cycle_days":  1,
+        "gross_amount":  5000.00,
+        "mdr_deduction":  0.00,
+        "rolling_reserve_held":  250.00,
+        "net_settlement_amount":  4750.00,
+        "transaction_count":  1,
+        "transaction_refs":  [
+                                 {
+                                     "amount":  5000,
+                                     "mariaDB_id":  "2968fba2-7120-11f1-88ab-4201c0a81e02",
+                                     "completed_at":  "2026-06-25T05:35:20.000Z",
+                                     "order_reference":  "ORD-DEMO-001"
+                                 }
+                             ],
+        "status":  "processed",
+        "processed_at":  "2026-06-26T05:48:21.655+00:00",
+        "failure_reason":  null,
+        "created_at":  "2026-06-26T05:48:21.393697+00:00",
+        "updated_at":  "2026-06-26T05:48:21.393697+00:00"
+    },
+    {
+        "id":  "933aaf1c-0b67-4a5a-89e3-ad68c5740b66",
+        "merchant_id":  "b6b880f1-9b3a-4a1d-b481-24196625ace4",
+        "distributor_id":  "14084576-781f-4ac6-ad21-58e3102f39f4",
+        "settlement_batch_ref":  "SETL-20260627-071610-NPGW59",
+        "settlement_date":  "2026-06-27",
+        "settlement_cycle_days":  1,
+        "gross_amount":  5000.00,
+        "mdr_deduction":  0.00,
+        "rolling_reserve_held":  250.00,
+        "net_settlement_amount":  4750.00,
+        "transaction_count":  1,
+        "transaction_refs":  [
+                                 {
+                                     "amount":  5000,
+                                     "mariaDB_id":  "94c80ebc-71f6-11f1-88ab-4201c0a81e02",
+                                     "completed_at":  "2026-06-25T07:13:05.000Z",
+                                     "order_reference":  "ORD-DEMO-1782543929"
+                                 }
+                             ],
+        "status":  "processed",
+        "processed_at":  "2026-06-27T07:16:11.062+00:00",
+        "failure_reason":  null,
+        "created_at":  "2026-06-27T07:16:10.249629+00:00",
+        "updated_at":  "2026-06-27T07:16:10.249629+00:00"
+    },
+    {
+        "id":  "9c1d163c-9e74-4f77-bd06-7af1aecc8520",
+        "merchant_id":  "8fa25a50-cec8-4cd4-9fc7-69f2fed1c8a8",
+        "distributor_id":  "14084576-781f-4ac6-ad21-58e3102f39f4",
+        "settlement_batch_ref":  "SETL-20260629-111524-YHZ0HH",
+        "settlement_date":  "2026-06-29",
+        "settlement_cycle_days":  1,
+        "gross_amount":  5000.00,
+        "mdr_deduction":  0.00,
+        "rolling_reserve_held":  249.50,
+        "net_settlement_amount":  4750.50,
+        "transaction_count":  1,
+        "transaction_refs":  [
+                                 {
+                                     "amount":  5000,
+                                     "mariaDB_id":  "1a6f53f3-73aa-11f1-88ab-4201c0a81e02",
+                                     "completed_at":  "2026-06-27T05:33:05.000Z",
+                                     "order_reference":  "ORD-DEMO-1782730985"
+                                 }
+                             ],
+        "status":  "processed",
+        "processed_at":  "2026-06-29T11:15:24.62+00:00",
+        "failure_reason":  null,
+        "created_at":  "2026-06-29T11:15:24.658753+00:00",
+        "updated_at":  "2026-06-29T11:15:24.658753+00:00"
+    },
+    {
+        "id":  "54dfb084-b53b-4549-af22-1edd5c7136c1",
+        "merchant_id":  "789bfe37-2a7a-4d9a-bf24-66a6a6cf6144",
+        "distributor_id":  "4ade24b2-a291-4c86-8378-cc3095ef186c",
+        "settlement_batch_ref":  "SETL-20260629-203003-VT14NR",
+        "settlement_date":  "2026-06-29",
+        "settlement_cycle_days":  1,
+        "gross_amount":  16000.00,
+        "mdr_deduction":  400.00,
+        "rolling_reserve_held":  0.00,
+        "net_settlement_amount":  15600.00,
+        "transaction_count":  3,
+        "transaction_refs":  [
+                                 {
+                                     "amount":  1000,
+                                     "mariaDB_id":  "demo-1781610766005-1000",
+                                     "completed_at":  "2026-06-16T11:52:46.000Z",
+                                     "order_reference":  "ORD-DEMO-1000"
+                                 },
+                                 {
+                                     "amount":  5000,
+                                     "mariaDB_id":  "demo-1781610766180-5000",
+                                     "completed_at":  "2026-06-16T11:52:46.000Z",
+                                     "order_reference":  "ORD-DEMO-5000"
+                                 },
+                                 {
+                                     "amount":  10000,
+                                     "mariaDB_id":  "demo-1781610766274-10000",
+                                     "completed_at":  "2026-06-16T11:52:46.000Z",
+                                     "order_reference":  "ORD-DEMO-10000"
+                                 }
+                             ],
+        "status":  "processed",
+        "processed_at":  "2026-06-29T20:30:03.412+00:00",
+        "failure_reason":  null,
+        "created_at":  "2026-06-29T20:30:03.43007+00:00",
+        "updated_at":  "2026-06-29T20:30:03.43007+00:00"
+    },
+    {
+        "id":  "c0feaffa-6153-408f-814b-dbdf22eb3600",
+        "merchant_id":  "52d3d1e8-9443-4d09-9b52-27c1bdb04a92",
+        "distributor_id":  "4ade24b2-a291-4c86-8378-cc3095ef186c",
+        "settlement_batch_ref":  "SETL-20260629-203004-OK64K8",
+        "settlement_date":  "2026-06-29",
+        "settlement_cycle_days":  1,
+        "gross_amount":  500.00,
+        "mdr_deduction":  0.00,
+        "rolling_reserve_held":  0.00,
+        "net_settlement_amount":  500.00,
+        "transaction_count":  1,
+        "transaction_refs":  [
+                                 {
+                                     "amount":  500,
+                                     "mariaDB_id":  "test-1781519507571",
+                                     "completed_at":  "2026-06-15T10:31:47.000Z",
+                                     "order_reference":  "ORD1781519507571"
+                                 }
+                             ],
+        "status":  "processed",
+        "processed_at":  "2026-06-29T20:30:04.115+00:00",
+        "failure_reason":  null,
+        "created_at":  "2026-06-29T20:30:04.119005+00:00",
+        "updated_at":  "2026-06-29T20:30:04.119005+00:00"
+    },
+    {
+        "id":  "901cbb4b-28bc-4b3d-be77-c210c19e4992",
+        "merchant_id":  "bda05f36-cb9d-4ab9-b1da-1948f10e590b",
+        "distributor_id":  "4ade24b2-a291-4c86-8378-cc3095ef186c",
+        "settlement_batch_ref":  "SETL-20260629-203004-GSIWWC",
+        "settlement_date":  "2026-06-29",
+        "settlement_cycle_days":  1,
+        "gross_amount":  1500.00,
+        "mdr_deduction":  27.50,
+        "rolling_reserve_held":  0.00,
+        "net_settlement_amount":  1472.50,
+        "transaction_count":  2,
+        "transaction_refs":  [
+                                 {
+                                     "amount":  500,
+                                     "mariaDB_id":  "test-1781519533071",
+                                     "completed_at":  "2026-06-15T10:32:12.000Z",
+                                     "order_reference":  "ORD1781519533071"
+                                 },
+                                 {
+                                     "amount":  1000,
+                                     "mariaDB_id":  "test-upi-1781519533570",
+                                     "completed_at":  "2026-06-15T10:32:13.000Z",
+                                     "order_reference":  "ORD1781519533570"
+                                 }
+                             ],
+        "status":  "processed",
+        "processed_at":  "2026-06-29T20:30:04.289+00:00",
+        "failure_reason":  null,
+        "created_at":  "2026-06-29T20:30:04.295081+00:00",
+        "updated_at":  "2026-06-29T20:30:04.295081+00:00"
+    },
+    {
+        "id":  "607b1dbe-5189-4a35-9b08-278864132425",
+        "merchant_id":  "86b5b134-14a5-42cf-9c47-a114a3d70b02",
+        "distributor_id":  "4ade24b2-a291-4c86-8378-cc3095ef186c",
+        "settlement_batch_ref":  "SETL-20260629-203004-4X1USP",
+        "settlement_date":  "2026-06-29",
+        "settlement_cycle_days":  1,
+        "gross_amount":  2792.68,
+        "mdr_deduction":  69.82,
+        "rolling_reserve_held":  0.00,
+        "net_settlement_amount":  2722.86,
+        "transaction_count":  2,
+        "transaction_refs":  [
+                                 {
+                                     "amount":  1396.34,
+                                     "mariaDB_id":  "1c52e6c5-28d6-47af-858c-0cf274ca703e",
+                                     "completed_at":  "2026-05-31T08:52:21.000Z",
+                                     "order_reference":  "MK-XIQTXSOGYF7R"
+                                 },
+                                 {
+                                     "amount":  1396.34,
+                                     "mariaDB_id":  "c3c1d598-627f-45fd-929b-05c98846080c",
+                                     "completed_at":  "2026-06-11T08:42:36.000Z",
+                                     "order_reference":  "MK-HTE6MCYGOSJA"
+                                 }
+                             ],
+        "status":  "processed",
+        "processed_at":  "2026-06-29T20:30:04.466+00:00",
+        "failure_reason":  null,
+        "created_at":  "2026-06-29T20:30:04.472334+00:00",
+        "updated_at":  "2026-06-29T20:30:04.472334+00:00"
+    },
+    {
+        "id":  "9dcf99fa-d73d-4a14-9322-bfed3e21a802",
+        "merchant_id":  "bc343a11-57f3-4603-a8b4-feae1b0fa360",
+        "distributor_id":  "4ade24b2-a291-4c86-8378-cc3095ef186c",
+        "settlement_batch_ref":  "SETL-20260629-203004-8XBXZE",
+        "settlement_date":  "2026-06-29",
+        "settlement_cycle_days":  1,
+        "gross_amount":  12184.34,
+        "mdr_deduction":  304.61,
+        "rolling_reserve_held":  0.00,
+        "net_settlement_amount":  11879.73,
+        "transaction_count":  32,
+        "transaction_refs":  [
+                                 {
+                                     "amount":  3,
+                                     "mariaDB_id":  "b3654565-16df-488c-ab8f-db1d6b4d9a2e",
+                                     "completed_at":  "2026-05-08T11:28:01.000Z",
+                                     "order_reference":  "ORDER-196"
+                                 },
+                                 {
+                                     "amount":  1572.63,
+                                     "mariaDB_id":  "79181545-4151-456c-904e-095a7af7957b",
+                                     "completed_at":  "2026-05-08T11:38:17.000Z",
+                                     "order_reference":  "KTL-RATE-BUY-GOLD-1572-63-1778240275660"
+                                 },
+                                 {
+                                     "amount":  1571.78,
+                                     "mariaDB_id":  "a44285b2-72e1-4f63-8060-7b0d0284b2e1",
+                                     "completed_at":  "2026-05-08T11:43:37.000Z",
+                                     "order_reference":  "KTL-RATE-BUY-GOLD-1571-78-1778240603947"
+                                 },
+                                 {
+                                     "amount":  300,
+                                     "mariaDB_id":  "3a0296ca-829a-4368-86f3-1bc3fc062676",
+                                     "completed_at":  "2026-05-08T11:45:46.000Z",
+                                     "order_reference":  "KTL-AUG-PROD-AU999GC001R-300-00-1778240729054"
+                                 },
+                                 {
+                                     "amount":  1571.12,
+                                     "mariaDB_id":  "45bd0bff-f066-4a19-8861-cacd94458209",
+                                     "completed_at":  "2026-05-08T11:47:04.000Z",
+                                     "order_reference":  "KTL-RATE-BUY-GOLD-1571-12-1778240799653"
+                                 },
+                                 {
+                                     "amount":  300,
+                                     "mariaDB_id":  "6cb654a3-cc82-4415-8274-9f534532fb49",
+                                     "completed_at":  "2026-05-08T11:50:43.000Z",
+                                     "order_reference":  "KTL-AUG-PROD-AU999GC001R-300-00-1778241030525"
+                                 },
+                                 {
+                                     "amount":  1578.16,
+                                     "mariaDB_id":  "3ff842ac-b2c8-4255-b924-fb5ee8a58607",
+                                     "completed_at":  "2026-05-08T13:57:54.000Z",
+                                     "order_reference":  "KTL-RATE-BUY-GOLD-1578-16-1778248654713"
+                                 },
+                                 {
+                                     "amount":  1578.35,
+                                     "mariaDB_id":  "157486a1-e894-4433-b451-e2dcb8b2ee47",
+                                     "completed_at":  "2026-05-08T13:59:45.000Z",
+                                     "order_reference":  "KTL-RATE-BUY-GOLD-1578-35-1778248769791"
+                                 },
+                                 {
+                                     "amount":  1575.3,
+                                     "mariaDB_id":  "e51d1ea0-3edb-438f-a720-fc01d6346776",
+                                     "completed_at":  "2026-05-08T14:08:59.000Z",
+                                     "order_reference":  "KTL-RATE-BUY-GOLD-1575-30-1778249321628"
+                                 },
+                                 {
+                                     "amount":  10,
+                                     "mariaDB_id":  "b06fea99-6326-4070-a843-7de265bf5ef7",
+                                     "completed_at":  "2026-05-13T06:43:19.000Z",
+                                     "order_reference":  "ORDER123421"
+                                 },
+                                 {
+                                     "amount":  10,
+                                     "mariaDB_id":  "f179d6d6-5475-4b26-a681-5498cfbcd500",
+                                     "completed_at":  "2026-05-19T10:59:39.000Z",
+                                     "order_reference":  "ORDER123499"
+                                 },
+                                 {
+                                     "amount":  1,
+                                     "mariaDB_id":  "96976499-78cf-4591-8e50-8966a5399532",
+                                     "completed_at":  "2026-05-23T13:45:16.000Z",
+                                     "order_reference":  "SP202605231914196088F2D2"
+                                 },
+                                 {
+                                     "amount":  50,
+                                     "mariaDB_id":  "ff4d598b-5f27-41a2-bf90-8b22ac080cd9",
+                                     "completed_at":  "2026-05-23T14:25:55.000Z",
+                                     "order_reference":  "SP202605231950586F35C383"
+                                 },
+                                 {
+                                     "amount":  50,
+                                     "mariaDB_id":  "92ee06e8-873e-4b85-9ce3-e0a50a709b15",
+                                     "completed_at":  "2026-05-23T14:26:43.000Z",
+                                     "order_reference":  "SP2026052319503396D55F63"
+                                 },
+                                 {
+                                     "amount":  50,
+                                     "mariaDB_id":  "8b44b548-3648-4d2d-b306-3b394c1d46a7",
+                                     "completed_at":  "2026-05-23T14:37:48.000Z",
+                                     "order_reference":  "SP2026052320073035A18836"
+                                 },
+                                 {
+                                     "amount":  50,
+                                     "mariaDB_id":  "e2df3399-e21e-4e78-b523-3b787c68d8d9",
+                                     "completed_at":  "2026-05-23T14:39:02.000Z",
+                                     "order_reference":  "SP2026052320084168E30464"
+                                 },
+                                 {
+                                     "amount":  50,
+                                     "mariaDB_id":  "2dbc0609-e4a3-440c-a75a-4fd259a8a2b8",
+                                     "completed_at":  "2026-05-23T14:42:37.000Z",
+                                     "order_reference":  "SP202605232012147787D654"
+                                 },
+                                 {
+                                     "amount":  50,
+                                     "mariaDB_id":  "516487e5-3ba8-4f34-a85c-c6ebbc400130",
+                                     "completed_at":  "2026-05-23T14:43:04.000Z",
+                                     "order_reference":  "SP20260523201245438185F8"
+                                 },
+                                 {
+                                     "amount":  50,
+                                     "mariaDB_id":  "d5f25bb0-8b6a-4b6e-aa0e-517935617de1",
+                                     "completed_at":  "2026-05-23T14:44:08.000Z",
+                                     "order_reference":  "SP2026052320133697DB8B80"
+                                 },
+                                 {
+                                     "amount":  50,
+                                     "mariaDB_id":  "37cb74e3-a16d-4fc3-862f-e18e25169cd8",
+                                     "completed_at":  "2026-05-23T14:47:40.000Z",
+                                     "order_reference":  "SP2026052320172194AE4442"
+                                 },
+                                 {
+                                     "amount":  50,
+                                     "mariaDB_id":  "81776947-faf5-42d2-b925-81cdc219aca8",
+                                     "completed_at":  "2026-05-23T14:52:51.000Z",
+                                     "order_reference":  "SP20260523202235C0C4D5B5"
+                                 },
+                                 {
+                                     "amount":  50,
+                                     "mariaDB_id":  "d9ef1aa5-4f2b-4f7f-b9da-a3d465a6bc1c",
+                                     "completed_at":  "2026-05-23T14:55:15.000Z",
+                                     "order_reference":  "SP2026052320245871EB3A10"
+                                 },
+                                 {
+                                     "amount":  10,
+                                     "mariaDB_id":  "73ab184d-2db7-437e-be54-fe9ca1d50a21",
+                                     "completed_at":  "2026-05-23T15:28:06.000Z",
+                                     "order_reference":  "SP202605232056337EF2BB90"
+                                 },
+                                 {
+                                     "amount":  1,
+                                     "mariaDB_id":  "bce7dfae-fb97-4f22-b922-4858f5c28c9f",
+                                     "completed_at":  "2026-05-27T06:12:06.000Z",
+                                     "order_reference":  "ORDER-181921"
+                                 },
+                                 {
+                                     "amount":  1,
+                                     "mariaDB_id":  "64df2832-4642-400f-a0e9-9694c180f34e",
+                                     "completed_at":  "2026-06-03T06:03:57.000Z",
+                                     "order_reference":  "ORDER-1780466580328"
+                                 },
+                                 {
+                                     "amount":  125,
+                                     "mariaDB_id":  "bd326a8a-d39b-46c5-838d-618ed6a9f5dd",
+                                     "completed_at":  "2026-06-03T06:24:34.000Z",
+                                     "order_reference":  "SABBPE-A81E02-20260603115316-6117"
+                                 },
+                                 {
+                                     "amount":  1000,
+                                     "mariaDB_id":  "c092f4ed-33e5-4231-be0e-48d511142f31",
+                                     "completed_at":  "2026-06-03T06:26:53.000Z",
+                                     "order_reference":  "SABBPE-A81E02-20260603115537-9740"
+                                 },
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "3ff51c3c-1f23-4a1e-8040-7882cba3c26a",
+                                     "completed_at":  "2026-06-03T13:08:21.000Z",
+                                     "order_reference":  "SABBPE-3F2DE4-20260603183732"
+                                 },
+                                 {
+                                     "amount":  125,
+                                     "mariaDB_id":  "477927ce-55eb-4f76-9b19-116f35c2357e",
+                                     "completed_at":  "2026-06-04T08:50:29.000Z",
+                                     "order_reference":  "SABBPE-3F2DE4-20260604141947"
+                                 },
+                                 {
+                                     "amount":  125,
+                                     "mariaDB_id":  "e6f514d1-a379-4f24-9507-e8a0b6d03885",
+                                     "completed_at":  "2026-06-04T08:55:44.000Z",
+                                     "order_reference":  "SABBPE-3F2DE4-20260604142459"
+                                 },
+                                 {
+                                     "amount":  125,
+                                     "mariaDB_id":  "be417164-ddef-4c45-a4ca-d0aba3592fa4",
+                                     "completed_at":  "2026-06-04T12:06:51.000Z",
+                                     "order_reference":  "SABBPE-3F2DE4-20260604173617"
+                                 },
+                                 {
+                                     "amount":  1,
+                                     "mariaDB_id":  "71d081ea-8b12-4508-a582-9bf189d386c1",
+                                     "completed_at":  "2026-06-10T10:30:45.000Z",
+                                     "order_reference":  "ORDER-18192111212"
+                                 }
+                             ],
+        "status":  "processed",
+        "processed_at":  "2026-06-29T20:30:04.869+00:00",
+        "failure_reason":  null,
+        "created_at":  "2026-06-29T20:30:04.876867+00:00",
+        "updated_at":  "2026-06-29T20:30:04.876867+00:00"
+    },
+    {
+        "id":  "cec75f6b-ba37-4919-b75d-989281cb6b9d",
+        "merchant_id":  "4102d9ba-34c1-41c7-b08f-5e68c4295d2c",
+        "distributor_id":  "4ade24b2-a291-4c86-8378-cc3095ef186c",
+        "settlement_batch_ref":  "SETL-20260629-203005-INBH7E",
+        "settlement_date":  "2026-06-29",
+        "settlement_cycle_days":  1,
+        "gross_amount":  52229.03,
+        "mdr_deduction":  1305.73,
+        "rolling_reserve_held":  0.00,
+        "net_settlement_amount":  50923.30,
+        "transaction_count":  32,
+        "transaction_refs":  [
+                                 {
+                                     "amount":  1,
+                                     "mariaDB_id":  "d70d018e-3173-41cf-99e7-46e427918f7e",
+                                     "completed_at":  "2026-05-19T10:56:23.000Z",
+                                     "order_reference":  "DT-TEST-001"
+                                 },
+                                 {
+                                     "amount":  13.65,
+                                     "mariaDB_id":  "92ee6ac2-f67a-4b7f-b91e-645ecd93d768",
+                                     "completed_at":  "2026-05-19T12:31:54.000Z",
+                                     "order_reference":  "BUS-JWKCES5I-1779193854"
+                                 },
+                                 {
+                                     "amount":  13.22,
+                                     "mariaDB_id":  "cb87fb0e-c523-4b92-9f06-a319a7cbe3a7",
+                                     "completed_at":  "2026-05-22T10:15:37.000Z",
+                                     "order_reference":  "BUS-1T00N0CK-1779444905"
+                                 },
+                                 {
+                                     "amount":  14.32,
+                                     "mariaDB_id":  "8823baa8-5f8e-4c67-97e7-96738748d631",
+                                     "completed_at":  "2026-05-22T10:49:36.000Z",
+                                     "order_reference":  "BUS-T4WJNMPO-1779446948"
+                                 },
+                                 {
+                                     "amount":  14.32,
+                                     "mariaDB_id":  "e3689e7e-b449-4cc7-b010-6b5a9ff80973",
+                                     "completed_at":  "2026-05-22T10:56:20.000Z",
+                                     "order_reference":  "BUS-JEFFMPS2-1779447352"
+                                 },
+                                 {
+                                     "amount":  13.22,
+                                     "mariaDB_id":  "bbf18f56-85c8-404e-b7ce-18a336d2adb3",
+                                     "completed_at":  "2026-05-22T11:00:50.000Z",
+                                     "order_reference":  "BUS-QETN4QMO-1779447626"
+                                 },
+                                 {
+                                     "amount":  14.32,
+                                     "mariaDB_id":  "5b6492d4-4f47-4f90-8bc0-e3b0716fccbd",
+                                     "completed_at":  "2026-05-25T09:58:44.000Z",
+                                     "order_reference":  "BUS-MY4UW2CO-1779703082"
+                                 },
+                                 {
+                                     "amount":  132.17,
+                                     "mariaDB_id":  "d6ea29fd-dfe7-4838-aa48-acacbe4c5a77",
+                                     "completed_at":  "2026-05-25T10:04:16.000Z",
+                                     "order_reference":  "BUS-MHTXYVKY-1779703411"
+                                 },
+                                 {
+                                     "amount":  13352.5,
+                                     "mariaDB_id":  "400a9a94-768e-4384-9f6e-f1a7c8b40cfe",
+                                     "completed_at":  "2026-05-25T10:09:42.000Z",
+                                     "order_reference":  "FLT-GHF3LJYD-1779185445"
+                                 },
+                                 {
+                                     "amount":  132.17,
+                                     "mariaDB_id":  "b4a83e00-0c98-4e7a-b98b-773ccf92784b",
+                                     "completed_at":  "2026-05-25T11:03:46.000Z",
+                                     "order_reference":  "BUS-C6SSL2KP-1779707000"
+                                 },
+                                 {
+                                     "amount":  13.22,
+                                     "mariaDB_id":  "15325ef0-da24-4dbf-85fe-66d717b6599b",
+                                     "completed_at":  "2026-05-25T13:07:36.000Z",
+                                     "order_reference":  "BUS-8S3Q4AIS-1779714422"
+                                 },
+                                 {
+                                     "amount":  13.22,
+                                     "mariaDB_id":  "f29651df-7b04-4c8c-8330-af16b2e957b4",
+                                     "completed_at":  "2026-05-26T07:17:59.000Z",
+                                     "order_reference":  "BUS-HKYJQ2UG-1779779853"
+                                 },
+                                 {
+                                     "amount":  33.22,
+                                     "mariaDB_id":  "97088583-169a-4b32-92df-5a857b76c150",
+                                     "completed_at":  "2026-05-26T10:55:50.000Z",
+                                     "order_reference":  "BUS-RG4L1CFM-1779792936"
+                                 },
+                                 {
+                                     "amount":  33.22,
+                                     "mariaDB_id":  "07c4f440-0230-406e-a9c5-b4047f847f7c",
+                                     "completed_at":  "2026-05-26T11:02:21.000Z",
+                                     "order_reference":  "BUS-DNKWYNRQ-1779793328"
+                                 },
+                                 {
+                                     "amount":  34.32,
+                                     "mariaDB_id":  "2806616a-c789-4306-b10c-3deb0440f9ac",
+                                     "completed_at":  "2026-05-26T11:17:08.000Z",
+                                     "order_reference":  "BUS-O0LG7AEJ-1779794213"
+                                 },
+                                 {
+                                     "amount":  34.32,
+                                     "mariaDB_id":  "55b68bb3-0080-489d-90e8-8ae272025e9f",
+                                     "completed_at":  "2026-05-26T11:40:47.000Z",
+                                     "order_reference":  "BUS-DAAQHKZ6-1779795635"
+                                 },
+                                 {
+                                     "amount":  100.5,
+                                     "mariaDB_id":  "3c9da480-d0c6-4db9-8115-a226dec4c084",
+                                     "completed_at":  "2026-05-27T05:42:54.000Z",
+                                     "order_reference":  "ORDER-181912"
+                                 },
+                                 {
+                                     "amount":  1,
+                                     "mariaDB_id":  "feef7cb5-b7f0-4432-bac3-6beda59eaf46",
+                                     "completed_at":  "2026-05-27T06:14:09.000Z",
+                                     "order_reference":  "ORDER-14733"
+                                 },
+                                 {
+                                     "amount":  1,
+                                     "mariaDB_id":  "9db0fa1a-bcf7-4138-b94e-2689e8f65df3",
+                                     "completed_at":  "2026-05-27T06:16:46.000Z",
+                                     "order_reference":  "ORDER-14734"
+                                 },
+                                 {
+                                     "amount":  1,
+                                     "mariaDB_id":  "ec01b7be-a5db-48bd-8090-3f2495929bdf",
+                                     "completed_at":  "2026-05-27T06:18:35.000Z",
+                                     "order_reference":  "ORDER-14735"
+                                 },
+                                 {
+                                     "amount":  1,
+                                     "mariaDB_id":  "f9455777-c2b2-495a-a218-5bf862c6e533",
+                                     "completed_at":  "2026-05-27T06:23:19.000Z",
+                                     "order_reference":  "ORDER-14736"
+                                 },
+                                 {
+                                     "amount":  1,
+                                     "mariaDB_id":  "846271ae-5a56-4121-89a5-1f1e736a3b9b",
+                                     "completed_at":  "2026-05-27T06:36:40.000Z",
+                                     "order_reference":  "ORDER-14737"
+                                 },
+                                 {
+                                     "amount":  18.48,
+                                     "mariaDB_id":  "56637a95-0e89-4dcf-9d71-edb28d0b7131",
+                                     "completed_at":  "2026-05-28T10:13:43.000Z",
+                                     "order_reference":  "BUS-SJHVMNHP-1779963172"
+                                 },
+                                 {
+                                     "amount":  26.88,
+                                     "mariaDB_id":  "76d4c6a4-71af-46fc-b361-639327fc5f7d",
+                                     "completed_at":  "2026-05-28T10:23:16.000Z",
+                                     "order_reference":  "BUS-WTUUL0O5-1779963744"
+                                 },
+                                 {
+                                     "amount":  331.26,
+                                     "mariaDB_id":  "bd9b07c6-e6b8-4847-b0c7-a702ee1ec991",
+                                     "completed_at":  "2026-05-28T13:08:02.000Z",
+                                     "order_reference":  "HTL-NMYHWZJO-1779973641"
+                                 },
+                                 {
+                                     "amount":  7576.5,
+                                     "mariaDB_id":  "cd755cee-79e7-47b3-8933-79f16cf243ef",
+                                     "completed_at":  "2026-05-28T13:12:47.000Z",
+                                     "order_reference":  "FLT-461QXFQN-1779973943"
+                                 },
+                                 {
+                                     "amount":  7576.5,
+                                     "mariaDB_id":  "2682731d-3f19-4583-b3a5-792b1c03dc72",
+                                     "completed_at":  "2026-05-29T06:16:32.000Z",
+                                     "order_reference":  "FLT-LBQO8TBI-1780035363"
+                                 },
+                                 {
+                                     "amount":  7576.5,
+                                     "mariaDB_id":  "d41fb2c3-7ad3-46e4-9cde-599c91b13b7e",
+                                     "completed_at":  "2026-05-29T06:24:36.000Z",
+                                     "order_reference":  "FLT-TCWA5LRM-1780035848"
+                                 },
+                                 {
+                                     "amount":  7576.5,
+                                     "mariaDB_id":  "0a5b2ce8-4d61-4f3b-9482-c82e5d415e07",
+                                     "completed_at":  "2026-05-29T06:45:20.000Z",
+                                     "order_reference":  "FLT-XZCHQLJR-1780037094"
+                                 },
+                                 {
+                                     "amount":  7576.5,
+                                     "mariaDB_id":  "0cadbc20-0fcc-4f3c-a051-f429e17d1a3b",
+                                     "completed_at":  "2026-05-29T07:00:17.000Z",
+                                     "order_reference":  "FLT-WUJFMORE-1780037979"
+                                 },
+                                 {
+                                     "amount":  1,
+                                     "mariaDB_id":  "dc7b8566-3cd5-48c3-acf2-27529ec19588",
+                                     "completed_at":  "2026-05-29T08:13:55.000Z",
+                                     "order_reference":  "ORDER-147399"
+                                 },
+                                 {
+                                     "amount":  1,
+                                     "mariaDB_id":  "f0c5983f-c33c-4c9c-88ed-09cfc2f5928b",
+                                     "completed_at":  "2026-06-03T12:45:46.000Z",
+                                     "order_reference":  "ORDER-147555"
+                                 }
+                             ],
+        "status":  "processed",
+        "processed_at":  "2026-06-29T20:30:05.593+00:00",
+        "failure_reason":  null,
+        "created_at":  "2026-06-29T20:30:05.59924+00:00",
+        "updated_at":  "2026-06-29T20:30:05.59924+00:00"
+    },
+    {
+        "id":  "1ece8f1d-3522-4683-86b6-624288b83576",
+        "merchant_id":  "26c9edc3-af75-4e2d-ab64-692aa3477f10",
+        "distributor_id":  "4ade24b2-a291-4c86-8378-cc3095ef186c",
+        "settlement_batch_ref":  "SETL-20260629-203005-157VE2",
+        "settlement_date":  "2026-06-29",
+        "settlement_cycle_days":  1,
+        "gross_amount":  13.00,
+        "mdr_deduction":  0.33,
+        "rolling_reserve_held":  0.00,
+        "net_settlement_amount":  12.67,
+        "transaction_count":  13,
+        "transaction_refs":  [
+                                 {
+                                     "amount":  1,
+                                     "mariaDB_id":  "2858f68a-c522-48e0-949f-5a6aaa9116ac",
+                                     "completed_at":  "2026-04-13T13:43:46.000Z",
+                                     "order_reference":  "ORDER-1721-1776087794"
+                                 },
+                                 {
+                                     "amount":  1,
+                                     "mariaDB_id":  "cc6a4f09-41d7-456b-a974-0846bdac67ed",
+                                     "completed_at":  "2026-04-13T13:58:21.000Z",
+                                     "order_reference":  "ORDER-1721-1776088015"
+                                 },
+                                 {
+                                     "amount":  1,
+                                     "mariaDB_id":  "15905f2f-615a-436b-8505-e5a381322f82",
+                                     "completed_at":  "2026-04-13T14:02:33.000Z",
+                                     "order_reference":  "ORDER-1721-1776088937"
+                                 },
+                                 {
+                                     "amount":  1,
+                                     "mariaDB_id":  "f4232c7e-97aa-41e2-acc9-bfeab3ccdc95",
+                                     "completed_at":  "2026-04-14T03:33:57.000Z",
+                                     "order_reference":  "ORDER-1726-1776137597"
+                                 },
+                                 {
+                                     "amount":  1,
+                                     "mariaDB_id":  "7b44885c-a7d6-4e4a-80a6-b87af213aab9",
+                                     "completed_at":  "2026-04-14T03:45:55.000Z",
+                                     "order_reference":  "ORDER-1726-1776138339"
+                                 },
+                                 {
+                                     "amount":  1,
+                                     "mariaDB_id":  "fd90f66e-d672-4daf-ad7c-a1938761a6ad",
+                                     "completed_at":  "2026-04-14T03:53:22.000Z",
+                                     "order_reference":  "ORDER-1726-1776138786"
+                                 },
+                                 {
+                                     "amount":  1,
+                                     "mariaDB_id":  "6cb15069-4b82-4c65-a358-b6f1fb35898c",
+                                     "completed_at":  "2026-04-14T12:42:44.000Z",
+                                     "order_reference":  "ORDER-1727-1776170536"
+                                 },
+                                 {
+                                     "amount":  1,
+                                     "mariaDB_id":  "da56d5c1-0d2c-4587-ae29-eea70bb28263",
+                                     "completed_at":  "2026-04-14T14:49:18.000Z",
+                                     "order_reference":  "ORDER-1728-1776178140"
+                                 },
+                                 {
+                                     "amount":  1,
+                                     "mariaDB_id":  "f9694bc9-d7e0-4969-b594-ccc2c0405de6",
+                                     "completed_at":  "2026-04-14T14:52:26.000Z",
+                                     "order_reference":  "ORDER-1729-1776178331"
+                                 },
+                                 {
+                                     "amount":  1,
+                                     "mariaDB_id":  "45e461c2-443c-47bf-bed6-b34f076c8d00",
+                                     "completed_at":  "2026-04-14T15:43:13.000Z",
+                                     "order_reference":  "ORDER-1731-1776181369"
+                                 },
+                                 {
+                                     "amount":  1,
+                                     "mariaDB_id":  "74bbe376-39e1-45b3-ad99-b4a207aae151",
+                                     "completed_at":  "2026-04-28T04:23:20.000Z",
+                                     "order_reference":  "ORDER-1732-1777350149"
+                                 },
+                                 {
+                                     "amount":  1,
+                                     "mariaDB_id":  "f168ce2f-ca5a-4fef-afc1-1902399db47d",
+                                     "completed_at":  "2026-05-20T09:42:58.000Z",
+                                     "order_reference":  "ORDER-1733-1779270161"
+                                 },
+                                 {
+                                     "amount":  1,
+                                     "mariaDB_id":  "02ab95a6-2ca9-41d1-b62f-f7c1483f6f0c",
+                                     "completed_at":  "2026-05-20T09:46:39.000Z",
+                                     "order_reference":  "ORDER-1734-1779270384"
+                                 }
+                             ],
+        "status":  "processed",
+        "processed_at":  "2026-06-29T20:30:05.813+00:00",
+        "failure_reason":  null,
+        "created_at":  "2026-06-29T20:30:05.823668+00:00",
+        "updated_at":  "2026-06-29T20:30:05.823668+00:00"
+    },
+    {
+        "id":  "36f392bd-602a-45cc-85f7-78c61a08d48a",
+        "merchant_id":  "8a9ed845-2347-4f25-bd50-1ce5430e522a",
+        "distributor_id":  "4ade24b2-a291-4c86-8378-cc3095ef186c",
+        "settlement_batch_ref":  "SETL-20260629-203006-8H1XN6",
+        "settlement_date":  "2026-06-29",
+        "settlement_cycle_days":  1,
+        "gross_amount":  9106.99,
+        "mdr_deduction":  227.67,
+        "rolling_reserve_held":  0.00,
+        "net_settlement_amount":  8879.32,
+        "transaction_count":  8,
+        "transaction_refs":  [
+                                 {
+                                     "amount":  1540.24,
+                                     "mariaDB_id":  "94f53e2d-c848-4407-88f2-367667fc1162",
+                                     "completed_at":  "2026-04-29T08:31:35.000Z",
+                                     "order_reference":  "SABBPE-1777451295461-SAD7B8"
+                                 },
+                                 {
+                                     "amount":  1540.02,
+                                     "mariaDB_id":  "137c2945-94b9-4215-a71c-b5abe73f42fe",
+                                     "completed_at":  "2026-04-29T08:33:43.000Z",
+                                     "order_reference":  "SABBPE-1777451609959-VQOHJK"
+                                 },
+                                 {
+                                     "amount":  1539.58,
+                                     "mariaDB_id":  "30083372-2ccf-4a41-b544-ec422d48543d",
+                                     "completed_at":  "2026-04-29T08:35:49.000Z",
+                                     "order_reference":  "SABBPE-1777451722334-J6ZYBJ"
+                                 },
+                                 {
+                                     "amount":  1539.05,
+                                     "mariaDB_id":  "94a31494-5277-45fa-bac5-d2131fc0c52e",
+                                     "completed_at":  "2026-04-29T08:39:44.000Z",
+                                     "order_reference":  "SABBPE-1777451968260-5WYP0B"
+                                 },
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "736be61e-2f5a-4727-b02c-98aae7fbc8e6",
+                                     "completed_at":  "2026-04-30T05:37:09.000Z",
+                                     "order_reference":  "KTL-BUY-1777527380374"
+                                 },
+                                 {
+                                     "amount":  1548.1,
+                                     "mariaDB_id":  "dd3eadae-d39e-4a2e-bfa3-bf97611e27a9",
+                                     "completed_at":  "2026-04-30T05:50:58.000Z",
+                                     "order_reference":  "SABBPE-1777528231337-QYVTYC"
+                                 },
+                                 {
+                                     "amount":  300,
+                                     "mariaDB_id":  "441fdf21-4c4a-48ab-adca-7fa9a189e3d0",
+                                     "completed_at":  "2026-04-30T06:10:38.000Z",
+                                     "order_reference":  "BUY-AUGMONT-1777529421909"
+                                 },
+                                 {
+                                     "amount":  1000,
+                                     "mariaDB_id":  "71bc4c84-a1fe-45e6-b0d4-abeb844390b5",
+                                     "completed_at":  "2026-04-30T08:05:59.000Z",
+                                     "order_reference":  "KTL-BUY-1777536323272"
+                                 }
+                             ],
+        "status":  "processed",
+        "processed_at":  "2026-06-29T20:30:06.002+00:00",
+        "failure_reason":  null,
+        "created_at":  "2026-06-29T20:30:06.006791+00:00",
+        "updated_at":  "2026-06-29T20:30:06.006791+00:00"
+    },
+    {
+        "id":  "bd6c5626-573e-4bb3-a426-5faedcd77d1e",
+        "merchant_id":  "0a4ccea2-9b94-4607-a8fd-35f286848888",
+        "distributor_id":  "4ade24b2-a291-4c86-8378-cc3095ef186c",
+        "settlement_batch_ref":  "SETL-20260629-203006-KZL56T",
+        "settlement_date":  "2026-06-29",
+        "settlement_cycle_days":  1,
+        "gross_amount":  4652.00,
+        "mdr_deduction":  116.30,
+        "rolling_reserve_held":  0.00,
+        "net_settlement_amount":  4535.70,
+        "transaction_count":  35,
+        "transaction_refs":  [
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "6d2bf377-7103-4df9-b4fd-5b3c1f4339fb",
+                                     "completed_at":  "2026-04-13T14:21:14.000Z",
+                                     "order_reference":  "PH20260413195055Z3B5AF"
+                                 },
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "0ab7c137-eb79-43d0-81d5-6ce30844ad77",
+                                     "completed_at":  "2026-04-15T06:54:31.000Z",
+                                     "order_reference":  "PH202604151214478EVU2W"
+                                 },
+                                 {
+                                     "amount":  10,
+                                     "mariaDB_id":  "aaeacf7c-ca02-443f-a7c1-706a3823c6b0",
+                                     "completed_at":  "2026-04-15T13:53:04.000Z",
+                                     "order_reference":  "PH202604151913309RRG8D"
+                                 },
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "fd2ee061-6c6d-4f0f-9153-ac6fd6101722",
+                                     "completed_at":  "2026-04-15T13:59:20.000Z",
+                                     "order_reference":  "PH20260415192700HD7RS2"
+                                 },
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "0d06fc2f-241a-4558-b6fd-f17f7200c2dc",
+                                     "completed_at":  "2026-04-15T14:02:17.000Z",
+                                     "order_reference":  "PH20260415193047LM7H0L"
+                                 },
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "c81a0d22-9be1-4625-9888-1da106075e60",
+                                     "completed_at":  "2026-04-15T14:13:33.000Z",
+                                     "order_reference":  "PH202604151943055NX5YC"
+                                 },
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "d85d778b-b507-4306-93bc-53a90fcdba0a",
+                                     "completed_at":  "2026-04-16T03:49:32.000Z",
+                                     "order_reference":  "PH20260416091826D8KIA3"
+                                 },
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "2e37115d-3ec9-48ee-a80f-f1d24ee431aa",
+                                     "completed_at":  "2026-04-16T03:54:28.000Z",
+                                     "order_reference":  "PH20260416092257C1VOBA"
+                                 },
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "0802df02-6af1-4e12-9d08-35e1cbe8e7e9",
+                                     "completed_at":  "2026-04-16T04:16:51.000Z",
+                                     "order_reference":  "PH20260416094328C28BXX"
+                                 },
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "95f22237-78b3-4afc-ac70-d449f5d072db",
+                                     "completed_at":  "2026-04-16T04:31:14.000Z",
+                                     "order_reference":  "PH20260416095902WOE63D"
+                                 },
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "8b4ad609-5c4d-45ec-91f5-de8e79c8ca6e",
+                                     "completed_at":  "2026-04-16T05:58:23.000Z",
+                                     "order_reference":  "PH202604161128044XIII3"
+                                 },
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "4b645502-537b-4808-b7a3-c69c6a2eb7cf",
+                                     "completed_at":  "2026-04-16T06:07:12.000Z",
+                                     "order_reference":  "PH20260416113658F4X590"
+                                 },
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "1c93ff4a-ea98-4b46-af04-ba8e6e11822b",
+                                     "completed_at":  "2026-04-16T06:14:52.000Z",
+                                     "order_reference":  "PH202604161144357F4CUQ"
+                                 },
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "2a088671-1302-4da1-8b2b-24ea5ff76b99",
+                                     "completed_at":  "2026-04-16T06:17:17.000Z",
+                                     "order_reference":  "PH202604161146590AH1E8"
+                                 },
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "9ca51b34-8dc0-485b-990d-7d2d07b14ef1",
+                                     "completed_at":  "2026-04-16T06:25:02.000Z",
+                                     "order_reference":  "PH202604161150446NC92F"
+                                 },
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "fd17bace-3225-4a3a-b1a9-9ae31c752706",
+                                     "completed_at":  "2026-04-16T06:26:24.000Z",
+                                     "order_reference":  "PH20260416115527XXTGCK"
+                                 },
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "f3402986-727a-42aa-ad4b-8610fdf99389",
+                                     "completed_at":  "2026-04-16T06:28:25.000Z",
+                                     "order_reference":  "PH20260416115638F5IAWD"
+                                 },
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "d20170ef-6b77-4ba3-afb1-95d1685fe2ba",
+                                     "completed_at":  "2026-04-16T07:18:12.000Z",
+                                     "order_reference":  "PH20260416124655V6C77Y"
+                                 },
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "1ab9314b-945f-4b20-bd38-6de2d6e06e42",
+                                     "completed_at":  "2026-04-16T07:27:07.000Z",
+                                     "order_reference":  "PH202604161256489VHWIN"
+                                 },
+                                 {
+                                     "amount":  10,
+                                     "mariaDB_id":  "8e3918cc-1df5-4d75-87a3-fd922472b159",
+                                     "completed_at":  "2026-04-16T07:46:23.000Z",
+                                     "order_reference":  "PH2026041613131265VFYF"
+                                 },
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "2af786cc-40d2-43b5-bc77-c8f424364e2b",
+                                     "completed_at":  "2026-04-16T07:48:05.000Z",
+                                     "order_reference":  "PH202604161316459NIZEH"
+                                 },
+                                 {
+                                     "amount":  1,
+                                     "mariaDB_id":  "852e8cfc-f77b-4d2e-abdc-d8601e882afc",
+                                     "completed_at":  "2026-04-16T10:24:01.000Z",
+                                     "order_reference":  "PH20260416153138MLYN73"
+                                 },
+                                 {
+                                     "amount":  1,
+                                     "mariaDB_id":  "6c181cff-27ed-4693-8295-5218f773a3ad",
+                                     "completed_at":  "2026-04-16T11:22:17.000Z",
+                                     "order_reference":  "PH20260416163944EZTI3M"
+                                 },
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "a520a4e7-fd2a-4cd9-b383-46e8cea047ed",
+                                     "completed_at":  "2026-04-16T11:24:40.000Z",
+                                     "order_reference":  "PH20260416164853LH0WQV"
+                                 },
+                                 {
+                                     "amount":  1000,
+                                     "mariaDB_id":  "b19a7cb7-f98d-4835-8618-af4dde1119a2",
+                                     "completed_at":  "2026-04-17T10:01:02.000Z",
+                                     "order_reference":  "PH20260417151742B394OB"
+                                 },
+                                 {
+                                     "amount":  1000,
+                                     "mariaDB_id":  "f850464c-7a29-4eb8-92d4-9d434d5bc09f",
+                                     "completed_at":  "2026-04-17T10:05:58.000Z",
+                                     "order_reference":  "PH20260417153307GT6UDH"
+                                 },
+                                 {
+                                     "amount":  10,
+                                     "mariaDB_id":  "56a23280-ac3c-4b2f-8247-77a2f88a1429",
+                                     "completed_at":  "2026-04-17T10:18:19.000Z",
+                                     "order_reference":  "PH20260417154344RJ49FQ"
+                                 },
+                                 {
+                                     "amount":  10,
+                                     "mariaDB_id":  "e9816840-a57c-4c39-89f0-e4d5cc0db119",
+                                     "completed_at":  "2026-04-17T10:44:12.000Z",
+                                     "order_reference":  "PH202604171612429AA0CA"
+                                 },
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "49c795d9-68a6-4377-9112-b8dcbe9ca8fe",
+                                     "completed_at":  "2026-04-17T12:25:28.000Z",
+                                     "order_reference":  "PH20260417175331HTK4NE"
+                                 },
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "bf326296-cc9a-44ef-8eca-ebc884ce9e00",
+                                     "completed_at":  "2026-04-17T12:27:48.000Z",
+                                     "order_reference":  "PH20260417175558LALDN3"
+                                 },
+                                 {
+                                     "amount":  10,
+                                     "mariaDB_id":  "35602bf1-4d9d-4abb-97f0-972c7423c4d6",
+                                     "completed_at":  "2026-04-18T04:57:45.000Z",
+                                     "order_reference":  "PH202604181026126WO6PZ"
+                                 },
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "4622421e-0f1e-442d-9dda-892ffb5ec50c",
+                                     "completed_at":  "2026-04-18T05:01:05.000Z",
+                                     "order_reference":  "PH20260418102921Z5M1UU"
+                                 },
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "6d5a31b8-a15d-48e9-9e4b-4d65e7931f3e",
+                                     "completed_at":  "2026-04-18T05:10:53.000Z",
+                                     "order_reference":  "PH202604181039172MELX2"
+                                 },
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "89185696-3222-4425-bf65-7067e383a8a8",
+                                     "completed_at":  "2026-04-18T05:18:41.000Z",
+                                     "order_reference":  "PH20260418104658X0Y62Q"
+                                 },
+                                 {
+                                     "amount":  100,
+                                     "mariaDB_id":  "dda3c5d1-fcff-4f0f-9585-48f59892d668",
+                                     "completed_at":  "2026-04-18T05:22:37.000Z",
+                                     "order_reference":  "PH20260418105033WXV1DV"
+                                 }
+                             ],
+        "status":  "processed",
+        "processed_at":  "2026-06-29T20:30:06.234+00:00",
+        "failure_reason":  null,
+        "created_at":  "2026-06-29T20:30:06.243513+00:00",
+        "updated_at":  "2026-06-29T20:30:06.243513+00:00"
+    },
+    {
+        "id":  "72c00074-a7f1-4d0b-8fb4-4209d19b19dd",
+        "merchant_id":  "0acd7380-d7dc-49f7-a6fa-ffd6d96f4db6",
+        "distributor_id":  "4ade24b2-a291-4c86-8378-cc3095ef186c",
+        "settlement_batch_ref":  "SETL-20260629-203006-C3WNDK",
+        "settlement_date":  "2026-06-29",
+        "settlement_cycle_days":  1,
+        "gross_amount":  70500.00,
+        "mdr_deduction":  1762.50,
+        "rolling_reserve_held":  0.00,
+        "net_settlement_amount":  68737.50,
+        "transaction_count":  41,
+        "transaction_refs":  [
+                                 {
+                                     "amount":  1500,
+                                     "mariaDB_id":  "6732e96b-7a1a-4588-a2bd-73ae5229376a",
+                                     "completed_at":  "2026-02-20T06:46:00.000Z",
+                                     "order_reference":  "TXN20260220CB3E8007"
+                                 },
+                                 {
+                                     "amount":  1500,
+                                     "mariaDB_id":  "38444258-a8a4-4e60-b59e-2d5c60bd658e",
+                                     "completed_at":  "2026-02-20T06:49:58.000Z",
+                                     "order_reference":  "TXN20260220CE384E00"
+                                 },
+                                 {
+                                     "amount":  1500,
+                                     "mariaDB_id":  "d540f153-92ba-4b03-9b95-f97dc463785e",
+                                     "completed_at":  "2026-02-20T06:59:19.000Z",
+                                     "order_reference":  "TXN20260220110D5FEA"
+                                 },
+                                 {
+                                     "amount":  1500,
+                                     "mariaDB_id":  "43f799b4-8938-403a-9235-ca75a8ce7813",
+                                     "completed_at":  "2026-02-20T07:08:20.000Z",
+                                     "order_reference":  "TXN202602200FC067AA"
+                                 },
+                                 {
+                                     "amount":  1500,
+                                     "mariaDB_id":  "17c3486a-7896-47d2-8149-e7ed79207f19",
+                                     "completed_at":  "2026-02-20T07:26:44.000Z",
+                                     "order_reference":  "TXN20260220C6C16C30"
+                                 },
+                                 {
+                                     "amount":  1500,
+                                     "mariaDB_id":  "6d20d6c8-ac65-4150-9cc3-af712200faca",
+                                     "completed_at":  "2026-02-20T07:31:32.000Z",
+                                     "order_reference":  "TXN20260220C20D428A"
+                                 },
+                                 {
+                                     "amount":  1500,
+                                     "mariaDB_id":  "7157e244-a7f2-49f7-9891-27ebf210c35b",
+                                     "completed_at":  "2026-02-20T07:57:45.000Z",
+                                     "order_reference":  "TXN202602205B6494DF"
+                                 },
+                                 {
+                                     "amount":  1500,
+                                     "mariaDB_id":  "e5b6e609-0667-41d4-9d15-235fc908bd78",
+                                     "completed_at":  "2026-02-20T08:11:16.000Z",
+                                     "order_reference":  "TXN20260220A3ED9CDE"
+                                 },
+                                 {
+                                     "amount":  2000,
+                                     "mariaDB_id":  "7cd8f634-7bcd-4fa4-bf32-7cf1039b48fa",
+                                     "completed_at":  "2026-02-20T08:19:49.000Z",
+                                     "order_reference":  "TXN2026022071726945"
+                                 },
+                                 {
+                                     "amount":  2000,
+                                     "mariaDB_id":  "d63012ad-990d-4f5d-8447-a0b4c8a5afd0",
+                                     "completed_at":  "2026-02-20T08:25:32.000Z",
+                                     "order_reference":  "TXN20260220269E8749"
+                                 },
+                                 {
+                                     "amount":  1500,
+                                     "mariaDB_id":  "c552c889-8e59-4c6c-a5c7-1f5d45faeb02",
+                                     "completed_at":  "2026-02-21T10:10:00.000Z",
+                                     "order_reference":  "TXN202602211DA50425"
+                                 },
+                                 {
+                                     "amount":  1500,
+                                     "mariaDB_id":  "7d724c7e-26ab-4c37-afa4-40dec0613164",
+                                     "completed_at":  "2026-02-21T10:14:50.000Z",
+                                     "order_reference":  "TXN20260221DA61EFBF"
+                                 },
+                                 {
+                                     "amount":  1500,
+                                     "mariaDB_id":  "c07127ef-3978-4ea6-97c5-518024dfcb10",
+                                     "completed_at":  "2026-02-23T06:49:03.000Z",
+                                     "order_reference":  "TXN2026022328B6F6D3"
+                                 },
+                                 {
+                                     "amount":  2000,
+                                     "mariaDB_id":  "91503ed2-c1e9-431d-ad78-a4868291b202",
+                                     "completed_at":  "2026-02-23T06:55:37.000Z",
+                                     "order_reference":  "TXN20260223DD16D8A5"
+                                 },
+                                 {
+                                     "amount":  2000,
+                                     "mariaDB_id":  "e26ed838-023c-4f45-aa01-9b83645f8df7",
+                                     "completed_at":  "2026-02-23T07:03:04.000Z",
+                                     "order_reference":  "TXN202602235B9D3674"
+                                 },
+                                 {
+                                     "amount":  2000,
+                                     "mariaDB_id":  "09fcc0d0-01a7-4901-ae1f-11ec1f04ef0a",
+                                     "completed_at":  "2026-02-23T07:06:36.000Z",
+                                     "order_reference":  "TXN202602230C8B8BF2"
+                                 },
+                                 {
+                                     "amount":  2000,
+                                     "mariaDB_id":  "826a573f-efbe-4685-9df7-ec599a70b590",
+                                     "completed_at":  "2026-02-23T07:11:09.000Z",
+                                     "order_reference":  "TXN2026022320161918"
+                                 },
+                                 {
+                                     "amount":  2000,
+                                     "mariaDB_id":  "967c7297-f7ce-4d44-a557-acc5c19b2ad9",
+                                     "completed_at":  "2026-02-23T07:31:40.000Z",
+                                     "order_reference":  "TXN2026022350E7056F"
+                                 },
+                                 {
+                                     "amount":  2000,
+                                     "mariaDB_id":  "5529bf47-8835-48ab-a9de-ca16e3dd2f0e",
+                                     "completed_at":  "2026-02-23T07:35:45.000Z",
+                                     "order_reference":  "TXN20260223A440D550"
+                                 },
+                                 {
+                                     "amount":  2000,
+                                     "mariaDB_id":  "c2408732-0369-4881-8ba8-5d5bbf4283da",
+                                     "completed_at":  "2026-02-23T07:41:45.000Z",
+                                     "order_reference":  "TXN20260223CAD2F00E"
+                                 },
+                                 {
+                                     "amount":  2000,
+                                     "mariaDB_id":  "fc4354a0-6bd8-4fa2-b6bd-fd768eb6409f",
+                                     "completed_at":  "2026-02-23T07:49:05.000Z",
+                                     "order_reference":  "TXN20260223F54C5D3A"
+                                 },
+                                 {
+                                     "amount":  2000,
+                                     "mariaDB_id":  "f8b3e8d8-d0c5-4121-9e7a-4aa3056fc34e",
+                                     "completed_at":  "2026-02-23T07:52:51.000Z",
+                                     "order_reference":  "TXN20260223087B6FE0"
+                                 },
+                                 {
+                                     "amount":  2000,
+                                     "mariaDB_id":  "dac67d15-c7e5-4723-8a32-2d08ba4c7379",
+                                     "completed_at":  "2026-02-23T08:15:55.000Z",
+                                     "order_reference":  "TXN202602237921AFAA"
+                                 },
+                                 {
+                                     "amount":  2000,
+                                     "mariaDB_id":  "33e3acc2-0789-4302-87de-72d5b62a80be",
+                                     "completed_at":  "2026-02-23T08:17:43.000Z",
+                                     "order_reference":  "TXN2026022379AE2F05"
+                                 },
+                                 {
+                                     "amount":  2000,
+                                     "mariaDB_id":  "cab698b4-2540-4e09-8d85-b0063325eebe",
+                                     "completed_at":  "2026-02-23T08:37:18.000Z",
+                                     "order_reference":  "TXN202602230386CC8A"
+                                 },
+                                 {
+                                     "amount":  2000,
+                                     "mariaDB_id":  "dc22c299-85f4-4645-8275-1a866d9e1976",
+                                     "completed_at":  "2026-02-23T08:38:51.000Z",
+                                     "order_reference":  "TXN20260223CDC40C4C"
+                                 },
+                                 {
+                                     "amount":  2000,
+                                     "mariaDB_id":  "7b393e07-4086-4ad1-aad0-8ceb3f890819",
+                                     "completed_at":  "2026-02-23T09:49:51.000Z",
+                                     "order_reference":  "TXN2026022348DF1DDF"
+                                 },
+                                 {
+                                     "amount":  1500,
+                                     "mariaDB_id":  "8e04200e-7567-4fc4-976d-6c13da7d563f",
+                                     "completed_at":  "2026-02-23T11:36:54.000Z",
+                                     "order_reference":  "TXN20260223CFD657DD"
+                                 },
+                                 {
+                                     "amount":  1500,
+                                     "mariaDB_id":  "7021c4f6-8f60-4b77-b59c-f1bc7291b2be",
+                                     "completed_at":  "2026-02-23T12:04:03.000Z",
+                                     "order_reference":  "TXN20260223F64765AB"
+                                 },
+                                 {
+                                     "amount":  1500,
+                                     "mariaDB_id":  "e50eda06-f145-41ba-a6c8-56b0d92f0053",
+                                     "completed_at":  "2026-02-23T12:12:55.000Z",
+                                     "order_reference":  "TXN2026022350FA0261"
+                                 },
+                                 {
+                                     "amount":  2000,
+                                     "mariaDB_id":  "53deb225-9b11-4662-8e35-feeede80cd7f",
+                                     "completed_at":  "2026-02-23T12:25:27.000Z",
+                                     "order_reference":  "TXN202602232BC3867A"
+                                 },
+                                 {
+                                     "amount":  1500,
+                                     "mariaDB_id":  "9bb308e4-8cf7-4266-b6f9-c14513d800bd",
+                                     "completed_at":  "2026-02-23T12:35:47.000Z",
+                                     "order_reference":  "TXN202602236C8C2089"
+                                 },
+                                 {
+                                     "amount":  1500,
+                                     "mariaDB_id":  "38d154da-5247-44f5-b9eb-1bdbf00fcf6a",
+                                     "completed_at":  "2026-02-23T12:52:21.000Z",
+                                     "order_reference":  "TXN20260223076AC84F"
+                                 },
+                                 {
+                                     "amount":  2000,
+                                     "mariaDB_id":  "df3d0b0f-1a93-4291-a09e-c19eccc9ac92",
+                                     "completed_at":  "2026-02-24T04:57:14.000Z",
+                                     "order_reference":  "TXN2026022498838B0D"
+                                 },
+                                 {
+                                     "amount":  1500,
+                                     "mariaDB_id":  "2120f47c-40bf-477c-999c-25fdb69a9ebd",
+                                     "completed_at":  "2026-02-24T07:17:48.000Z",
+                                     "order_reference":  "TXN2026022400F956A0"
+                                 },
+                                 {
+                                     "amount":  1500,
+                                     "mariaDB_id":  "9b7c4445-11d1-4d98-8fdb-135910196f60",
+                                     "completed_at":  "2026-02-24T07:39:04.000Z",
+                                     "order_reference":  "TXN20260224FF4BABBB"
+                                 },
+                                 {
+                                     "amount":  1500,
+                                     "mariaDB_id":  "da0386fe-7252-4606-8ecc-0be4f36fd3ec",
+                                     "completed_at":  "2026-02-24T07:58:57.000Z",
+                                     "order_reference":  "TXN20260224DCE7D209"
+                                 },
+                                 {
+                                     "amount":  1500,
+                                     "mariaDB_id":  "337171bc-1af4-4a1d-b151-01e16b62bebc",
+                                     "completed_at":  "2026-02-24T08:04:25.000Z",
+                                     "order_reference":  "TXN202602240F44ED55"
+                                 },
+                                 {
+                                     "amount":  1500,
+                                     "mariaDB_id":  "a31cfcf3-ef05-4210-b5eb-224617481eae",
+                                     "completed_at":  "2026-02-24T08:17:34.000Z",
+                                     "order_reference":  "TXN20260224E6CC9D69"
+                                 },
+                                 {
+                                     "amount":  1500,
+                                     "mariaDB_id":  "e67b74bf-0679-482d-b089-232ba39447ac",
+                                     "completed_at":  "2026-02-24T08:24:45.000Z",
+                                     "order_reference":  "TXN20260224784BCC40"
+                                 },
+                                 {
+                                     "amount":  1500,
+                                     "mariaDB_id":  "b3f2d121-1b80-4557-9b23-425c78bb89f8",
+                                     "completed_at":  "2026-02-24T08:29:45.000Z",
+                                     "order_reference":  "TXN20260224E1C4EAA4"
+                                 }
+                             ],
+        "status":  "processed",
+        "processed_at":  "2026-06-29T20:30:06.491+00:00",
+        "failure_reason":  null,
+        "created_at":  "2026-06-29T20:30:06.497224+00:00",
+        "updated_at":  "2026-06-29T20:30:06.497224+00:00"
+    }
+]

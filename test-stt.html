@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head><title>STT Language Test</title></head>
+<body>
+<h2>STT API Language Test</h2>
+<select id="lang">
+<option value="en">English (en)</option>
+<option value="hi">Hindi (hi)</option>
+<option value="te">Telugu (te)</option>
+<option value="bn">Bengali (bn)</option>
+<option value="ta">Tamil (ta)</option>
+<option value="kn">Kannada (kn)</option>
+<option value="ml">Malayalam (ml)</option>
+<option value="mr">Marathi (mr)</option>
+<option value="gu">Gujarati (gu)</option>
+<option value="pa">Punjabi (pa)</option>
+<option value="ne">Nepali (ne)</option>
+<option value="ur">Urdu (ur)</option>
+</select>
+<button onclick="startRec()">  Start Recording</button>
+<button onclick="stopRec()">  Stop & Test</button>
+<p id="status"></p>
+<pre id="result"></pre>
+<script>
+let rec, chunks=[], stream;
+async function startRec() {
+  stream = await navigator.mediaDevices.getUserMedia({audio:true});
+  rec = new MediaRecorder(stream);
+  chunks = [];
+  rec.ondataavailable = e => chunks.push(e.data);
+  rec.start();
+  document.getElementById('status').textContent = '  Recording... Speak now!';
+  document.getElementById('result').textContent = '';
+}
+async function stopRec() {
+  rec.stop();
+  stream.getTracks().forEach(t=>t.stop());
+  rec.onstop = async () => {
+    document.getElementById('status').textContent = '⏳ Converting...';
+    let webmBlob = new Blob(chunks, {type:'audio/webm'});
+    
+    // Convert webm to wav like the widget does
+    let audioCtx = new AudioContext();
+    let arrBuf = await webmBlob.arrayBuffer();
+    let audioBuf = await audioCtx.decodeAudioData(arrBuf);
+    let targetRate = 16000;
+    let src = audioBuf.getChannelData(0);
+    let ratio = audioBuf.sampleRate / targetRate;
+    let newLen = Math.round(src.length / ratio);
+    let down = new Float32Array(newLen);
+    for(let i=0;i<newLen;i++) down[i]=src[Math.floor(i*ratio)];
+    
+    let dataSize = newLen*2;
+    let buf = new ArrayBuffer(44+dataSize);
+    let v = new DataView(buf);
+    function ws(o,s){for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))}
+    ws(0,'RIFF');v.setUint32(4,buf.size-8,true);ws(8,'WAVE');ws(12,'fmt ');
+    v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);
+    v.setUint32(24,targetRate,true);v.setUint32(28,targetRate*2,true);
+    v.setUint16(32,2,true);v.setUint16(34,16,true);ws(36,'data');v.setUint32(40,dataSize,true);
+    let off=44;
+    for(let i=0;i<newLen;i++){let s=Math.max(-1,Math.min(1,down[i]));v.setInt16(off,s<0?s*32768:s*32767,true);off+=2}
+    let wavBlob=new Blob([buf],{type:'audio/wav'});
+    audioCtx.close();
+    
+    // Send to backend proxy
+    let wavArr = await wavBlob.arrayBuffer();
+    let lang = document.getElementById('lang').value;
+    try {
+      let r = await fetch('http://localhost:8888/api/stt', {
+        method:'POST',
+        headers:{'Content-Type':'audio/wav','X-Language':lang},
+        body:wavArr
+      });
+      let d = await r.json();
+      document.getElementById('status').textContent = '✅ Done! (' + lang + ')';
+      document.getElementById('result').textContent = JSON.stringify(d, null, 2);
+    } catch(e) {
+      document.getElementById('status').textContent = '❌ Error';
+      document.getElementById('result').textContent = e.message;
+    }
+  };
+}
+</script>
+</body>
+</html>

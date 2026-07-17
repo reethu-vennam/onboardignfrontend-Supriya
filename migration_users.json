@@ -1,0 +1,38 @@
+﻿[
+    {
+        "id":  "fdb77c31-5a74-4385-ae98-f88cc181ff24",
+        "name":  "Super Admin",
+        "email":  "admin@sabbpe.com",
+        "password":  "$2b$10$bQprGhYUgxMuH7nFCznQQeC2ectDHctDjZhpcZr9YOzvnr4bYbKty",
+        "role":  "super_admin",
+        "created_at":  "2026-03-01T06:21:56.589151",
+        "is_active":  true
+    },
+    {
+        "id":  "01ba5742-10c6-4dff-8975-04e15ee636ba",
+        "name":  "supportc",
+        "email":  "supportc@sabbpe.com",
+        "password":  "$2b$10$LxstneO2lqlGHNMBMU8v6OV9YCauE4o5z9dU6o01Hz1PRpWGVJ0aq",
+        "role":  "support",
+        "created_at":  "2026-03-04T11:42:37.975368",
+        "is_active":  true
+    },
+    {
+        "id":  "349c1e1f-7cf8-434b-ba4d-0ac09c211da8",
+        "name":  "supportd",
+        "email":  "supportd@sabbpe.com",
+        "password":  "$2b$10$PyL.E7JCL5z7EIL9hBZfZuooYGSYUrPX9XlfCA9.c6h76zRYjrIuu",
+        "role":  "support",
+        "created_at":  "2026-03-13T16:37:10.381086",
+        "is_active":  true
+    },
+    {
+        "id":  "a65fc7c2-ca99-4702-93d4-12253be0bf27",
+        "name":  "SupportA",
+        "email":  "support@sabbpe.com",
+        "password":  "$2b$10$11COnozQq5N0K7fxWKV7E.2ldOvq5zeXo.v7qyqrC4H.sX9kjhn9m",
+        "role":  "support",
+        "created_at":  "2026-03-01T06:27:02.515336",
+        "is_active":  true
+    }
+]

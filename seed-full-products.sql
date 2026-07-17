@@ -1,0 +1,72 @@
+TRUNCATE product_catalog;
+
+INSERT INTO product_catalog (id, product_code, product_name, product_description, features, price_monthly_min, price_monthly_max, price_onetime_min, price_onetime_max, price_integration_fee, price_amc, price_mid, price_sim_cost_min, price_sim_cost_max, display_price, display_price_type, pricing_note, product_image_url, category, is_active, display_order) VALUES
+(UUID(), 'PROD_001', 'UPI QR', 'Accept payments via UPI QR code with instant settlement',
+ '["Instant payment collection","No hardware required","Low transaction fees","Real-time notifications"]',
+ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 'Free',
+ 'No setup or monthly fees',
+ 'https://grbbtgfvgwxtkgxtakug.supabase.co/storage/v1/object/public/product-images/UPI.jpeg',
+ 'software', TRUE, 1),
+
+(UUID(), 'PROD_002', 'UPI QR + Soundbox', 'QR code with audio payment confirmation device',
+ '["Audio payment alerts","No phone needed","Battery powered","2G/4G connectivity"]',
+ 99.00, 499.00, 1200.00, 2200.00, NULL, NULL, NULL, 45.00, 99.00, 99.00, 'Monthly',
+ 'Monthly rental ₹99-499 or One-time purchase ₹1200-2200. SIM cost ₹45-99 extra.',
+ 'https://grbbtgfvgwxtkgxtakug.supabase.co/storage/v1/object/public/product-images/UPI.jpeg',
+ 'hardware', TRUE, 2),
+
+(UUID(), 'PROD_003', 'POS Terminal', 'Accept card payments with POS machine',
+ '["Card payments","EMI options","Receipt printer","Multiple card networks"]',
+ 450.00, 550.00, 7000.00, 12000.00, NULL, NULL, NULL, 45.00, 99.00, 450.00, 'Monthly',
+ 'Monthly rental ₹450-550 or One-time purchase ₹7000-12000. SIM cost ₹45-99 extra.',
+ 'https://grbbtgfvgwxtkgxtakug.supabase.co/storage/v1/object/public/product-images/UPI.jpeg',
+ 'hardware', TRUE, 3),
+
+(UUID(), 'PROD_004', 'Payment Gateway', 'Online payment integration for your website/app',
+ '["Multiple payment modes","API integration","Checkout page","Recurring payments"]',
+ NULL, NULL, NULL, NULL, 60000.00, 2000.00, 2000.00, NULL, NULL, 60000.00, 'Integration Fee',
+ 'Integration: ₹60,000 (One-time). AMC: ₹2,000/year. MID: ₹2,000 per additional MID.',
+ 'https://grbbtgfvgwxtkgxtakug.supabase.co/storage/v1/object/public/product-images/PG.jpeg',
+ 'software', TRUE, 4),
+
+(UUID(), 'PROD_005', 'Current Account', 'Business banking account with no balance limit',
+ '["No balance limit","Free transactions","Overdraft facility","Dedicated RM"]',
+ 599.00, 599.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 599.00, 'Monthly',
+ 'Monthly account maintenance charges',
+ 'https://grbbtgfvgwxtkgxtakug.supabase.co/storage/v1/object/public/product-images/SPLogo.png',
+ 'service', TRUE, 5),
+
+(UUID(), 'PROD_006', 'SabbPe Gift Vouchers', 'Digitally issue and manage branded gift vouchers',
+ '["Attract repeat customers","Track usage & redemption in real time","Customizable designs"]',
+ 99.00, 99.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 99.00, 'Monthly',
+ 'Platform access fee',
+ 'https://grbbtgfvgwxtkgxtakug.supabase.co/storage/v1/object/public/product-images/GiftV.jpeg',
+ 'software', TRUE, 6),
+
+(UUID(), 'PROD_007', 'Payout', 'Automated vendor & salary payout solution',
+ '["Real-time settlement options","Dashboard for bulk & scheduled transfers","API integration"]',
+ NULL, NULL, NULL, NULL, 30000.00, 2000.00, 2000.00, NULL, NULL, 30000.00, 'Integration Fee',
+ 'Integration: ₹30,000 (One-time). AMC: ₹2,000/year. MID: ₹2,000 per additional MID.',
+ 'https://grbbtgfvgwxtkgxtakug.supabase.co/storage/v1/object/public/product-images/Payout.jpeg',
+ 'software', TRUE, 7),
+
+(UUID(), 'PROD_008', 'Secured Lending', 'Low-interest business credit against collateral',
+ '["Higher approval rate","Flexible repayment tenure","Competitive interest rates"]',
+ 599.00, 599.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 599.00, 'Monthly',
+ 'Service fee for loan management',
+ 'https://grbbtgfvgwxtkgxtakug.supabase.co/storage/v1/object/public/product-images/SPLogo.png',
+ 'lending', TRUE, 8),
+
+(UUID(), 'PROD_009', 'Unsecured Lending', 'Instant collateral-free business loans',
+ '["Fast approval based on business cashflow","Short-term & long-term options available","Minimal documentation"]',
+ 599.00, 599.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 599.00, 'Monthly',
+ 'Service fee for loan management',
+ 'https://grbbtgfvgwxtkgxtakug.supabase.co/storage/v1/object/public/product-images/SPLogo.png',
+ 'lending', TRUE, 9),
+
+(UUID(), 'PROD_010', 'KYC APIs', 'Enterprise-grade KYC & compliance APIs for aggregators and platforms. Verify identities, validate bank accounts, pull credit histories, and automate mandates — all via a single integration.',
+ '["Aadhaar Verification (OTP & Offline)","PAN Verification & Validation","Bank Account Validation (Penny Drop / Async)","Bank Statement Analysis","Credit History & Bureau Reports","DocuSign / eSign Integration","NACH Mandate Setup & Management","UPI Mandate Registration"]',
+ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 'Contact Sales',
+ 'Pricing is customised based on API volume and use-case. Contact our sales team for a tailored quote.',
+ NULL,
+ 'service', TRUE, 10);

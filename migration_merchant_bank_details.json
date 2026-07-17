@@ -1,0 +1,502 @@
+﻿[
+    {
+        "id":  "f9fbbb80-74b7-4f7b-9949-fb5a9ed81122",
+        "merchant_id":  "9de44e1e-be96-4b05-b425-7f25e63377d4",
+        "account_number":  "123456789",
+        "ifsc_code":  "SBIN0002345",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "sai",
+        "created_at":  "2026-05-25T12:53:50.620598+00:00",
+        "updated_at":  "2026-05-25T13:02:27.094953+00:00"
+    },
+    {
+        "id":  "f94adbd6-314f-4b85-9569-69b863ea11c3",
+        "merchant_id":  "a4616e57-9a22-41b8-9228-c0d701e05522",
+        "account_number":  "22222222666555",
+        "ifsc_code":  "HDFC0000189",
+        "bank_name":  "HDFC Bank",
+        "account_holder_name":  "Shubhang",
+        "created_at":  "2025-12-24T10:59:53.906382+00:00",
+        "updated_at":  "2025-12-24T11:05:21.841858+00:00"
+    },
+    {
+        "id":  "4997e103-fca8-4a8c-a59e-f03f1938135f",
+        "merchant_id":  "9f9f73dc-60d8-4349-ae3f-7ac171474e79",
+        "account_number":  "22222222666555",
+        "ifsc_code":  "HDFC0000189",
+        "bank_name":  "HDFC Bank",
+        "account_holder_name":  "Shubhang",
+        "created_at":  "2025-12-26T05:51:37.533015+00:00",
+        "updated_at":  "2025-12-26T05:57:10.338786+00:00"
+    },
+    {
+        "id":  "1f83137f-0fad-4ae0-8a54-83311584ec98",
+        "merchant_id":  "2762b6c7-e731-4067-b008-be0cdd4b471f",
+        "account_number":  "50200102013956",
+        "ifsc_code":  "HDFC0003636",
+        "bank_name":  "HDFC Bank",
+        "account_holder_name":  "Agrigrader Global Solutions Private Limited ",
+        "created_at":  "2026-04-16T10:59:49.815019+00:00",
+        "updated_at":  "2026-04-16T11:00:04.204352+00:00"
+    },
+    {
+        "id":  "21686ca3-b8eb-496b-a162-4935e47160c7",
+        "merchant_id":  "3f06d471-506e-471a-a40f-47d9854a12a5",
+        "account_number":  "1234567890123456",
+        "ifsc_code":  "SBIN0003301",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "TestMerchant",
+        "created_at":  "2025-12-26T14:57:30.226391+00:00",
+        "updated_at":  "2025-12-26T14:58:51.670298+00:00"
+    },
+    {
+        "id":  "1f5fd951-9177-4186-9869-50f071c846fc",
+        "merchant_id":  "68373594-6898-4c89-b42f-1fcff344feca",
+        "account_number":  "41242124924",
+        "ifsc_code":  "SBIN0008792",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "rajashekar Rikkula",
+        "created_at":  "2026-05-26T05:35:49.151597+00:00",
+        "updated_at":  "2026-05-26T05:37:38.62545+00:00"
+    },
+    {
+        "id":  "c82d4fe3-2801-4f01-a81b-8c36ed09092e",
+        "merchant_id":  "e485d1d5-3ab9-4bc0-86b0-526e759aad7d",
+        "account_number":  "1234567890123456",
+        "ifsc_code":  "SBIN0003301",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "TestMerchant",
+        "created_at":  "2025-12-27T12:55:21.685446+00:00",
+        "updated_at":  "2025-12-27T13:07:05.287309+00:00"
+    },
+    {
+        "id":  "a2dbdf6d-f3d3-411e-8b96-42c3b81b395f",
+        "merchant_id":  "acd5ecd7-63ff-49ca-a5dd-10ca93cff68f",
+        "account_number":  "1234567890123456",
+        "ifsc_code":  "SBIN0003301",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "TestMerchant",
+        "created_at":  "2025-12-27T13:56:35.415837+00:00",
+        "updated_at":  "2025-12-27T13:57:18.577957+00:00"
+    },
+    {
+        "id":  "a2d39a79-9662-4168-8629-1c032f3a844e",
+        "merchant_id":  "e5eb1ace-bc2d-48a0-8438-0cc8ca6ba220",
+        "account_number":  "22222222666555",
+        "ifsc_code":  "HDFC0000189",
+        "bank_name":  "HDFC Bank",
+        "account_holder_name":  "Shubhang",
+        "created_at":  "2026-01-08T07:41:23.560219+00:00",
+        "updated_at":  "2026-01-08T07:41:38.592522+00:00"
+    },
+    {
+        "id":  "5f79bd09-9a87-4dcb-9dbe-c39ea009be5b",
+        "merchant_id":  "439b1236-9541-4b72-a94b-06f6aed78954",
+        "account_number":  "",
+        "ifsc_code":  "",
+        "bank_name":  "",
+        "account_holder_name":  "",
+        "created_at":  "2026-05-26T08:27:03.8359+00:00",
+        "updated_at":  "2026-05-26T09:34:52.136089+00:00"
+    },
+    {
+        "id":  "605a1f93-cda7-4bad-9fa9-092dcf5a3462",
+        "merchant_id":  "04cde5da-c80d-4fbb-a67e-f2e797508a9f",
+        "account_number":  "",
+        "ifsc_code":  "",
+        "bank_name":  "",
+        "account_holder_name":  "",
+        "created_at":  "2026-04-23T09:09:55.687763+00:00",
+        "updated_at":  "2026-04-23T09:54:51.630283+00:00"
+    },
+    {
+        "id":  "2d0e4e85-8bc5-47ca-b61e-93f4d1116138",
+        "merchant_id":  "a6c1b8bd-f722-431c-8e94-4d5464309808",
+        "account_number":  "721110110010993",
+        "ifsc_code":  "BKID0007055",
+        "bank_name":  "Bank of India",
+        "account_holder_name":  "Rajnesh Kumar",
+        "created_at":  "2026-05-27T06:40:45.329719+00:00",
+        "updated_at":  "2026-05-27T06:40:45.329719+00:00"
+    },
+    {
+        "id":  "191af1b8-14c5-417d-b676-190139e08336",
+        "merchant_id":  "b7a2beca-1a87-4f39-8987-b01fe233cbcd",
+        "account_number":  "2115102000007610",
+        "ifsc_code":  "IBKL0002115",
+        "bank_name":  "IDBI",
+        "account_holder_name":  "MONEYGATE TECHNOLOGY PRIVATE LIMITED",
+        "created_at":  "2026-04-30T12:18:51.778777+00:00",
+        "updated_at":  "2026-04-30T13:16:20.866167+00:00"
+    },
+    {
+        "id":  "34cb156d-a557-408b-84a6-bdde9f314401",
+        "merchant_id":  "95e034fc-3e58-4580-9c7c-11b39bb61731",
+        "account_number":  "94970200001946",
+        "ifsc_code":  "BARB0DBJAMS",
+        "bank_name":  "Bank of Baroda",
+        "account_holder_name":  "SAI ENTERPRISES",
+        "created_at":  "2026-05-17T11:00:43.30891+00:00",
+        "updated_at":  "2026-05-19T05:04:20.125085+00:00"
+    },
+    {
+        "id":  "253c9bf6-d9ed-43b1-9990-8711e344d0c1",
+        "merchant_id":  "cc96e893-e99d-425f-bf3b-0fd4556650b6",
+        "account_number":  "4561237894",
+        "ifsc_code":  "SBIN0003301",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "abc",
+        "created_at":  "2026-07-08T09:21:08.451535+00:00",
+        "updated_at":  "2026-07-08T09:21:26.06303+00:00"
+    },
+    {
+        "id":  "1b0ecee4-0395-4fb4-9759-1b418101ac6b",
+        "merchant_id":  "dc40cd52-ffef-4e7e-aeaa-74bd5a3cfce4",
+        "account_number":  "41242124924",
+        "ifsc_code":  "SBIN0008792",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "rajashekar Rikkula",
+        "created_at":  "2026-05-27T08:37:26.509403+00:00",
+        "updated_at":  "2026-05-27T08:38:08.063993+00:00"
+    },
+    {
+        "id":  "786d3a42-2d71-42e6-b732-d2137ee3d3f6",
+        "merchant_id":  "a7967a19-9aa2-4ed4-a58c-8b5651652f44",
+        "account_number":  "44384961913",
+        "ifsc_code":  "SBIN0040259",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "COLOURGO STICH PRIVATE LIMITED",
+        "created_at":  "2026-05-25T07:52:26.738197+00:00",
+        "updated_at":  "2026-05-25T07:52:26.738197+00:00"
+    },
+    {
+        "id":  "96f2b90f-1ce6-4b70-859e-9b60ba4545f6",
+        "merchant_id":  "879fd97d-dfb7-46c0-a263-d57a8300dacc",
+        "account_number":  "",
+        "ifsc_code":  "",
+        "bank_name":  "",
+        "account_holder_name":  "",
+        "created_at":  "2026-05-25T11:34:21.274792+00:00",
+        "updated_at":  "2026-05-25T11:59:58.78129+00:00"
+    },
+    {
+        "id":  "e6633971-42e1-4afd-9876-7953d7b23247",
+        "merchant_id":  "cb9e64e5-8ed8-4bd4-9235-f6abc17f793b",
+        "account_number":  "99270200001682",
+        "ifsc_code":  "BARB0DBMAZG",
+        "bank_name":  "Bank of Baroda",
+        "account_holder_name":  "KRSKARA STEEL",
+        "created_at":  "2026-05-29T04:19:17.075103+00:00",
+        "updated_at":  "2026-05-29T05:56:48.390986+00:00"
+    },
+    {
+        "id":  "5aebacba-d06d-4254-99e1-2de5bf8cd48e",
+        "merchant_id":  "b6b880f1-9b3a-4a1d-b481-24196625ace4",
+        "account_number":  "",
+        "ifsc_code":  "",
+        "bank_name":  "",
+        "account_holder_name":  "",
+        "created_at":  "2026-06-27T05:16:58.098175+00:00",
+        "updated_at":  "2026-06-27T05:20:38.752894+00:00"
+    },
+    {
+        "id":  "203656eb-9a1e-400a-93ff-23d6fdfe434a",
+        "merchant_id":  "6f982f80-7134-4af2-b5db-d353b389aeb7",
+        "account_number":  "00205500034897",
+        "ifsc_code":  "SBIN0003301",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "Scuba ",
+        "created_at":  "2026-03-18T09:54:37.662232+00:00",
+        "updated_at":  "2026-03-18T10:00:56.838803+00:00"
+    },
+    {
+        "id":  "59e9634b-c0b5-43eb-98b0-3095b743dfdd",
+        "merchant_id":  "0649d2ac-ae87-469f-aa32-6516e895bcad",
+        "account_number":  "4561237894",
+        "ifsc_code":  "SBIN0001234",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "Reethu",
+        "created_at":  "2026-06-30T10:50:53.19851+00:00",
+        "updated_at":  "2026-06-30T13:20:21.075206+00:00"
+    },
+    {
+        "id":  "72963f31-4f82-42fa-b988-e97e5aef455a",
+        "merchant_id":  "de389a40-72b0-470d-bf2e-9959044df373",
+        "account_number":  "22222222666555",
+        "ifsc_code":  "HDFC0000189",
+        "bank_name":  "HDFC Bank",
+        "account_holder_name":  "Shubhang",
+        "created_at":  "2026-04-16T09:50:38.823672+00:00",
+        "updated_at":  "2026-04-16T09:50:49.40188+00:00"
+    },
+    {
+        "id":  "49cfe305-9317-43cf-8c76-b11f742674c5",
+        "merchant_id":  "70d78d39-c5f6-462c-9c51-cf58b5d7cebf",
+        "account_number":  "22222222666555",
+        "ifsc_code":  "HDFC0000189",
+        "bank_name":  "HDFC Bank",
+        "account_holder_name":  "Shubhang",
+        "created_at":  "2025-12-24T06:10:38.81759+00:00",
+        "updated_at":  "2025-12-24T06:48:26.797606+00:00"
+    },
+    {
+        "id":  "e88f56d9-9b86-412f-8fe2-1d211258d781",
+        "merchant_id":  "f717b2c8-b8d9-495e-b239-c5515218240c",
+        "account_number":  "22222222666555111",
+        "ifsc_code":  "HDFC0000189",
+        "bank_name":  "HDFC Bank",
+        "account_holder_name":  "Shubhang",
+        "created_at":  "2026-04-23T07:28:52.435594+00:00",
+        "updated_at":  "2026-04-23T07:29:27.332481+00:00"
+    },
+    {
+        "id":  "49142a66-fe10-4f98-b7b6-a95005a5638b",
+        "merchant_id":  "93f7fdf9-5698-4ba2-a45b-06983fe07142",
+        "account_number":  "7412589632",
+        "ifsc_code":  "SBIN0003301",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "abc",
+        "created_at":  "2026-07-09T06:47:02.950581+00:00",
+        "updated_at":  "2026-07-09T06:47:04.832155+00:00"
+    },
+    {
+        "id":  "6d3b80f1-6b5a-404d-bdbd-848212bbae3e",
+        "merchant_id":  "f1edd3e9-bfa2-4f0c-ab39-a8fc9d0a8cb2",
+        "account_number":  "22222222666555",
+        "ifsc_code":  "HDFC0000189",
+        "bank_name":  "HDFC Bank",
+        "account_holder_name":  "Shubhang",
+        "created_at":  "2026-03-15T12:38:27.560224+00:00",
+        "updated_at":  "2026-03-15T12:39:02.784068+00:00"
+    },
+    {
+        "id":  "582ce648-e278-4ab6-9c40-59a6648a75da",
+        "merchant_id":  "07895dc9-eb98-4bbe-bce6-9622aabe1ba5",
+        "account_number":  "",
+        "ifsc_code":  "",
+        "bank_name":  "",
+        "account_holder_name":  "",
+        "created_at":  "2026-05-21T10:41:51.819346+00:00",
+        "updated_at":  "2026-05-26T05:24:33.06485+00:00"
+    },
+    {
+        "id":  "b19c5647-5241-49aa-8663-35e8c37da941",
+        "merchant_id":  "8653d5f2-219c-4da2-bf8f-36f752df4134",
+        "account_number":  "41242124924",
+        "ifsc_code":  "SBIN0008792",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "rajashekar Rikkula",
+        "created_at":  "2026-05-26T05:31:43.981669+00:00",
+        "updated_at":  "2026-05-26T05:31:43.981669+00:00"
+    },
+    {
+        "id":  "8e58f082-31eb-46a6-8dfc-13991c09cb9e",
+        "merchant_id":  "33e7f436-e337-4ebc-a5b4-ff783e31b543",
+        "account_number":  "41242124924",
+        "ifsc_code":  "SBIN0008792",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "rajashekar Rikkula",
+        "created_at":  "2026-05-26T06:41:33.535226+00:00",
+        "updated_at":  "2026-05-26T06:42:36.100255+00:00"
+    },
+    {
+        "id":  "ce50bb38-4b0f-4881-a563-62dd99935742",
+        "merchant_id":  "91e6cfe4-557d-4ec1-a518-4a7ba66e7fa2",
+        "account_number":  "1234567890123456",
+        "ifsc_code":  "SBIN0003301",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "TestMerchant",
+        "created_at":  "2025-12-26T15:23:40.684161+00:00",
+        "updated_at":  "2025-12-26T15:26:55.354105+00:00"
+    },
+    {
+        "id":  "a3ca6634-67b6-42f1-b1a1-44be0e3213b0",
+        "merchant_id":  "28e1612b-f505-46e5-a26a-13e448198164",
+        "account_number":  "41242124924",
+        "ifsc_code":  "SBIN0008972",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "rikkula rajashekar",
+        "created_at":  "2026-05-27T05:41:05.225337+00:00",
+        "updated_at":  "2026-05-27T05:47:05.215953+00:00"
+    },
+    {
+        "id":  "574f75a6-0543-4cf8-9fad-c6e0f3e13833",
+        "merchant_id":  "f496d0c6-da80-4144-8d7f-83837d8df80f",
+        "account_number":  "1234567890123456",
+        "ifsc_code":  "SBIN0003301",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "TestMerchant",
+        "created_at":  "2025-12-26T09:56:42.996678+00:00",
+        "updated_at":  "2025-12-27T05:58:39.477271+00:00"
+    },
+    {
+        "id":  "9122fbc3-4307-42ac-a407-4a4211020059",
+        "merchant_id":  "44f21424-fba6-4c87-b616-d62c05a35b50",
+        "account_number":  "",
+        "ifsc_code":  "",
+        "bank_name":  "",
+        "account_holder_name":  "",
+        "created_at":  "2026-04-30T06:08:55.203047+00:00",
+        "updated_at":  "2026-04-30T06:49:05.492637+00:00"
+    },
+    {
+        "id":  "9e5099de-4ef6-449d-9349-19929bac281e",
+        "merchant_id":  "2ab4b29c-7c1d-486f-a596-b89b6f21adfc",
+        "account_number":  "41242124924",
+        "ifsc_code":  "SBIN0008972",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "rikkula rajashekar",
+        "created_at":  "2026-05-27T07:35:45.062814+00:00",
+        "updated_at":  "2026-05-27T07:41:29.234484+00:00"
+    },
+    {
+        "id":  "ff139bae-e9d7-4b13-949e-0c5a1da6098f",
+        "merchant_id":  "bc83224e-0724-4289-bf6b-983302fc5fca",
+        "account_number":  "94970200001946",
+        "ifsc_code":  "BARB0DBJAMS",
+        "bank_name":  "Bank of Baroda",
+        "account_holder_name":  "SAI ENTERPRISES",
+        "created_at":  "2026-05-16T06:23:59.130789+00:00",
+        "updated_at":  "2026-05-16T14:15:53.562199+00:00"
+    },
+    {
+        "id":  "8a9c6fb1-4396-4fc6-8d35-461869a3176a",
+        "merchant_id":  "32ca6de5-f3fb-4874-978d-504841a6b436",
+        "account_number":  "7412589632",
+        "ifsc_code":  "SBIN0003301",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "TEST MERCHNT99",
+        "created_at":  "2026-06-30T10:42:49.917183+00:00",
+        "updated_at":  "2026-07-09T14:01:02.487179+00:00"
+    },
+    {
+        "id":  "bd4bf18d-bba8-4e0a-a1d9-efa9c6f96d57",
+        "merchant_id":  "d24bef20-29c2-49d1-bc30-16435b10623d",
+        "account_number":  "",
+        "ifsc_code":  "",
+        "bank_name":  "",
+        "account_holder_name":  "",
+        "created_at":  "2026-05-27T10:27:38.929292+00:00",
+        "updated_at":  "2026-05-27T12:17:59.054212+00:00"
+    },
+    {
+        "id":  "3e88e6db-b664-4343-8a1f-2a8e147aeb05",
+        "merchant_id":  "33d19029-12d0-4e1a-a658-b7c43323431f",
+        "account_number":  "41926323027",
+        "ifsc_code":  "SBIN0003301",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "prod merchnat",
+        "created_at":  "2026-07-09T15:27:46.333578+00:00",
+        "updated_at":  "2026-07-09T15:27:49.355137+00:00"
+    },
+    {
+        "id":  "d245c86c-2e0b-4fa9-84db-4a13a5263c76",
+        "merchant_id":  "4351822b-d5ef-41ca-bd18-aecc15daa885",
+        "account_number":  "1234567890123456",
+        "ifsc_code":  "SBIN0003301",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "TestMerchant",
+        "created_at":  "2025-12-26T05:39:41.523377+00:00",
+        "updated_at":  "2025-12-27T11:44:10.745219+00:00"
+    },
+    {
+        "id":  "a0ab9d0d-9d07-4c8c-9fb5-267efe6604cc",
+        "merchant_id":  "afd71396-e124-43c3-a3e1-ebbbefb1db7a",
+        "account_number":  "",
+        "ifsc_code":  "",
+        "bank_name":  "",
+        "account_holder_name":  "",
+        "created_at":  "2026-05-30T11:46:07.906047+00:00",
+        "updated_at":  "2026-05-30T12:05:48.487248+00:00"
+    },
+    {
+        "id":  "37109652-770b-4b21-81e6-6ea112715cc9",
+        "merchant_id":  "c91278f1-d1fc-41f1-a476-11ebbcce5b66",
+        "account_number":  "1234567890123456",
+        "ifsc_code":  "SBIN0003301",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "TestMerchant",
+        "created_at":  "2025-12-27T13:11:38.969385+00:00",
+        "updated_at":  "2025-12-27T13:13:04.292303+00:00"
+    },
+    {
+        "id":  "5536b81f-0bcb-485f-b6d0-850b6b2697bf",
+        "merchant_id":  "7e003165-e3db-4c0e-9b54-d6ce712a88b2",
+        "account_number":  "42719011823",
+        "ifsc_code":  "SBIN0005681",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "SMART SOLUTION",
+        "created_at":  "2026-05-30T05:27:35.037274+00:00",
+        "updated_at":  "2026-06-01T04:48:12.335132+00:00"
+    },
+    {
+        "id":  "ee843435-0f1a-4b31-8460-902f2ee15c3a",
+        "merchant_id":  "ae456d24-c797-4d1b-9437-2be58bd0e30f",
+        "account_number":  "44679368755",
+        "ifsc_code":  "SBIN0001244",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "KATURI YADEEDY",
+        "created_at":  "2025-12-29T11:38:12.013986+00:00",
+        "updated_at":  "2025-12-29T11:39:33.323142+00:00"
+    },
+    {
+        "id":  "bbff979e-a476-4ff2-932c-c8fba0871a47",
+        "merchant_id":  "66ce1487-025d-4fd3-a646-8c4b12d3eab1",
+        "account_number":  "22222222666555",
+        "ifsc_code":  "HDFC0000189",
+        "bank_name":  "HDFC Bank",
+        "account_holder_name":  "Shubhang",
+        "created_at":  "2026-01-16T10:55:00.166868+00:00",
+        "updated_at":  "2026-01-16T10:55:27.986968+00:00"
+    },
+    {
+        "id":  "6ee6a19a-37b2-495e-80de-98469dab08c1",
+        "merchant_id":  "d8e2e7b4-fa39-4902-8831-cddf19a04d87",
+        "account_number":  "45186266431",
+        "ifsc_code":  "SBIN0016913",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "MIKASIKA PRIVATE LIMITED",
+        "created_at":  "2026-05-23T06:06:54.797155+00:00",
+        "updated_at":  "2026-05-23T06:17:51.792579+00:00"
+    },
+    {
+        "id":  "3720d9b4-a079-4256-891a-b1279c8b0ca5",
+        "merchant_id":  "53a803dd-8f19-466f-9e83-cafb9b31b6ec",
+        "account_number":  "45186266431",
+        "ifsc_code":  "SBIN0016913",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "MIKASIKA PRIVATE LIMITED",
+        "created_at":  "2026-05-23T07:08:42.393382+00:00",
+        "updated_at":  "2026-05-23T07:09:47.033662+00:00"
+    },
+    {
+        "id":  "8a7eec4d-b856-4ec7-b643-8e01a34c4d07",
+        "merchant_id":  "4bb40f3f-083c-453d-b753-2df532a0bacc",
+        "account_number":  "41242124924",
+        "ifsc_code":  "SBIN0008792",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "rajashekar Rikkula",
+        "created_at":  "2026-05-25T11:10:00.466675+00:00",
+        "updated_at":  "2026-05-25T11:12:44.772373+00:00"
+    },
+    {
+        "id":  "51fbf8db-9090-41e9-a1ca-74cb815ec703",
+        "merchant_id":  "b56ccc9b-b9e8-4177-8c93-7508f30b67fd",
+        "account_number":  "4561237894",
+        "ifsc_code":  "SBIN0003301",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "TEST MERCHNT99",
+        "created_at":  "2026-06-25T05:24:22.02366+00:00",
+        "updated_at":  "2026-06-25T05:25:06.845729+00:00"
+    },
+    {
+        "id":  "fc2e65de-d89a-43c4-a614-6538badd1f68",
+        "merchant_id":  "28a51df0-30b1-4c9b-a8b3-b80b548872c8",
+        "account_number":  "4561237894",
+        "ifsc_code":  "SBIN0003301",
+        "bank_name":  "State Bank of India",
+        "account_holder_name":  "abc",
+        "created_at":  "2026-07-06T12:49:53.839897+00:00",
+        "updated_at":  "2026-07-06T12:52:20.592317+00:00"
+    }
+]
