@@ -67,7 +67,7 @@ export interface MerchantProfile {
 
 export interface BankDetails {
   id?: string;
-  merchantId: string;
+  merchantId?: string;
   accountNumber: string;
   ifscCode: string;
   bankName: string;
@@ -112,8 +112,8 @@ export const useMerchantData = () => {
       if (profile) {
         const mapped: MerchantProfile = {
           ...profile,
-          onboardingStatus: profile.onboardingStatus || 'draft',
-          onboarding_status: profile.onboardingStatus || 'draft',
+          onboardingStatus: profile.onboardingStatus || profile.onboarding_status || 'draft',
+          onboarding_status: profile.onboardingStatus || profile.onboarding_status || 'draft',
           full_name: profile.fullName || profile.full_name,
           business_name: profile.businessName || profile.business_name,
           mobile_number: profile.mobileNumber || profile.mobile_number,
@@ -148,9 +148,41 @@ export const useMerchantData = () => {
           bank_commercials: profile.bankCommercials || profile.bank_commercials,
         };
         setMerchantProfile(mapped);
-        if (profile.bankDetails) setBankDetails(profile.bankDetails);
-        if (profile.documents) setDocuments(profile.documents);
-        if (profile.kyc && profile.kyc.length > 0) setKycData(profile.kyc[0]);
+        // Handle bank details - Spring Boot returns snake_case due to @JsonNaming(SnakeCaseStrategy.class)
+        const bankData = profile.bankDetails || profile.bank_details;
+        if (bankData) {
+          setBankDetails({
+            accountNumber: bankData.accountNumber || bankData.account_number || '',
+            ifscCode: bankData.ifscCode || bankData.ifsc_code || '',
+            bankName: bankData.bankName || bankData.bank_name || '',
+            accountHolderName: bankData.accountHolderName || bankData.account_holder_name || '',
+          });
+        }
+        if (profile.documents || profile.documents_list) {
+          const docs = (profile.documents || profile.documents_list || []);
+          setDocuments(docs.map((d: any) => ({
+            id: d.id,
+            merchantId: d.merchantId || d.merchant_id,
+            documentType: d.documentType || d.document_type,
+            fileName: d.fileName || d.file_name,
+            filePath: d.filePath || d.file_path,
+            fileSize: d.fileSize || d.file_size,
+            mimeType: d.mimeType || d.mime_type,
+            status: d.status,
+            rejectionReason: d.rejectionReason || d.rejection_reason,
+          })));
+        }
+        const kycArr = profile.kyc;
+        if (kycArr && kycArr.length > 0) {
+          const k = kycArr[0];
+          setKycData({
+            id: k.id,
+            merchantId: k.merchantId || k.merchant_id,
+            videoKycCompleted: k.videoKycCompleted ?? k.video_kyc_completed ?? false,
+            locationCaptured: k.locationCaptured ?? k.location_captured ?? false,
+            kycStatus: k.kycStatus || k.kyc_status || 'pending',
+          });
+        }
       }
     } catch (err: any) {
       if (!err.message?.includes('404')) {

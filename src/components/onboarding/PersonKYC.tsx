@@ -61,7 +61,9 @@ import {
 } from 'lucide-react';
 import { useI18n } from '@/i18n/I18nProvider';
 
-// ─── OCR Service (moved from MerchantRegistration) ────────────────────────────
+// ─── OCR Service (calls Spring Boot backend /api/ocr/extract) ─────────────────
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
 interface ExtractedData {
     panNumber?: string;
@@ -72,113 +74,30 @@ interface ExtractedData {
 }
 
 class RealOCRService {
-    private apiKey = import.meta.env.VITE_GOOGLE_VISION_API_KEY || '';
-    private endpoint = 'https://vision.googleapis.com/v1/images:annotate';
-
-    private async fileToBase64(file: File): Promise<string> {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = reject;
-        });
-    }
-
-    private detectDocumentType(text: string): 'pan_card' | 'aadhaar_card' | 'unknown' {
-        const clean = text.toUpperCase().replace(/[^A-Z0-9\s]/g, ' ');
-        const panPatterns = [/INCOME\s*TAX/, /PERMANENT\s*ACCOUNT/, /GOVT?\s*OF\s*INDIA/, /\bPAN\b/];
-        const aadhaarPatterns = [/UNIQUE\s*IDENTIFICATION/, /GOVERNMENT\s*OF\s*INDIA/, /AADHAAR/, /\bUID\b/];
-        const panScore = panPatterns.filter(p => p.test(clean)).length + (/[A-Z]{5}[0-9]{4}[A-Z]/.test(clean) ? 2 : 0);
-        const aadhaarScore = aadhaarPatterns.filter(p => p.test(clean)).length + (/[2-9]\d{3}[\s-]?\d{4}[\s-]?\d{4}/.test(clean) ? 2 : 0);
-        if (panScore > 0 && panScore >= aadhaarScore) return 'pan_card';
-        if (aadhaarScore > 0) return 'aadhaar_card';
-        return 'unknown';
-    }
-
-    private extractName(lines: string[]): string | undefined {
-        const excludeWords = ['INCOME', 'TAX', 'DEPARTMENT', 'GOVT', 'GOVERNMENT', 'INDIA',
-            'PERMANENT', 'ACCOUNT', 'NUMBER', 'SIGNATURE', 'PAN', 'UNIQUE', 'IDENTIFICATION',
-            'AUTHORITY', 'AADHAAR', 'MALE', 'FEMALE', 'DOB', 'VID'];
-        let best = '';
-        let maxScore = 0;
-        for (const line of lines) {
-            const words = line.toUpperCase().split(/\s+/);
-            const hasExcluded = words.some(w => excludeWords.some(e => w.includes(e)));
-            const isAllCaps = line === line.toUpperCase();
-            const hasLetters = /[A-Z]/i.test(line);
-            const hasNumbers = /[0-9]/.test(line);
-            if (!hasExcluded && isAllCaps && hasLetters && !hasNumbers && line.length > 3) {
-                const score = line.length + (words.length * 2);
-                if (score > maxScore) { maxScore = score; best = line.trim(); }
-            }
-        }
-        return best || undefined;
-    }
-
-    private extractPANData(text: string): ExtractedData {
-        const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
-        const clean = text.replace(/[^\w\s/-]/g, ' ').replace(/\s+/g, ' ');
-        const panMatch = clean.match(/[A-Z]{5}[0-9]{4}[A-Z]/);
-        const dobMatch = clean.match(/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})/);
-        return {
-            panNumber: panMatch?.[0],
-            extractedName: this.extractName(lines),
-            dateOfBirth: dobMatch?.[0],
-            confidence: panMatch ? 90 : 40,
-        };
-    }
-
-    private extractAadhaarData(text: string): ExtractedData {
-        const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
-        const clean = text.replace(/[^\w\s/-]/g, ' ').replace(/\s+/g, ' ');
-        let aadhaarNumber: string | undefined;
-        for (const pattern of [/[2-9]\d{3}[\s-]?\d{4}[\s-]?\d{4}/, /[2-9]\d{11}/]) {
-            const m = clean.match(pattern);
-            if (m) {
-                const raw = m[0].replace(/[\s-]/g, '');
-                aadhaarNumber = raw.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3');
-                break;
-            }
-        }
-        const dobMatch = clean.match(/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})/);
-        return {
-            aadhaarNumber,
-            extractedName: this.extractName(lines),
-            dateOfBirth: dobMatch?.[0],
-            confidence: aadhaarNumber ? 90 : 40,
-        };
-    }
 
     async processDocument(file: File, onProgress?: (p: number) => void): Promise<ExtractedData> {
-        if (!this.apiKey) throw new Error('Google Vision API key not configured');
         onProgress?.(10);
-        const base64 = await this.fileToBase64(file);
+        const formData = new FormData();
+        formData.append('file', file);
         onProgress?.(30);
-        const response = await fetch(`${this.endpoint}?key=${this.apiKey}`, {
+        const response = await fetch(`${API_URL}/api/ocr/extract`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                requests: [{
-                    image: { content: base64.split(',')[1] },
-                    features: [{ type: 'DOCUMENT_TEXT_DETECTION', maxResults: 50 }],
-                    imageContext: { languageHints: ['en', 'hi'] },
-                }],
-            }),
+            body: formData,
         });
-        if (!response.ok) throw new Error(`Vision API error: ${response.statusText}`);
-        const result = await response.json();
+        if (!response.ok) throw new Error(`OCR service error: ${response.statusText}`);
+        const json = await response.json();
         onProgress?.(80);
-        if (result.responses[0]?.error) throw new Error(result.responses[0].error.message);
-        const text = result.responses[0]?.textAnnotations?.[0]?.description || '';
-        const docType = this.detectDocumentType(text);
+        if (!json.success || !json.data) {
+            throw new Error(json.error?.message || json.data?.rawText || 'OCR failed');
+        }
         onProgress?.(100);
-        if (docType === 'pan_card') return this.extractPANData(text);
-        if (docType === 'aadhaar_card') return this.extractAadhaarData(text);
-        const pan = this.extractPANData(text);
-        const aadhaar = this.extractAadhaarData(text);
-        if (pan.panNumber) return pan;
-        if (aadhaar.aadhaarNumber) return aadhaar;
-        throw new Error('Document type not recognised. Please upload a clear PAN or Aadhaar image.');
+        return {
+            panNumber: json.data.panNumber || undefined,
+            aadhaarNumber: json.data.aadhaarNumber || undefined,
+            extractedName: json.data.extractedName || undefined,
+            dateOfBirth: json.data.dateOfBirth || undefined,
+            confidence: json.data.confidence || 0,
+        };
     }
 }
 

@@ -280,102 +280,108 @@ const EnhancedOnboardingFlow: React.FC = () => {
             : undefined;
         const merged = { ...onboardingData, ...partialStepData };
 
+        const isEditable = !merchantProfile?.onboarding_status
+            || merchantProfile.onboarding_status === 'draft'
+            || merchantProfile.onboarding_status === 'rejected';
+
         try {
-            const payload: any = {};
+            if (isEditable) {
+                const payload: any = {};
 
-            if (currentStep === 'welcome') {
-                payload.fullName = merged.fullName || user?.fullName || '';
-                payload.mobileNumber = merged.mobileNumber || '';
-                payload.email = merged.email || user?.email || '';
-            }
-
-            if (currentStep === 'entity-type') {
-                payload.entityType = merged.entityType;
-            }
-
-            if (currentStep === 'products') {
-                // Products are saved by ProductSelection component via its own API call
-            }
-
-            if (currentStep === 'business-details') {
-                payload.fullName = merged.fullName;
-                payload.mobileNumber = merged.mobileNumber;
-                payload.email = merged.email;
-                payload.businessName = merged.businessName;
-                payload.gstNumber = merged.gstNumber || null;
-                payload.entityType = merged.entityType || null;
-                payload.panNumber = merged.panNumber || null;
-                payload.aadhaarNumber = merged.aadhaarNumber || null;
-                const addr = merged.registeredAddress || merged.operatingAddress || merged.businessAddress;
-                if (addr) {
-                    payload.businessAddressLine1 = addr.addressLine1 || addr.line1;
-                    payload.businessAddressLine2 = (addr as any).addressLine2 || addr.line2 || null;
-                    payload.businessCity = addr.city;
-                    payload.businessState = addr.state;
-                    payload.businessPostalCode = addr.pincode || addr.postalCode;
-                    payload.businessCountry = addr.country || 'India';
+                if (currentStep === 'welcome') {
+                    payload.fullName = merged.fullName || user?.fullName || '';
+                    payload.mobileNumber = merged.mobileNumber || '';
+                    payload.email = merged.email || user?.email || '';
                 }
-            }
 
-            if (currentStep === 'person-kyc' || currentStep === 'entity-documents') {
-                payload.panNumber = merged.panNumber || null;
-                payload.aadhaarNumber = merged.aadhaarNumber || null;
-                payload.persons = (merged.persons || []).map((p: any) => ({
-                    role: p.role,
-                    fullName: p.fullName,
-                    panNumber: p.panNumber || null,
-                    addressProofType: p.addressProofType || null,
-                    isAuthorizedSignatory: p.isAuthorizedSignatory,
-                    sequenceOrder: p.sequenceOrder,
-                }));
-            }
-
-            if (currentStep === 'kyc') {
-                payload.kyc = {
-                    isVideoCompleted: merged.kycData?.isVideoCompleted || false,
-                    locationVerified: merged.kycData?.locationVerified || false,
-                    selfieUrl: merged.kycData?.selfieUrl || null,
-                    latitude: merged.kycData?.latitude || null,
-                    longitude: merged.kycData?.longitude || null,
-                    fullAddress: merged.kycData?.fullAddress || null,
-                    area: merged.kycData?.area || null,
-                    city: merged.kycData?.city || null,
-                    state: merged.kycData?.state || null,
-                    pincode: merged.kycData?.pincode || null,
-                    country: merged.kycData?.country || null,
-                };
-            }
-
-            if (currentStep === 'doing-business' || currentStep === 'bank-details') {
-                const addr = merged.businessAddress || merged.registeredAddress || merged.operatingAddress;
-                if (addr) {
-                    payload.businessAddressLine1 = addr.addressLine1 || addr.line1;
-                    payload.businessAddressLine2 = (addr as any).addressLine2 || addr.line2 || null;
-                    payload.businessCity = addr.city;
-                    payload.businessState = addr.state;
-                    payload.businessPostalCode = addr.pincode || addr.postalCode;
-                    payload.businessCountry = addr.country || 'India';
+                if (currentStep === 'entity-type') {
+                    payload.entityType = merged.entityType;
                 }
-                if (merged.bankDetails) {
-                    payload.bankDetails = {
-                        accountNumber: merged.bankDetails.accountNumber,
-                        ifscCode: merged.bankDetails.ifscCode,
-                        bankName: merged.bankDetails.bankName,
-                        accountHolderName: merged.bankDetails.accountHolderName,
+
+                if (currentStep === 'products') {
+                    // Products are saved by ProductSelection component via its own API call
+                }
+
+                if (currentStep === 'business-details') {
+                    payload.fullName = merged.fullName;
+                    payload.mobileNumber = merged.mobileNumber;
+                    payload.email = merged.email;
+                    payload.businessName = merged.businessName;
+                    payload.gstNumber = merged.gstNumber || null;
+                    payload.entityType = merged.entityType || null;
+                    payload.panNumber = merged.panNumber || null;
+                    payload.aadhaarNumber = merged.aadhaarNumber || null;
+                    const addr = merged.registeredAddress || merged.operatingAddress || merged.businessAddress;
+                    if (addr) {
+                        payload.businessAddressLine1 = addr.addressLine1 || addr.line1;
+                        payload.businessAddressLine2 = (addr as any).addressLine2 || addr.line2 || null;
+                        payload.businessCity = addr.city;
+                        payload.businessState = addr.state;
+                        payload.businessPostalCode = addr.pincode || addr.postalCode;
+                        payload.businessCountry = addr.country || 'India';
+                    }
+                }
+
+                if (currentStep === 'person-kyc' || currentStep === 'entity-documents') {
+                    payload.panNumber = merged.panNumber || null;
+                    payload.aadhaarNumber = merged.aadhaarNumber || null;
+                    payload.persons = (merged.persons || []).map((p: any) => ({
+                        role: p.role,
+                        fullName: p.fullName,
+                        panNumber: p.panNumber || null,
+                        addressProofType: p.addressProofType || null,
+                        isAuthorizedSignatory: p.isAuthorizedSignatory,
+                        sequenceOrder: p.sequenceOrder,
+                    }));
+                }
+
+                if (currentStep === 'kyc') {
+                    payload.kyc = {
+                        isVideoCompleted: merged.kycData?.isVideoCompleted || false,
+                        locationVerified: merged.kycData?.locationVerified || false,
+                        selfieUrl: merged.kycData?.selfieUrl || null,
+                        latitude: merged.kycData?.latitude || null,
+                        longitude: merged.kycData?.longitude || null,
+                        fullAddress: merged.kycData?.fullAddress || null,
+                        area: merged.kycData?.area || null,
+                        city: merged.kycData?.city || null,
+                        state: merged.kycData?.state || null,
+                        pincode: merged.kycData?.pincode || null,
+                        country: merged.kycData?.country || null,
                     };
                 }
-            }
 
-            if (Object.keys(payload).length > 0) {
-                console.log(`[handleNextStep] ${currentStep} payload:`, JSON.stringify(payload, null, 2));
-                await api.post('/merchant/profile', payload);
+                if (currentStep === 'doing-business' || currentStep === 'bank-details') {
+                    const addr = merged.businessAddress || merged.registeredAddress || merged.operatingAddress;
+                    if (addr) {
+                        payload.businessAddressLine1 = addr.addressLine1 || addr.line1;
+                        payload.businessAddressLine2 = (addr as any).addressLine2 || addr.line2 || null;
+                        payload.businessCity = addr.city;
+                        payload.businessState = addr.state;
+                        payload.businessPostalCode = addr.pincode || addr.postalCode;
+                        payload.businessCountry = addr.country || 'India';
+                    }
+                    if (merged.bankDetails) {
+                        payload.bankDetails = {
+                            accountNumber: merged.bankDetails.accountNumber,
+                            ifscCode: merged.bankDetails.ifscCode,
+                            bankName: merged.bankDetails.bankName,
+                            accountHolderName: merged.bankDetails.accountHolderName,
+                        };
+                    }
+                }
+
+                if (Object.keys(payload).length > 0) {
+                    console.log(`[handleNextStep] ${currentStep} payload:`, JSON.stringify(payload, null, 2));
+                    await api.post('/merchant/profile', payload);
+                }
             }
         } catch (err) {
             console.error(`Error saving step ${currentStep}:`, err);
         }
 
         nextStep();
-    }, [currentStep, nextStep, user, onboardingData]);
+    }, [currentStep, nextStep, user, onboardingData, merchantProfile]);
 
     const handleGoToStep = React.useCallback((stepId: string) => {
         const exists = ONBOARDING_STEPS.find(s => s.id === stepId);
@@ -395,7 +401,10 @@ const EnhancedOnboardingFlow: React.FC = () => {
                 || onboardingData.operatingAddress;
 
             const hasLocalAddr = src && (src.addressLine1 || src.city || src.state || src.pincode);
-            const hasDbAddr = existingProfile?.businessAddressLine1 || existingProfile?.businessCity || existingProfile?.businessState || existingProfile?.businessPostalCode;
+            const hasDbAddr = existingProfile?.businessAddressLine1 || existingProfile?.business_address_line1
+                || existingProfile?.businessCity || existingProfile?.business_city
+                || existingProfile?.businessState || existingProfile?.business_state
+                || existingProfile?.businessPostalCode || existingProfile?.business_postal_code;
 
             if (!hasLocalAddr && !hasDbAddr) {
                 toast({
@@ -409,14 +418,14 @@ const EnhancedOnboardingFlow: React.FC = () => {
             }
 
             const profilePayload: any = {
-                fullName: onboardingData.fullName || existingProfile?.fullName,
-                mobileNumber: onboardingData.mobileNumber || existingProfile?.mobileNumber,
+                fullName: onboardingData.fullName || existingProfile?.fullName || existingProfile?.full_name,
+                mobileNumber: onboardingData.mobileNumber || existingProfile?.mobileNumber || existingProfile?.mobile_number,
                 email: onboardingData.email || existingProfile?.email,
-                businessName: onboardingData.businessName || existingProfile?.businessName,
-                panNumber: onboardingData.panNumber || existingProfile?.panNumber || null,
-                aadhaarNumber: onboardingData.aadhaarNumber || existingProfile?.aadhaarNumber || null,
-                gstNumber: onboardingData.gstNumber || existingProfile?.gstNumber || null,
-                entityType: onboardingData.entityType || existingProfile?.entityType || null,
+                businessName: onboardingData.businessName || existingProfile?.businessName || existingProfile?.business_name,
+                panNumber: onboardingData.panNumber || existingProfile?.panNumber || existingProfile?.pan_number || null,
+                aadhaarNumber: onboardingData.aadhaarNumber || existingProfile?.aadhaarNumber || existingProfile?.aadhaar_number || null,
+                gstNumber: onboardingData.gstNumber || existingProfile?.gstNumber || existingProfile?.gst_number || null,
+                entityType: onboardingData.entityType || existingProfile?.entityType || existingProfile?.entity_type || null,
                 bankDetails: onboardingData.bankDetails ? {
                     accountNumber: onboardingData.bankDetails.accountNumber,
                     ifscCode: onboardingData.bankDetails.ifscCode,
@@ -448,12 +457,12 @@ const EnhancedOnboardingFlow: React.FC = () => {
                 profilePayload.businessPostalCode = src.pincode || (src as any).postalCode;
                 profilePayload.businessCountry = src.country || 'India';
             } else if (existingProfile) {
-                profilePayload.businessAddressLine1 = existingProfile.businessAddressLine1;
-                profilePayload.businessAddressLine2 = existingProfile.businessAddressLine2;
-                profilePayload.businessCity = existingProfile.businessCity;
-                profilePayload.businessState = existingProfile.businessState;
-                profilePayload.businessPostalCode = existingProfile.businessPostalCode;
-                profilePayload.businessCountry = existingProfile.businessCountry;
+                profilePayload.businessAddressLine1 = existingProfile.businessAddressLine1 || existingProfile.business_address_line1;
+                profilePayload.businessAddressLine2 = existingProfile.businessAddressLine2 || existingProfile.business_address_line2;
+                profilePayload.businessCity = existingProfile.businessCity || existingProfile.business_city;
+                profilePayload.businessState = existingProfile.businessState || existingProfile.business_state;
+                profilePayload.businessPostalCode = existingProfile.businessPostalCode || existingProfile.business_postal_code;
+                profilePayload.businessCountry = existingProfile.businessCountry || existingProfile.business_country;
             }
 
             await api.post('/merchant/profile', profilePayload);
@@ -583,7 +592,7 @@ const EnhancedOnboardingFlow: React.FC = () => {
             const kycArr = mp.kyc || [];
             const kyc = kycArr.length > 0 ? kycArr[0] : null;
 
-            const bankDto = mp.bankDetails || null;
+            const bankDto = mp.bankDetails || mp.bank_details || null;
 
             return {
                 ...prev,
@@ -733,8 +742,8 @@ const EnhancedOnboardingFlow: React.FC = () => {
             return;
         }
 
-        // Submitted but mandate not completed → resume mandate flow
-        if (status === 'submitted' && !isMandateComplete) {
+        // Submitted/pending/in_progress status → dashboard or mandate flow
+        if (['submitted', 'pending', 'in_progress'].includes(status || '') && !isMandateComplete) {
             goToStep('review');
             setShowMandateFlow(true);
             stepRestoredRef.current = true;
@@ -744,14 +753,14 @@ const EnhancedOnboardingFlow: React.FC = () => {
         // Terminal statuses → dashboard
         if (['approved', 'verified', 'validating',
              'pending_bank_approval', 'cpv_pending', 'cpv_verified',
-             'agreement_pending', 'agreement_signed'].includes(status || '')) {
+             'agreement_pending', 'agreement_signed', 'pending', 'in_progress'].includes(status || '')) {
             goToStep('dashboard');
             stepRestoredRef.current = true;
             return;
         }
 
-        // Submitted and mandate completed → dashboard
-        if (status === 'submitted' && isMandateComplete) {
+        // Submitted/pending/in_progress with mandate completed → dashboard
+        if (['submitted', 'pending', 'in_progress'].includes(status || '') && isMandateComplete) {
             goToStep('dashboard');
             stepRestoredRef.current = true;
             return;
@@ -791,7 +800,13 @@ const EnhancedOnboardingFlow: React.FC = () => {
         );
 
         const hasBankDetails = Boolean(bankDetails?.accountNumber || bankDetails?.account_number);
-        const hasKYC = merchantProfile.cpv_status === 'cpv_verified' || merchantProfile.cpvSubmitted === true;
+        const hasKYC = merchantProfile.cpv_status === 'cpv_verified'
+            || (merchantProfile as any).cpvSubmitted === true
+            || (merchantProfile as any).verification_submitted === true
+            || Boolean(
+                (kycData?.video_kyc_completed || kycData?.videoKycCompleted) &&
+                (kycData?.location_captured || kycData?.locationCaptured)
+            );
 
         if (!hasEntityType) { goToStep('entity-type'); }
         else if (!hasProducts) { goToStep('products'); }

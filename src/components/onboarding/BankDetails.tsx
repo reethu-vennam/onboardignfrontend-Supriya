@@ -624,7 +624,6 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
                                     <p className="text-sm text-red-500">{errors.accountNumber}</p>
                                 </div>
                             )}
-                            {/* Transbank validation warning - hidden during dev */}
                         </div>
 
                         {/* Confirm Account Number */}

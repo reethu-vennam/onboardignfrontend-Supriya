@@ -47,8 +47,7 @@ export const useFileUpload = () => {
         try {
             const formData = new FormData();
             formData.append('file', file);
-            formData.append('bucket', bucket);
-            formData.append('path', path);
+            formData.append('filePath', `${path}/${file.name}`);
 
             const token = authService.getToken();
             const headers: Record<string, string> = {};

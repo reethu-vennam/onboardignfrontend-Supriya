@@ -94,15 +94,25 @@ export const CPVRecorder: React.FC<CPVRecorderProps> = ({ merchantId, userId, on
         setStatus('uploading');
 
         try {
-            // Upload to Supabase storage
-            const fileName = `${userId}/cpv-video-${Date.now()}.webm`;
-            const uploadError = null; /* upload handled via api.uploadFile */
+            // Upload video to Spring Boot backend
+            const formData = new FormData();
+            const fileName = `cpv-video-${Date.now()}.webm`;
+            formData.append('file', videoBlob, fileName);
 
-            if (uploadError) throw uploadError;
+            const token = localStorage.getItem('sabbpe_token') || '';
+            const uploadRes = await fetch('http://localhost:8080/api/upload/file', {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${token}` },
+                body: formData,
+            });
+
+            if (!uploadRes.ok) throw new Error('Video upload failed');
+            const uploadData = await uploadRes.json();
+            const videoUrl = uploadData.data?.url || uploadData.url;
 
             // Save path to merchant profile
             const { data } = await apiClient.post('/merchants/submit-cpv', {
-                cpv_video_path: fileName
+                cpv_video_path: videoUrl || fileName
             });
 
             if (data.success) {

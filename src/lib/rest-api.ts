@@ -48,7 +48,7 @@ export const api = {
 
   // Distributor
   createMerchant: (data: any) => api.post('/distributor/create-merchant', data),
-  getDistributorMerchants: (status?: string) => api.get(`/distributor/transactions${status ? `?status=${status}` : ''}`),
+  getDistributorMerchants: (status?: string) => api.get(`/distributor/merchants${status ? `?status=${status}` : ''}`),
   saveMerchantBankDetails: (merchantId: string, data: any) => api.post(`/distributor/save-bank-details?merchantId=${merchantId}`, data),
   submitDistributorMerchant: (merchantId: string) => api.post(`/distributor/submit-merchant-onboarding?merchantId=${merchantId}`),
   deleteDistributorMerchant: (merchantId: string) => api.delete(`/distributor/delete-merchant?merchantId=${merchantId}`),
@@ -62,9 +62,10 @@ export const api = {
   getAgreements: () => api.get('/products/merchant/agreements'),
 
   // Upload
-  uploadFile: async (file: File): Promise<any> => {
+  uploadFile: async (file: File, filePath?: string): Promise<any> => {
     const formData = new FormData();
     formData.append('file', file);
+    if (filePath) formData.append('filePath', filePath);
     const token = authService.getToken();
     const headers: Record<string, string> = {};
     if (token) headers['Authorization'] = `Bearer ${token}`;

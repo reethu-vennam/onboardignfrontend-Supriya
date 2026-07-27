@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { authService } from '@/lib/auth-service';
+import { useAuth } from '@/components/auth/AuthProvider';
 import { api } from '@/lib/rest-api';
 import { API_BASE_URL, apiClient } from '@/lib/api-client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -107,20 +108,19 @@ interface SettlementPreviewData {
     merchant_name: string;
     email: string;
     settlement_cycle_days: number;
-    eligible_transaction_count: number;
-    calculation: {
-        gross_amount: number;
-        mdr_deduction: number;
-        rolling_reserve_held: number;
-        net_settlement_amount: number;
-        transaction_count: number;
-        transaction_refs: Array<{
-            mariaDB_id: string;
-            order_reference: string;
-            amount: number;
-            completed_at: string;
-        }>;
-    };
+    transaction_count: number;
+    gross_amount: number;
+    mdr_deduction: number;
+    rolling_reserve: number;
+    net_amount: number;
+    reserve_enabled: boolean;
+    reserve_percentage: number | null;
+    transactions: Array<{
+        transaction_id: string;
+        amount: number;
+        status: string;
+        created_at: string;
+    }>;
 }
 
 interface ChargebackRecord {
@@ -558,9 +558,9 @@ export default function DistributorDashboard() {
             let merchantsData;
             try {
                 if (adminMode) {
-                    merchantsData = await api.get('/admin/merchants');
+                    merchantsData = await api.get('/distributor/merchants');
                 } else {
-                    merchantsData = await api.get('/distributor/transactions');
+                    merchantsData = await api.get('/distributor/merchants');
                 }
             } catch { merchantsData = []; }
 
@@ -1873,9 +1873,10 @@ export default function DistributorDashboard() {
             }
 
             if (result.data) {
+                const netAmt = result.data.net_amount || result.data.netAmount || result.data.calculation?.net_settlement_amount || 0;
                 toast({
                     title: 'Settlement Processed',
-                    description: `Net ₹${result.data.calculation.net_settlement_amount.toLocaleString('en-IN')} settled for ${merchantLabel}`,
+                    description: `Net ₹${netAmt.toLocaleString('en-IN')} settled for ${merchantLabel}`,
                 });
             } else {
                 toast({
@@ -2416,15 +2417,14 @@ export default function DistributorDashboard() {
             const token = authService.getToken();
             if (!token) { toast({ title: 'Error', description: 'Not authenticated', variant: 'destructive' }); return; }
             const backendUrl = import.meta.env.VITE_BACKEND_URL || API_BASE_URL;
-            const resp = await fetch(`${backendUrl}/api/chargeback/recover`, {
+            const resp = await fetch(`${backendUrl}/api/chargeback/recover?chargebackId=${encodeURIComponent(selectedChargeback.id)}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-                body: JSON.stringify({ chargebackId: selectedChargeback.id }),
             });
             const result = await resp.json();
             if (!resp.ok) throw new Error(result?.error?.message || 'Recovery failed');
             const rd = result.data;
-            toast({ title: 'Recovery Successful', description: `₹${rd.total_recovered.toLocaleString('en-IN')} recovered from ${rd.recovery_steps.length} source(s)` });
+            toast({ title: 'Recovery Successful', description: `₹${(rd.amount || 0).toLocaleString('en-IN')} recovered from ${rd.recovery_source || 'reserve'} source` });
             setSelectedChargeback(null);
             setConfirmRecoverOpen(false);
             fetchChargebacks(chargebacksPage);
@@ -2458,10 +2458,10 @@ export default function DistributorDashboard() {
     }, [toast]);
 
     // Handle logout
+    const { signOut } = useAuth();
     const handleLogout = useCallback(async () => {
         try {
-            const { error } = authService.logout();
-            if (error) throw error;
+            await signOut();
             navigate('/auth');
         } catch (error) {
             console.error('Error logging out:', error);
@@ -2471,7 +2471,7 @@ export default function DistributorDashboard() {
                 variant: 'destructive',
             });
         }
-    }, [navigate, toast]);
+    }, [signOut, navigate, toast]);
 
     useEffect(() => {
         fetchDashboardData();
@@ -5190,8 +5190,8 @@ PQR Shop,9123456789,pqr@example.com`}
                                         Settlement history, reserve ledger, and merchant summary
                                     </p>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    {isAdmin && settlementMerchantFilter !== 'all' && (
+                                    <div className="flex items-center gap-2">
+                                    {(isAdmin || !isEmployee) && settlementMerchantFilter !== 'all' && (
                                         <Button
                                             onClick={() => setConfirmRunSettlementOpen(true)}
                                             disabled={settlementRunning}
@@ -5575,25 +5575,25 @@ PQR Shop,9123456789,pqr@example.com`}
                                                     <div className="bg-gray-50 rounded-lg p-4">
                                                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Gross Amount</p>
                                                         <p className="text-xl font-bold text-gray-900">
-                                                            ₹{settlementPreview.calculation.gross_amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                                            ₹{(settlementPreview.gross_amount || settlementPreview.grossAmount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                                         </p>
                                                     </div>
                                                     <div className="bg-red-50 rounded-lg p-4">
                                                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">MDR Deduction</p>
                                                         <p className="text-xl font-bold text-red-600">
-                                                            ₹{settlementPreview.calculation.mdr_deduction.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                                            ₹{(settlementPreview.mdr_deduction || settlementPreview.mdrDeduction || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                                         </p>
                                                     </div>
                                                     <div className="bg-amber-50 rounded-lg p-4">
                                                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Rolling Reserve</p>
                                                         <p className="text-xl font-bold text-amber-600">
-                                                            ₹{settlementPreview.calculation.rolling_reserve_held.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                                            ₹{(settlementPreview.rolling_reserve || settlementPreview.rollingReserve || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                                         </p>
                                                     </div>
                                                     <div className="bg-green-50 rounded-lg p-4">
                                                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Net Settlement</p>
                                                         <p className="text-xl font-bold text-green-700">
-                                                            ₹{settlementPreview.calculation.net_settlement_amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                                            ₹{(settlementPreview.net_amount || settlementPreview.netAmount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -5601,7 +5601,7 @@ PQR Shop,9123456789,pqr@example.com`}
                                                 {/* Transaction Count */}
                                                 <div className="flex items-center gap-2 text-sm text-gray-600 border-t border-gray-100 pt-4">
                                                     <CheckCircle className="h-4 w-4 text-green-500" />
-                                                    <span>{settlementPreview.eligible_transaction_count} eligible transaction{settlementPreview.eligible_transaction_count !== 1 ? 's' : ''} found</span>
+                                                    <span>{settlementPreview.transaction_count || settlementPreview.transactionCount || 0} eligible transaction{(settlementPreview.transaction_count || settlementPreview.transactionCount || 0) !== 1 ? 's' : ''} found</span>
                                                 </div>
                                             </div>
                                         )}
@@ -5954,16 +5954,17 @@ PQR Shop,9123456789,pqr@example.com`}
                         <AlertDialogTitle>Recover Chargeback</AlertDialogTitle>
                         <AlertDialogDescription>
                             {selectedChargeback && (<>
-                                This will recover <strong>₹{parseFloat(String(selectedChargeback.amount)).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</strong> for <strong>{selectedChargeback.merchant_name || 'the merchant'}</strong>.
-                                Funds will be deducted in order: rolling reserve \u2192 pending settlement \u2192 merchant balance.
-                                <div className="mt-3 bg-gray-50 rounded-lg p-3 text-sm">
-                                    <p><strong>Rolling Reserve:</strong> ₹{(selectedChargeback.rolling_reserve_held || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                                    <p><strong>Pending Settlement:</strong> ₹{(selectedChargeback.pending_settlement || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                                    <p><strong>Merchant Balance:</strong> ₹{(selectedChargeback.merchant_balance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                                </div>
+                                This will recover <strong>₹{parseFloat(String(selectedChargeback.amount)).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</strong> for <strong>{selectedChargeback.merchant_name || 'the merchant'}</strong>. Funds will be deducted in order: rolling reserve, pending settlement, merchant balance.
                             </>)}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
+                    {selectedChargeback && (
+                        <div className="bg-gray-50 rounded-lg p-3 text-sm space-y-1">
+                            <p className="text-sm"><strong>Rolling Reserve:</strong> ₹{(selectedChargeback.rolling_reserve_held || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                            <p className="text-sm"><strong>Pending Settlement:</strong> ₹{(selectedChargeback.pending_settlement || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                            <p className="text-sm"><strong>Merchant Balance:</strong> ₹{(selectedChargeback.merchant_balance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                        </div>
+                    )}
                     <AlertDialogFooter>
                         <AlertDialogCancel disabled={!!chargebackRecovering}>Cancel</AlertDialogCancel>
                         <AlertDialogAction onClick={handleRecoverChargeback} disabled={!!chargebackRecovering} className="bg-green-600 hover:bg-green-700">

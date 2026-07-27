@@ -264,7 +264,11 @@ export const EntityTypeSelection: React.FC<EntityTypeSelectionProps> = ({
             const userId = merchantProfile?.user_id as string | undefined || user?.id;
 
             try {
-                await api.post('/merchant/profile', { entityType: selected });
+                const status = (merchantProfile as any)?.onboarding_status || (merchantProfile as any)?.onboardingStatus;
+                const isEditable = !status || status === 'draft' || status === 'rejected';
+                if (isEditable) {
+                    await api.post('/merchant/profile', { entityType: selected });
+                }
             } catch (err: any) {
                 console.error('Failed to save entity_type:', err);
                 toast({
