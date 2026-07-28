@@ -191,6 +191,7 @@ export const OnboardingChatbot: React.FC<Props> = ({ currentStep, onDataChange, 
         recognition.continuous = true;
 
         let finalTranscript = '';
+        const baseText = input.replace(/\s*\|\s*listening\.\.\./, '').trim();
 
         recognition.onresult = (event: any) => {
             let interim = '';
@@ -198,18 +199,12 @@ export const OnboardingChatbot: React.FC<Props> = ({ currentStep, onDataChange, 
                 const transcript = event.results[i][0].transcript;
                 if (event.results[i].isFinal) {
                     finalTranscript += transcript + ' ';
-                    setInput(prev => {
-                        const base = prev.replace(/\| listening\.\.\./, '').trim();
-                        return (base ? base + ' ' : '') + finalTranscript.trim();
-                    });
                 } else {
-                    interim = transcript;
-                    setInput(prev => {
-                        const base = prev.replace(/\| listening\.\.\./, '').trim();
-                        return (base ? base + ' ' : '') + finalTranscript.trim() + (interim ? ' ' + interim : '') + ' | listening...';
-                    });
+                    interim += transcript;
                 }
             }
+            const combined = [baseText, finalTranscript.trim(), interim].filter(Boolean).join(' ');
+            setInput(combined + ' | listening...');
         };
 
         recognition.onerror = (event: any) => {
@@ -227,7 +222,7 @@ export const OnboardingChatbot: React.FC<Props> = ({ currentStep, onDataChange, 
         recognition.start();
         recognitionRef.current = recognition;
         setIsRecording(true);
-        setInput(prev => prev + ' | listening...');
+        setInput((baseText ? baseText + ' ' : '') + '| listening...');
     };
 
     const stopRecording = () => {
