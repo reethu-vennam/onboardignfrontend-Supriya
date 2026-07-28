@@ -331,6 +331,21 @@ export const PersonKYC: React.FC<PersonKYCProps> = ({
 
     const [saving, setSaving] = useState(false);
 
+    // Sync form fields when chatbot fills data
+    useEffect(() => {
+        if (!data?.panNumber && !data?.aadhaarNumber) return;
+        setPersons(prev => {
+            if (prev.length === 0) return prev;
+            const updated = [...prev];
+            updated[0] = {
+                ...updated[0],
+                panNumber: data.panNumber || updated[0].panNumber,
+                aadhaarNumber: data.aadhaarNumber || updated[0].aadhaarNumber,
+            };
+            return updated;
+        });
+    }, [data?.panNumber, data?.aadhaarNumber]);
+
     // ── Upload to Supabase Storage ─────────────────────────────────────────────
     const uploadToStorage = useCallback(async (
         file: File,

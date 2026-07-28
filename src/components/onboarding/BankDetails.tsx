@@ -78,6 +78,19 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
     accountName?: string;
     error?: string;
   }>({ isValid: false });
+
+    // Sync form fields when chatbot fills data
+    useEffect(() => {
+        if (!data?.bankDetails) return;
+        setFormData(prev => ({
+            ...prev,
+            ifscCode: data.bankDetails?.ifscCode || prev.ifscCode,
+            accountNumber: data.bankDetails?.accountNumber || prev.accountNumber,
+            confirmAccountNumber: data.bankDetails?.confirmAccountNumber || prev.confirmAccountNumber,
+            accountHolderName: data.bankDetails?.accountHolderName || prev.accountHolderName,
+            bankName: data.bankDetails?.bankName || prev.bankName,
+        }));
+    }, [data?.bankDetails]);
      const clearError = (field: keyof BankDetailsData | 'cancelledCheque') => {
         setErrors(prev => {
             const newErrors = { ...prev };
@@ -251,62 +264,41 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
         }
 
         try {
-            // Get user info for folder structure
-            const user = authService.getUser(); const userError = null;
-            if (userError || !user) {
+            const user = authService.getUser();
+            if (!user) {
                 throw new Error("User not authenticated");
             }
 
-            console.log('💳 handleFileUpload started');
-            console.log('   - merchantProfile:', merchantProfile);
-            console.log('   - merchantProfile?.id:', merchantProfile?.id);
-            console.log('   - merchantProfile?.id type:', typeof merchantProfile?.id);
-            console.log('   - merchantProfile?.id is empty string?', merchantProfile?.id === '');
-
             if (!merchantProfile?.id || merchantProfile.id === '') {
-                const debugInfo = {
-                    merchantProfileExists: !!merchantProfile,
-                    idExists: !!merchantProfile?.id,
-                    idValue: merchantProfile?.id,
-                    idType: typeof merchantProfile?.id,
-                    merchantProfilePropExists: (data as any)?.isDistributorFlow,
-                    merchantProfileHookExists: !!merchantProfileHook,
-                };
-                console.error('❌ Merchant profile ID missing:', debugInfo);
                 throw new Error('Merchant account not yet created. Please wait or reload the page.');
             }
 
-            // ✅ CRITICAL FIX: Use authenticated user's ID (distributor or merchant)
-            // not merchant's user_id, to avoid RLS policy rejection
-            const isDistributorFlow = !!(data as any)?.isDistributorFlow;
-            const uploadUserId = isDistributorFlow ? user.id : (merchantProfile?.userId as string || user.id);
-            
-            console.log('💳 handleFileUpload - determining user ID for file path');
-            console.log('   - isDistributorFlow:', isDistributorFlow);
-            console.log('   - authenticated user.id:', user.id);
-            console.log('   - merchantProfile?.userId:', merchantProfile?.userId);
-            console.log('   - uploadUserId to use:', uploadUserId);
+            const uploadResult = await api.uploadFile(file);
+            if (!uploadResult) throw new Error('Upload failed');
 
-            const safePhone = user?.phone?.replace(/\D/g, "") || "unknown";
-            const fileName = `${Date.now()}_${file.name}`;
-            const filePath = `${uploadUserId}/cancelled-cheques/${fileName}`;
+            const publicUrl = uploadResult.url || '';
 
-            console.log('   - Final filePath:', filePath);
+            await api.post('/merchant/profile', {
+                documents: [{
+                    fileName: file.name,
+                    filePath: publicUrl,
+                    fileSize: file.size,
+                    mimeType: file.type,
+                    documentType: 'cancelled_cheque',
+                    docCategory: 'bank',
+                }],
+            });
 
-            console.log('✅ File ready for upload:', filePath);
-
-            // 3. Update local state
             setCancelledCheque(file);
             clearError('cancelledCheque');
 
-            // 4. Update parent state with document info
             if (onDataChange) {
                 onDataChange({
                     documents: {
                         ...data?.documents,
                         cancelledCheque: {
                             file: file,
-                            path: filePath
+                            path: publicUrl
                         }
                     }
                 });

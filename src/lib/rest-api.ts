@@ -1,6 +1,6 @@
 import { authService } from './auth-service';
 
-const API_BASE = 'http://localhost:8080';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
 async function request(method: string, path: string, body?: any): Promise<any> {
   const token = authService.getToken();

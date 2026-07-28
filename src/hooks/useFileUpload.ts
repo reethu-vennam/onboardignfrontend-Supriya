@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { authService } from '@/lib/auth-service';
 import { useToast } from './use-toast';
 
-const API_BASE = 'http://localhost:8080';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
 interface UploadProgress {
     progress: number;
@@ -47,7 +47,11 @@ export const useFileUpload = () => {
         try {
             const formData = new FormData();
             formData.append('file', file);
-            formData.append('filePath', `${path}/${file.name}`);
+            if (path && !path.includes(file.name)) {
+                formData.append('filePath', `${path}/${file.name}`);
+            } else {
+                formData.append('filePath', path || file.name);
+            }
 
             const token = authService.getToken();
             const headers: Record<string, string> = {};

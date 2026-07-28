@@ -6,6 +6,7 @@ import { useKYCValidation } from '@/hooks/useKYCValidation';
 import { useFileUpload } from '@/hooks/useFileUpload';
 import { useMerchantData } from '@/hooks/useMerchantData';
 import { useToast } from '@/hooks/use-toast';
+import { api } from '@/lib/rest-api';
 import { FaceVoiceSync } from './FaceVoiceSync'; // Make sure this path is correct
  import { RaiseTicketButton } from "@/components/RaiseTicketButton";
  import { ViewTicketButton } from "@/components/ViewTicketButton";
@@ -140,12 +141,14 @@ export const KYCVerification: React.FC<KYCVerificationProps> = ({
                 canvas.toBlob(async (blob) => {
                     if (blob && merchantProfile) {
                         const file = new File([blob], 'kyc-selfie.jpg', { type: 'image/jpeg' });
-                        const uploadPath = `${merchantProfile.user_id}/kyc-selfie-${Date.now()}.jpg`;
+                        const uploadPath = `${merchantProfile.user_id}/kyc-selfies`;
 
                         const uploadResult = await uploadFile(file, 'merchant-documents', uploadPath);
 
                         if (uploadResult) {
                             completeVideoKYC(blob);
+
+                            const selfieUrl = uploadResult.url || '';
 
                             const simulatedScore = Math.floor(Math.random() * (98 - 85) + 85);
                             setFaceScore(simulatedScore);
@@ -155,12 +158,23 @@ export const KYCVerification: React.FC<KYCVerificationProps> = ({
                                 description: `Face Match Confidence: ${simulatedScore}%`,
                             });
 
+                            await api.post('/merchant/profile', {
+                                documents: [{
+                                    fileName: 'kyc-selfie.jpg',
+                                    filePath: selfieUrl,
+                                    fileSize: file.size,
+                                    mimeType: 'image/jpeg',
+                                    documentType: 'selfie',
+                                    docCategory: 'kyc',
+                                }],
+                            });
+
                             onDataChange?.({
                                 ...data,
                                 kycData: {
                                     ...data?.kycData,
                                     isVideoCompleted: true,
-                                    selfieUrl: uploadPath
+                                    selfieUrl: selfieUrl
                                 }
                             });
 

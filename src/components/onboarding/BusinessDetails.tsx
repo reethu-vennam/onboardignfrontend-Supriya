@@ -305,6 +305,18 @@ const regDetails = (merchantProfile as any).registration_details as Record<strin
         }
     }, []);
 
+    // Sync form fields when chatbot fills data
+    useEffect(() => {
+        if (!data) return;
+        const d = data as Partial<OnboardingData>;
+        if (d.businessName) setBusinessName(d.businessName);
+        if (d.gstNumber) setGstNumber(d.gstNumber);
+        if (d.hasGST !== undefined) setHasGST(d.hasGST);
+        if (d.registeredAddress) {
+            setRegisteredAddress(d.registeredAddress);
+        }
+    }, [data?.businessName, data?.gstNumber, data?.hasGST, data?.registeredAddress]);
+
     // Copy registered address to operating address
     const handleCopyAddress = useCallback(() => {
         setOperatingAddress({ ...registeredAddress });

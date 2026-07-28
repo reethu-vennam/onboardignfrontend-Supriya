@@ -352,9 +352,9 @@ export default function AdminDashboard() {
             const mapped = (data || []).map(item => ({
                 ...item,
                 entity_type: item.entity_type || 'individual',
-                merchant_bank_details: Array.isArray(item.merchant_bank_details) ? item.merchant_bank_details[0] : item.merchant_bank_details,
-                merchant_documents: item.merchant_documents || [],
-                merchant_kyc: Array.isArray(item.merchant_kyc) ? item.merchant_kyc[0] : item.merchant_kyc,
+                merchant_bank_details: item.bank_details || null,
+                merchant_documents: item.documents || [],
+                merchant_kyc: Array.isArray(item.kyc) ? item.kyc[0] : (item.kyc || null),
                 merchant_product_selections: safeParse(item.selected_products),
                 merchant_sub_product_selections: [] as any[]
             })) as MerchantApplication[];

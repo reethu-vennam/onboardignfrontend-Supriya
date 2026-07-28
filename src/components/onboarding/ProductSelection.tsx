@@ -502,7 +502,7 @@ export const ProductSelectionEnhanced: React.FC<ProductSelectionProps> = ({ onNe
         setSaveStatus('saving');
         try {
             const selectedProducts = buildSelectedProductsArray();
-            await apiClient.post('/merchant/profile', {
+            await apiClient.post('/products/merchant/update-products', {
                 selectedProducts: JSON.stringify(selectedProducts),
             });
             setSaveStatus('saved');

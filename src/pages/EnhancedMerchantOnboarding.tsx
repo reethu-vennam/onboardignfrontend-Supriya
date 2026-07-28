@@ -40,6 +40,7 @@ import { OnboardingDashboard } from '@/components/onboarding/OnboardingDashboard
 import { MandatePopup } from '@/components/onboarding/MandatePopup';
 import { MandateFlowModal } from '@/components/onboarding/MandateFlowModal';
 import { LanguageSelector } from '@/components/LanguageSelector';
+import { OnboardingChatbot } from '@/components/OnboardingChatbot';
 
 import {
     OnboardingData,
@@ -151,6 +152,53 @@ const SuccessPopup: React.FC<{
         </div>
     );
 };
+
+function mapChatbotData(step: string, data: Record<string, any>): Partial<OnboardingData> {
+    const result: Record<string, any> = {};
+
+    for (const [key, value] of Object.entries(data)) {
+        const strVal = String(value);
+
+        switch (key) {
+            case 'hasGST':
+            case 'operatingAddressDifferent':
+                result[key] = strVal === 'true';
+                break;
+            case 'accountHolderName':
+            case 'accountNumber':
+            case 'confirmAccountNumber':
+            case 'ifscCode':
+            case 'bankName':
+            case 'branchName':
+                if (!result.bankDetails) {
+                    const existing = {} as any;
+                    result.bankDetails = existing;
+                }
+                result.bankDetails[key] = strVal;
+                break;
+            case 'addressLine1':
+            case 'city':
+            case 'state':
+            case 'pincode':
+            case 'country':
+                if (!result.registeredAddress) {
+                    result.registeredAddress = {
+                        addressLine1: '',
+                        city: '',
+                        state: '',
+                        pincode: '',
+                        country: 'India',
+                    };
+                }
+                result.registeredAddress[key] = strVal;
+                break;
+            default:
+                result[key] = strVal;
+        }
+    }
+
+    return result as Partial<OnboardingData>;
+}
 
 const EnhancedOnboardingFlow: React.FC = () => {
     const { toast } = useToast();
@@ -703,25 +751,6 @@ const EnhancedOnboardingFlow: React.FC = () => {
         });
     }, [currentStep, setSavedProgress]);
 
-    // Sync Sahil widget with the current onboarding step and backend chat endpoint.
-   useEffect(() => {
-    if (typeof window !== 'undefined' && (window as any).SabbPeWidget) {
-        const apiUrl = String(import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
-        if (apiUrl) {
-            (window as any).SabbPeWidget.setGatewayUrl(`${apiUrl}/api/chat`);
-            (window as any).SabbPeWidget.setSttUrl(`${apiUrl}/api/stt`);
-        }
-        (window as any).SabbPeWidget.setModel('gemini-2.5-flash-lite');
-        (window as any).SabbPeWidget.updateStep(currentStep);
-    }
-}, [currentStep]);
-
-    // Sync language to Sahil widget whenever i18n language changes
-    useEffect(() => {
-        if (typeof window !== 'undefined' && (window as any).SabbPeWidget) {
-            (window as any).SabbPeWidget.setSttLang(language);
-        }
-    }, [language]);
     useEffect(() => {
         if (!merchantProfile || stepRestoredRef.current || profileLoading) return;
 
@@ -965,6 +994,15 @@ const EnhancedOnboardingFlow: React.FC = () => {
                 merchantProfile={merchantProfile}
                 user={user}
                 refetchMerchant={refetch}
+            />
+
+            <OnboardingChatbot
+                currentStep={currentStep}
+                onDataChange={(data) => {
+                    const mapped = mapChatbotData(currentStep, data);
+                    handleDataChange(mapped);
+                }}
+                language={language}
             />
 
             {process.env.NODE_ENV === 'development' && (
