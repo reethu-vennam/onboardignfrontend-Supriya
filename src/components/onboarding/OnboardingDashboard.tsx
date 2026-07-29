@@ -110,7 +110,7 @@ export const OnboardingDashboard: React.FC = () => {
         .filter((field) => field.value !== null && field.value !== undefined && field.value !== '');
 
     const extraTxnEntries = txnDetails
-        ? Object.entries(txnDetails).filter(([key]) => !txnSummaryFields.some((field) => field.keys.includes(key)))
+        ? Object.entries(txnDetails).filter(([key]) => !txnSummaryFields.some((field) => (field.keys as readonly string[]).includes(key)))
         : [];
 
     const handleSabbpePayment = async () => {
@@ -477,7 +477,7 @@ export const OnboardingDashboard: React.FC = () => {
         },
         {
             name: 'KYC Verification',
-            status: (kycData?.video_kyc_completed || kycData?.kyc_status === 'verified' || ['approved', 'pending_bank_approval', 'cpv_pending', 'cpv_verified', 'agreement_pending', 'agreement_signed'].includes(merchantProfile?.onboarding_status || '')) ? 'completed' : 'pending'
+            status: (kycData?.videoKycCompleted || kycData?.kycStatus === 'verified' || ['approved', 'pending_bank_approval', 'cpv_pending', 'cpv_verified', 'agreement_pending', 'agreement_signed'].includes(merchantProfile?.onboarding_status || '')) ? 'completed' : 'pending'
         },
         {
             name: 'Bank Verification',

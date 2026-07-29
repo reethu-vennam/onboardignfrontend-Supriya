@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { api } from '@/lib/rest-api';
+import { authService } from '@/lib/auth-service';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -52,7 +53,7 @@ export const ViewTicketButton: React.FC = () => {
       const token = authService.getToken();
       const user = authService.getUser();
 
-      if (!session || !user) {
+      if (!token || !user) {
         throw new Error("User not authenticated");
       }
 

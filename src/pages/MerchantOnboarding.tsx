@@ -517,7 +517,7 @@
 //         });
 
 //         // Start upload and OCR in parallel
-//         const uploadPromise = uploadFile(file, 'pan-cards');
+//         const uploadPromise = uploadToSupabase(file, 'pan-cards');
 //         const ocrPromise = ocrService.processDocument(file, (progress) => {
 //             setPanDocument(prev => ({ ...prev, ocrProgress: progress }));
 //         });
@@ -613,7 +613,7 @@
 //         });
 
 //         // Start upload and OCR in parallel
-//         const uploadPromise = uploadFile(file, 'aadhaar-cards');
+//         const uploadPromise = uploadToSupabase(file, 'aadhaar-cards');
 //         const ocrPromise = ocrService.processDocument(file, (progress) => {
 //             setAadhaarDocument(prev => ({ ...prev, ocrProgress: progress }));
 //         });
@@ -703,7 +703,7 @@
 //         try {
 //             // Upload to Supabase
 //             const folder = docType === 'business' ? 'business-proofs' : 'bank-statements';
-//             const uploadPath = await uploadFile(file, folder);
+//             const uploadPath = await uploadToSupabase(file, folder);
 //             console.log(`${docType} document uploaded to:`, uploadPath);
 
 //             if (docType === 'business') {
@@ -1091,12 +1091,12 @@
 //                         Tips for Better OCR Results
 //                     </h4>
 //                     <ul className="text-sm text-gray-600 space-y-1">
-//                         <li>• Clear photos: Ensure good lighting and avoid shadows</li>
-//                         <li>• Flat documents: Keep documents flat without wrinkles or folds</li>
-//                         <li>• High resolution: Use high-quality images when possible</li>
-//                         <li>• Crop properly: Make sure the entire document is visible</li>
-//                         <li>• File size: Images are automatically resized to under 2MB for processing</li>
-//                         <li>• Storage: All documents are securely uploaded to Supabase storage immediately</li>
+//                         <li>ï¿½ Clear photos: Ensure good lighting and avoid shadows</li>
+//                         <li>ï¿½ Flat documents: Keep documents flat without wrinkles or folds</li>
+//                         <li>ï¿½ High resolution: Use high-quality images when possible</li>
+//                         <li>ï¿½ Crop properly: Make sure the entire document is visible</li>
+//                         <li>ï¿½ File size: Images are automatically resized to under 2MB for processing</li>
+//                         <li>ï¿½ Storage: All documents are securely uploaded to Supabase storage immediately</li>
 //                     </ul>
 //                 </CardContent>
 //             </Card>
@@ -1588,19 +1588,11 @@ const MerchantRegistration: React.FC<MerchantRegistrationProps> = ({
     // Auto-filled fields
     const [autoFilledFields, setAutoFilledFields] = useState<Set<string>>(new Set());
 
-    // Upload to Supabase
+    // Upload file via backend API
     const uploadToSupabase = async (file: File, folder: string): Promise<string> => {
-        const fileName = `${Date.now()}_${file.name}`;
-        const filePath = `${folder}/${fileName}`;
-
-        const data = { path: filePath }; const error = null; /* storage upload replaced with api.uploadFile */
-
-        if (error) {
-            console.error('Supabase upload error:', error);
-            throw new Error('Failed to upload to storage');
-        }
-
-        return filePath;
+        const uploadResult = await api.uploadFile(file, folder);
+        if (!uploadResult) throw new Error('Failed to upload to storage');
+        return uploadResult.url || uploadResult.filePath || uploadResult.path || '';
     };
 
     // Apply OCR results to form
@@ -1648,7 +1640,7 @@ const MerchantRegistration: React.FC<MerchantRegistrationProps> = ({
         });
 
         // Start upload and OCR in parallel
-        const uploadPromise = uploadFile(file, 'pan-cards');
+        const uploadPromise = uploadToSupabase(file, 'pan-cards');
         const ocrPromise = ocrService.processDocument(file, (progress) => {
             setPanDocument(prev => ({ ...prev, ocrProgress: progress }));
         });
@@ -1726,6 +1718,7 @@ const MerchantRegistration: React.FC<MerchantRegistrationProps> = ({
                 variant: "destructive",
                 title: "Processing Failed",
                 description: msg,
+            });
         }
     }, [applyOCRResults, toast]);
 
@@ -1743,7 +1736,7 @@ const MerchantRegistration: React.FC<MerchantRegistrationProps> = ({
         });
 
         // Start upload and OCR in parallel
-        const uploadPromise = uploadFile(file, 'aadhaar-cards');
+        const uploadPromise = uploadToSupabase(file, 'aadhaar-cards');
         const ocrPromise = ocrService.processDocument(file, (progress) => {
             setAadhaarDocument(prev => ({ ...prev, ocrProgress: progress }));
         });
@@ -1821,6 +1814,7 @@ const MerchantRegistration: React.FC<MerchantRegistrationProps> = ({
                 variant: "destructive",
                 title: "Processing Failed",
                 description: msg,
+            });
         }
     }, [applyOCRResults, toast]);
 
@@ -1832,7 +1826,7 @@ const MerchantRegistration: React.FC<MerchantRegistrationProps> = ({
         try {
             // Upload to Supabase
             const folder = docType === 'business' ? 'business-proofs' : 'bank-statements';
-            const uploadPath = await uploadFile(file, folder);
+            const uploadPath = await uploadToSupabase(file, folder);
             console.log(`${docType} document uploaded to:`, uploadPath);
 
             if (docType === 'business') {
@@ -2220,12 +2214,12 @@ const MerchantRegistration: React.FC<MerchantRegistrationProps> = ({
                         Tips for Better OCR Results
                     </h4>
                     <ul className="text-sm text-gray-600 space-y-1">
-                        <li>• Clear photos: Ensure good lighting and avoid shadows</li>
-                        <li>• Flat documents: Keep documents flat without wrinkles or folds</li>
-                        <li>• High resolution: Use high-quality images when possible</li>
-                        <li>• Crop properly: Make sure the entire document is visible</li>
-                        <li>• File size: Images are automatically resized to under 2MB for processing</li>
-                        <li>• Storage: All documents are securely uploaded to Supabase storage immediately</li>
+                        <li>ï¿½ Clear photos: Ensure good lighting and avoid shadows</li>
+                        <li>ï¿½ Flat documents: Keep documents flat without wrinkles or folds</li>
+                        <li>ï¿½ High resolution: Use high-quality images when possible</li>
+                        <li>ï¿½ Crop properly: Make sure the entire document is visible</li>
+                        <li>ï¿½ File size: Images are automatically resized to under 2MB for processing</li>
+                        <li>ï¿½ Storage: All documents are securely uploaded to Supabase storage immediately</li>
                     </ul>
                 </CardContent>
             </Card>

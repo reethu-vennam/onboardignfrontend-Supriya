@@ -19,7 +19,7 @@ import {
     IndianRupee,
     PenTool
 } from 'lucide-react';
-import { OnboardingData } from '@/pages/EnhancedMerchantOnboarding';
+import { OnboardingData } from '@/types/onboarding';
 import { apiClient } from '@/lib/api-client';
 import { useToast } from '@/hooks/use-toast';
 import { WhatsAppSupportButton } from './WhatsAppSupportButton';
@@ -28,6 +28,7 @@ import type { Product, SelectedProduct, CostSummary } from '@/types/products';
 import { formatPrice } from '@/types/products';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { api } from '@/lib/rest-api';
+import { authService } from '@/lib/auth-service';
 
 interface ReviewSubmitProps {
     data: OnboardingData;
@@ -225,7 +226,7 @@ const [loading, setLoading] = useState(false);
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${session?.access_token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           merchant_id: merchantId,
@@ -265,7 +266,7 @@ const fetchTickets = async () => {
       `${import.meta.env.VITE_SUPPORT_API_URL}/api/tickets/merchant/${merchantId}`,
       {
         headers: {
-          Authorization: `Bearer ${session?.access_token}`,
+          Authorization: `Bearer ${token}`,
         },
       }
     );

@@ -286,8 +286,7 @@ export const EntityDocuments: React.FC<EntityDocumentsProps> = ({
         for (const [groupKey, docs] of Object.entries(requirementGroups)) {
             const hasAnyUploaded = docs.some(doc => slots[doc.docType]?.uploadStatus === 'success');
             if (!hasAnyUploaded) {
-                return REQUIREMENT_GROUP_MESSAGES[groupKey]
-                    || `Please upload one of: ${docs.map(doc => doc.label).join(' or ')}`;
+                return `Please upload one of: ${docs.map(doc => doc.label).join(' or ')}`;
             }
         }
 

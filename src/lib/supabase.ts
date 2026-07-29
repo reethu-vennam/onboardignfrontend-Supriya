@@ -2,6 +2,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '@/integrations/supabase/types';
+import { authService } from '@/lib/auth-service';
 
 // Your Supabase project credentials
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;

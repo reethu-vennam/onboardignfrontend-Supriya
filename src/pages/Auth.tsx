@@ -18,7 +18,7 @@ const Auth = () => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [selectedRole, setSelectedRole] = useState<'merchant' | 'distributor' | 'employee' | 'admin' | null>(null);
+    const [selectedRole, setSelectedRole] = useState<'merchant' | 'distributor' | 'employee' | null>(null);
 
     const [signInData, setSignInData] = useState({
         email: '',

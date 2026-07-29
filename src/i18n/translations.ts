@@ -8,7 +8,7 @@ interface TranslationTree {
     [key: string]: string | TranslationTree;
 }
 
-export const translations: Partial<Record<LanguageCode, TranslationTree>> = {
+export const translations: Partial<Record<LanguageCode | 'hi' | 'te', TranslationTree>> = {
     en: {
         common: {
             language: 'Language',

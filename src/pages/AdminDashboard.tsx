@@ -5,7 +5,7 @@ import { authService } from '@/lib/auth-service';
 import { API_BASE_URL } from '@/lib/api-client';
 import {
     CheckCircle, XCircle, Clock, Search, Filter, Download,
-    Eye, AlertCircle, PlayCircle, FileText, Image as ImageIcon, ExternalLink
+    Eye, AlertCircle, PlayCircle, FileText, Image as ImageIcon, ExternalLink, Users
 } from 'lucide-react';
 
 interface MerchantDocument {
@@ -417,7 +417,7 @@ export default function AdminDashboard() {
             setDistLoading(true);
             const token = authService.getToken();
             const res = await fetch(`${window.location.origin}/api/distributor/onboarding`, {
-                headers: { Authorization: `Bearer ${token ?.access_token}` }
+                headers: { Authorization: `Bearer ${token}` }
             });
             const result = await res.json();
             if (result.success) setDistributors(result.data);
@@ -462,7 +462,7 @@ export default function AdminDashboard() {
             const token = authService.getToken();
             const res = await fetch(`${window.location.origin}/api/distributor/onboarding/approve`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token ?.access_token}` },
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                 body: JSON.stringify({ distributorId }),
             });
             const result = await res.json();
@@ -478,7 +478,7 @@ export default function AdminDashboard() {
             const token = authService.getToken();
             const res = await fetch(`${window.location.origin}/api/distributor/onboarding/reject`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token ?.access_token}` },
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                 body: JSON.stringify({ distributorId, reason: rejectReason.trim() }),
             });
             const result = await res.json();
@@ -494,7 +494,7 @@ export default function AdminDashboard() {
             const token = authService.getToken();
             const res = await fetch(`${window.location.origin}/api/distributor/onboarding/credentials/send`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token ?.access_token}` },
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                 body: JSON.stringify({ distributorId, password: credPassword }),
             });
             const result = await res.json();
@@ -506,7 +506,7 @@ export default function AdminDashboard() {
     const viewSignedAgreement = async (distributorId: string) => {
         const token = authService.getToken();
         const res = await fetch(`${window.location.origin}/api/distributor/onboarding/signed/${distributorId}`, {
-            headers: { Authorization: `Bearer ${token ?.access_token}` }
+            headers: { Authorization: `Bearer ${token}` }
         });
         const result = await res.json();
         if (result.success && result.data.signedUrl) window.open(result.data.signedUrl, '_blank');
@@ -518,7 +518,7 @@ export default function AdminDashboard() {
         const token = authService.getToken();
         const res = await fetch(`${window.location.origin}/api/distributor/onboarding/kyc/approve`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token ?.access_token}` },
+            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
             body: JSON.stringify({ distributorId }),
         });
         const result = await res.json();
@@ -531,7 +531,7 @@ export default function AdminDashboard() {
         const token = authService.getToken();
         const res = await fetch(`${window.location.origin}/api/distributor/onboarding/kyc/reject`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token ?.access_token}` },
+            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
             body: JSON.stringify({ distributorId }),
         });
         const result = await res.json();
@@ -684,7 +684,7 @@ export default function AdminDashboard() {
 
             const res = await fetch(`${window.location.origin}/api/distributor/create`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token ?.access_token}` },
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                 body: JSON.stringify(payload),
             });
             const result = await res.json();

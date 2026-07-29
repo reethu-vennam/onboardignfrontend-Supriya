@@ -63,6 +63,49 @@ export interface MerchantProfile {
   rejectionReason?: string | null;
   createdAt: string;
   updatedAt: string;
+
+  // Snake_case duplicates populated by fetchMerchantProfile() below for
+  // components that read the raw Spring Boot (snake_case) field names.
+  user_id?: string;
+  full_name?: string;
+  mobile_number?: string;
+  pan_number?: string;
+  aadhaar_number?: string;
+  business_name?: string;
+  gst_number?: string;
+  entity_type?: string | null;
+  onboarding_status?: string;
+  business_address_line1?: string;
+  business_address_line2?: string;
+  business_city?: string;
+  business_state?: string;
+  business_postal_code?: string;
+  business_country?: string;
+  upi_vpa?: string;
+  upi_qr_string?: string;
+  upi_mandate_status?: string;
+  upiVpa?: string;
+  upiQrString?: string;
+  upiMandateStatus?: string;
+  cpv_status?: string;
+  cpvStatus?: string;
+  application_id?: string;
+  applicationId?: string;
+  rejection_reason?: string | null;
+  bank_merchant_code?: string;
+  bank_application_id?: string;
+  agreement_signed?: boolean;
+  pgAgreementSigned?: boolean;
+  pg_agreement_signed?: boolean;
+  selected_products?: any;
+  created_at?: string;
+  updated_at?: string;
+  txn_details?: any;
+  total_monthly_cost?: number;
+  total_onetime_cost?: number;
+  total_integration_cost?: number;
+  split_payment_config?: any;
+  bank_commercials?: any;
 }
 
 export interface BankDetails {

@@ -411,7 +411,6 @@ const regDetails = (merchantProfile as any).registration_details as Record<strin
                 mobileNumber: mobileNumber.trim(),
                 email: email.trim().toLowerCase(),
                 businessAddressLine1: registeredAddress.addressLine1 || null,
-                businessAddressLine2: registeredAddress.addressLine2 || null,
                 businessCity: registeredAddress.city || null,
                 businessState: registeredAddress.state || null,
                 businessPostalCode: registeredAddress.pincode || null,

@@ -24,6 +24,12 @@ interface KYCVerificationProps {
             locationVerified?: boolean;
             latitude?: number;
             longitude?: number;
+            fullAddress?: string | null;
+            area?: string | null;
+            city?: string | null;
+            state?: string | null;
+            pincode?: string | null;
+            country?: string | null;
         };
         panNumber?: string;
         aadhaarNumber?: string;
@@ -36,6 +42,12 @@ interface KYCVerificationProps {
             locationVerified?: boolean;
             latitude?: number;
             longitude?: number;
+            fullAddress?: string | null;
+            area?: string | null;
+            city?: string | null;
+            state?: string | null;
+            pincode?: string | null;
+            country?: string | null;
         };
         [key: string]: unknown;
     }) => void;

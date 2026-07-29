@@ -202,7 +202,7 @@ function mapChatbotData(step: string, data: Record<string, any>): Partial<Onboar
 
 const EnhancedOnboardingFlow: React.FC = () => {
     const { toast } = useToast();
-    const { user, session } = useAuth();
+    const { user } = useAuth();
     const { language } = useI18n();
     const navigate = useNavigate();
     const location = useLocation();
@@ -296,7 +296,7 @@ const EnhancedOnboardingFlow: React.FC = () => {
         if (!user?.id) return false;
         try {
             const mergedData = { ...onboardingData, ...dataToSave };
-            const addr = mergedData.registeredAddress || mergedData.operatingAddress || mergedData.businessAddress;
+            const addr = mergedData.registeredAddress || mergedData.operatingAddress;
             const payload: any = {
                 fullName: mergedData.fullName,
                 mobileNumber: mergedData.mobileNumber,
@@ -306,11 +306,11 @@ const EnhancedOnboardingFlow: React.FC = () => {
                 entityType: mergedData.entityType || null,
             };
             if (addr && (addr.addressLine1 || addr.city || addr.state)) {
-                payload.businessAddressLine1 = addr.addressLine1 || (addr as any).line1 || null;
-                payload.businessAddressLine2 = (addr as any).addressLine2 || (addr as any).line2 || null;
+                payload.businessAddressLine1 = addr.addressLine1 || null;
+                payload.businessAddressLine2 = (addr as any).addressLine2 || null;
                 payload.businessCity = addr.city || null;
                 payload.businessState = addr.state || null;
-                payload.businessPostalCode = addr.pincode || (addr as any).postalCode || null;
+                payload.businessPostalCode = addr.pincode || null;
                 payload.businessCountry = addr.country || 'India';
             }
             await api.post('/merchant/profile', payload);
@@ -359,13 +359,13 @@ const EnhancedOnboardingFlow: React.FC = () => {
                     payload.entityType = merged.entityType || null;
                     payload.panNumber = merged.panNumber || null;
                     payload.aadhaarNumber = merged.aadhaarNumber || null;
-                    const addr = merged.registeredAddress || merged.operatingAddress || merged.businessAddress;
+                    const addr = merged.registeredAddress || merged.operatingAddress;
                     if (addr) {
-                        payload.businessAddressLine1 = addr.addressLine1 || addr.line1;
-                        payload.businessAddressLine2 = (addr as any).addressLine2 || addr.line2 || null;
+                        payload.businessAddressLine1 = addr.addressLine1;
+                        payload.businessAddressLine2 = (addr as any).addressLine2 || null;
                         payload.businessCity = addr.city;
                         payload.businessState = addr.state;
-                        payload.businessPostalCode = addr.pincode || addr.postalCode;
+                        payload.businessPostalCode = addr.pincode;
                         payload.businessCountry = addr.country || 'India';
                     }
                 }
@@ -400,13 +400,13 @@ const EnhancedOnboardingFlow: React.FC = () => {
                 }
 
                 if (currentStep === 'doing-business' || currentStep === 'bank-details') {
-                    const addr = merged.businessAddress || merged.registeredAddress || merged.operatingAddress;
+                    const addr = merged.registeredAddress || merged.operatingAddress;
                     if (addr) {
-                        payload.businessAddressLine1 = addr.addressLine1 || addr.line1;
-                        payload.businessAddressLine2 = (addr as any).addressLine2 || addr.line2 || null;
+                        payload.businessAddressLine1 = addr.addressLine1;
+                        payload.businessAddressLine2 = (addr as any).addressLine2 || null;
                         payload.businessCity = addr.city;
                         payload.businessState = addr.state;
-                        payload.businessPostalCode = addr.pincode || addr.postalCode;
+                        payload.businessPostalCode = addr.pincode;
                         payload.businessCountry = addr.country || 'India';
                     }
                     if (merged.bankDetails) {
@@ -444,8 +444,7 @@ const EnhancedOnboardingFlow: React.FC = () => {
 
             const existingProfile = await api.get('/merchant/profile').catch(() => null);
 
-            const src = onboardingData.businessAddress
-                || onboardingData.registeredAddress
+            const src = onboardingData.registeredAddress
                 || onboardingData.operatingAddress;
 
             const hasLocalAddr = src && (src.addressLine1 || src.city || src.state || src.pincode);
@@ -559,18 +558,18 @@ const EnhancedOnboardingFlow: React.FC = () => {
         const hasBankDetails = Boolean(
             isBankDetailsComplete(onboardingData) ||
             (
-                (bankDetails?.account_number || bankDetails?.accountNumber) &&
-                (bankDetails?.ifsc_code || bankDetails?.ifscCode) &&
-                (bankDetails?.bank_name || bankDetails?.bankName) &&
-                (bankDetails?.account_holder_name || bankDetails?.accountHolderName)
+                bankDetails?.accountNumber &&
+                bankDetails?.ifscCode &&
+                bankDetails?.bankName &&
+                bankDetails?.accountHolderName
             )
         );
 
         const hasKYC = Boolean(
             isKYCComplete(onboardingData) ||
             (
-                (kycData?.video_kyc_completed || kycData?.videoKycCompleted) &&
-                (kycData?.location_captured || kycData?.locationCaptured)
+                kycData?.videoKycCompleted &&
+                kycData?.locationCaptured
             )
         );
 
@@ -720,11 +719,11 @@ const EnhancedOnboardingFlow: React.FC = () => {
         };
         const docMap: Record<string, { file: File; path: string }> = {};
         documents.forEach(doc => {
-            const key = keyMap[doc.document_type];
+            const key = keyMap[doc.documentType];
             if (key) {
                 docMap[key] = {
-                    file: new File([], doc.file_name, { type: doc.mime_type || 'application/octet-stream' }),
-                    path: doc.file_path,
+                    file: new File([], doc.fileName, { type: doc.mimeType || 'application/octet-stream' }),
+                    path: doc.filePath,
                 };
             }
         });
@@ -828,14 +827,11 @@ const EnhancedOnboardingFlow: React.FC = () => {
             d => d.documentType === 'utility_bill' || d.documentType === 'rent_agreement'
         );
 
-        const hasBankDetails = Boolean(bankDetails?.accountNumber || bankDetails?.account_number);
+        const hasBankDetails = Boolean(bankDetails?.accountNumber);
         const hasKYC = merchantProfile.cpv_status === 'cpv_verified'
             || (merchantProfile as any).cpvSubmitted === true
             || (merchantProfile as any).verification_submitted === true
-            || Boolean(
-                (kycData?.video_kyc_completed || kycData?.videoKycCompleted) &&
-                (kycData?.location_captured || kycData?.locationCaptured)
-            );
+            || Boolean(kycData?.videoKycCompleted && kycData?.locationCaptured);
 
         if (!hasEntityType) { goToStep('entity-type'); }
         else if (!hasProducts) { goToStep('products'); }

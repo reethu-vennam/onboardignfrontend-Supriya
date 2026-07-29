@@ -183,6 +183,12 @@ export interface OnboardingData {
         locationVerified?: boolean;
         latitude?: number;
         longitude?: number;
+        fullAddress?: string | null;
+        area?: string | null;
+        city?: string | null;
+        state?: string | null;
+        pincode?: string | null;
+        country?: string | null;
     };
 
     // â”€â”€ Step 10: Review & Submit â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€

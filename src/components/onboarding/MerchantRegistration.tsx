@@ -403,7 +403,7 @@ const MerchantRegistration: React.FC<MerchantRegistrationProps & { merchantProfi
     // This bypasses RLS issues - the file path owner matches the authenticated user
     // The backend already tracks merchant_id in the database separately
     
-    const isDistributorFlow = !!(data as any)?.isDistributorFlow ?? !!merchantProfileProp;
+    const isDistributorFlow = !!(data as any)?.isDistributorFlow || !!merchantProfileProp;
     const uploadUserId = isDistributorFlow ? user?.id : (merchantProfile?.user_id as string || user?.id);
     
     console.log('?? Determining upload user ID...');

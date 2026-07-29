@@ -235,6 +235,7 @@ export default function DistributorDashboard() {
     const [filterStatus, setFilterStatus] = useState('all');
     const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
     const [inviteData, setInviteData] = useState({ name: '', mobile: '', email: '' });
+    const [paymentRequestData, setPaymentRequestData] = useState({ name: '', email: '', mobile_number: '', amount: '' });
     const [sending, setSending] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -1464,10 +1465,9 @@ export default function DistributorDashboard() {
 
     const handleUploadFile = useCallback(async (file: File, bucket: string, filePath: string): Promise<string | null> => {
         try {
-            /* upload handled via api.uploadFile */
-
-            if (uploadError) throw uploadError;
-            return filePath;
+            const uploadResult = await api.uploadFile(file, filePath);
+            if (!uploadResult) throw new Error('Upload failed');
+            return uploadResult.url || uploadResult.filePath || uploadResult.path || filePath;
         } catch (error) {
             console.error('File upload error:', error);
             toast({ title: 'Upload Failed', description: getErrorMessage(error), variant: 'destructive' });
@@ -2315,7 +2315,7 @@ export default function DistributorDashboard() {
     };
 
     const resetCreateDistForm = () => {
-        setNewDistributor({ company_name: '', contact_person: '', email: '', mobile_number: '', pan_number: '', aadhaar_number: '', bank_account_holder: '', bank_name: '', bank_account_number: '', bank_ifsc: '', address: '', city: '', state: '', pincode: '', default_commission_rate: '', payout_cycle: 'monthly' });
+        setNewDistributor({ company_name: '', contact_person: '', email: '', mobile_number: '', pan_number: '', bank_account_holder: '', bank_name: '', bank_account_number: '', bank_ifsc: '', address: '', city: '', state: '', pincode: '', default_commission_rate: '', payout_cycle: 'monthly' });
         setProfilePhotoFile(null);
         setCreateSignedAgreementFile(null);
         setCreatePanDocFile(null);
@@ -2721,6 +2721,7 @@ export default function DistributorDashboard() {
             { id: 'earnings', label: 'Earnings', icon: 'dollar' },
             { id: 'settlements', label: 'Settlements', icon: 'wallet' },
             { id: 'chargebacks', label: 'Chargebacks', icon: 'credit-card' },
+            ...(!isAdmin ? [{ id: 'auto-merchant-creation', label: 'Auto Merchant Creation', icon: 'credit-card' }] : []),
             ...(isAdmin ? [{ id: 'distributor-onboarding', label: 'Distributor Onboarding', icon: 'users' }] : []),
             ...(isAdmin ? [{ id: 'employee-management', label: 'Employee Management', icon: 'users' }] : []),
             { id: 'invitations', label: 'Invitations', icon: 'mail' },
@@ -2754,12 +2755,13 @@ export default function DistributorDashboard() {
                                     : 'text-gray-700 hover:bg-gray-100'
                             }`}
                         >
-                            {item.id === 'chart' && <BarChart className="h-4 w-4" />}
-                            {item.id === 'users' && <Users className="h-4 w-4" />}
-                            {item.id === 'mail' && <MessageSquare className="h-4 w-4" />}
-                            {item.id === 'dollar' && <IndianRupee className="h-4 w-4" />}
-                            {item.id === 'wallet' && <Wallet className="h-4 w-4" />}
-                            {item.id === 'credit-card' && <CreditCard className="h-4 w-4" />}
+                            {item.icon === 'chart' && <BarChart className="h-4 w-4" />}
+                            {item.icon === 'users' && <Users className="h-4 w-4" />}
+                            {item.icon === 'mail' && <MessageSquare className="h-4 w-4" />}
+                            {item.icon === 'dollar' && <IndianRupee className="h-4 w-4" />}
+                            {item.icon === 'wallet' && <Wallet className="h-4 w-4" />}
+                            {item.icon === 'credit-card' && <CreditCard className="h-4 w-4" />}
+                            {item.icon === 'settings' && <Settings className="h-4 w-4" />}
                             {sidebarOpen && <span>{item.label}</span>}
                         </button>
                     ))}
@@ -5179,6 +5181,81 @@ PQR Shop,9123456789,pqr@example.com`}
                         </div>
                     )}
 
+                    {/* Auto Merchant Creation Tab */}
+                    {activeTab === 'auto-merchant-creation' && (
+                        <div className="space-y-6">
+                            <div>
+                                <h2 className="text-3xl font-bold text-gray-900">Auto Merchant Creation</h2>
+                                <p className="text-gray-600">Enter merchant payment details</p>
+                            </div>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2">
+                                        <CreditCard className="h-5 w-5 text-blue-500" />
+                                        Payment Details
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                                            <Input
+                                                value={paymentRequestData.name}
+                                                onChange={(e) => setPaymentRequestData({ ...paymentRequestData, name: e.target.value })}
+                                                placeholder="Enter name"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                            <Input
+                                                type="email"
+                                                value={paymentRequestData.email}
+                                                onChange={(e) => setPaymentRequestData({ ...paymentRequestData, email: e.target.value })}
+                                                placeholder="Enter email"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">Mobile Number</label>
+                                            <Input
+                                                value={paymentRequestData.mobile_number}
+                                                onChange={(e) => setPaymentRequestData({ ...paymentRequestData, mobile_number: e.target.value.replace(/\D/g, '') })}
+                                                placeholder="Enter mobile number"
+                                                maxLength={10}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">Amount</label>
+                                            <Input
+                                                type="number"
+                                                value={paymentRequestData.amount}
+                                                onChange={(e) => setPaymentRequestData({ ...paymentRequestData, amount: e.target.value })}
+                                                placeholder="Enter amount"
+                                                min="0"
+                                                step="0.01"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="flex justify-end">
+                                        <Button
+                                            onClick={() => {
+                                                toast({
+                                                    title: 'Payments',
+                                                    description: 'Payment details captured',
+                                                });
+                                            }}
+                                            disabled={!paymentRequestData.name || !paymentRequestData.email || !paymentRequestData.mobile_number || !paymentRequestData.amount}
+                                            className="gap-2"
+                                        >
+                                            <CreditCard className="h-4 w-4" />
+                                            Payments
+                                        </Button>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </div>
+                    )}
+
                     {/* Settlements Tab */}
                     {activeTab === 'settlements' && (
                         <div className="space-y-6">
@@ -5375,16 +5452,16 @@ PQR Shop,9123456789,pqr@example.com`}
                                                                         {record.settlement_batch_ref || '—'}
                                                                     </td>
                                                                     <td className="py-3 px-4 text-right text-gray-900">
-                                                                        ₹{parseFloat(record.gross_amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                                                        ₹{(record.gross_amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                                                     </td>
                                                                     <td className="py-3 px-4 text-right text-red-600">
-                                                                        ₹{parseFloat(record.mdr_deduction || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                                                        ₹{(record.mdr_deduction || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                                                     </td>
                                                                     <td className="py-3 px-4 text-right text-amber-600">
-                                                                        ₹{parseFloat(record.rolling_reserve_held || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                                                        ₹{(record.rolling_reserve_held || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                                                     </td>
                                                                     <td className="py-3 px-4 text-right font-medium text-green-700">
-                                                                        ₹{parseFloat(record.net_settlement_amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                                                        ₹{(record.net_settlement_amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                                                     </td>
                                                                     <td className="py-3 px-4 text-center text-gray-600">
                                                                         {record.transaction_count || 0}
@@ -5480,10 +5557,10 @@ PQR Shop,9123456789,pqr@example.com`}
                                                                         {entry.release_date ? new Date(entry.release_date).toLocaleDateString('en-IN') : '—'}
                                                                     </td>
                                                                     <td className="py-3 px-4 text-right text-gray-900">
-                                                                        ₹{parseFloat(entry.gross_settlement_amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                                                        ₹{(entry.gross_settlement_amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                                                     </td>
                                                                     <td className="py-3 px-4 text-right font-medium text-amber-600">
-                                                                        ₹{parseFloat(entry.reserve_amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                                                        ₹{(entry.reserve_amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                                                     </td>
                                                                     <td className="py-3 px-4 text-gray-600 font-mono text-xs">
                                                                         {entry.transaction_ref || '—'}
@@ -5575,25 +5652,25 @@ PQR Shop,9123456789,pqr@example.com`}
                                                     <div className="bg-gray-50 rounded-lg p-4">
                                                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Gross Amount</p>
                                                         <p className="text-xl font-bold text-gray-900">
-                                                            ₹{(settlementPreview.gross_amount || settlementPreview.grossAmount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                                            ₹{(settlementPreview.gross_amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                                         </p>
                                                     </div>
                                                     <div className="bg-red-50 rounded-lg p-4">
                                                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">MDR Deduction</p>
                                                         <p className="text-xl font-bold text-red-600">
-                                                            ₹{(settlementPreview.mdr_deduction || settlementPreview.mdrDeduction || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                                            ₹{(settlementPreview.mdr_deduction || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                                         </p>
                                                     </div>
                                                     <div className="bg-amber-50 rounded-lg p-4">
                                                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Rolling Reserve</p>
                                                         <p className="text-xl font-bold text-amber-600">
-                                                            ₹{(settlementPreview.rolling_reserve || settlementPreview.rollingReserve || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                                            ₹{(settlementPreview.rolling_reserve || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                                         </p>
                                                     </div>
                                                     <div className="bg-green-50 rounded-lg p-4">
                                                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Net Settlement</p>
                                                         <p className="text-xl font-bold text-green-700">
-                                                            ₹{(settlementPreview.net_amount || settlementPreview.netAmount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                                            ₹{(settlementPreview.net_amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -5601,7 +5678,7 @@ PQR Shop,9123456789,pqr@example.com`}
                                                 {/* Transaction Count */}
                                                 <div className="flex items-center gap-2 text-sm text-gray-600 border-t border-gray-100 pt-4">
                                                     <CheckCircle className="h-4 w-4 text-green-500" />
-                                                    <span>{settlementPreview.transaction_count || settlementPreview.transactionCount || 0} eligible transaction{(settlementPreview.transaction_count || settlementPreview.transactionCount || 0) !== 1 ? 's' : ''} found</span>
+                                                    <span>{settlementPreview.transaction_count || 0} eligible transaction{(settlementPreview.transaction_count || 0) !== 1 ? 's' : ''} found</span>
                                                 </div>
                                             </div>
                                         )}
