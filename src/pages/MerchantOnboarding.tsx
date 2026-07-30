@@ -1589,7 +1589,7 @@ const MerchantRegistration: React.FC<MerchantRegistrationProps> = ({
     const [autoFilledFields, setAutoFilledFields] = useState<Set<string>>(new Set());
 
     // Upload file via backend API
-    const uploadToSupabase = async (file: File, folder: string): Promise<string> => {
+    const uploadDocument = async (file: File, folder: string): Promise<string> => {
         const uploadResult = await api.uploadFile(file, folder);
         if (!uploadResult) throw new Error('Failed to upload to storage');
         return uploadResult.url || uploadResult.filePath || uploadResult.path || '';
@@ -1640,7 +1640,7 @@ const MerchantRegistration: React.FC<MerchantRegistrationProps> = ({
         });
 
         // Start upload and OCR in parallel
-        const uploadPromise = uploadToSupabase(file, 'pan-cards');
+        const uploadPromise = uploadDocument(file, 'pan-cards');
         const ocrPromise = ocrService.processDocument(file, (progress) => {
             setPanDocument(prev => ({ ...prev, ocrProgress: progress }));
         });
@@ -1736,7 +1736,7 @@ const MerchantRegistration: React.FC<MerchantRegistrationProps> = ({
         });
 
         // Start upload and OCR in parallel
-        const uploadPromise = uploadToSupabase(file, 'aadhaar-cards');
+        const uploadPromise = uploadDocument(file, 'aadhaar-cards');
         const ocrPromise = ocrService.processDocument(file, (progress) => {
             setAadhaarDocument(prev => ({ ...prev, ocrProgress: progress }));
         });
@@ -1824,9 +1824,8 @@ const MerchantRegistration: React.FC<MerchantRegistrationProps> = ({
         if (!file) return;
 
         try {
-            // Upload to Supabase
             const folder = docType === 'business' ? 'business-proofs' : 'bank-statements';
-            const uploadPath = await uploadToSupabase(file, folder);
+            const uploadPath = await uploadDocument(file, folder);
             console.log(`${docType} document uploaded to:`, uploadPath);
 
             if (docType === 'business') {

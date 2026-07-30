@@ -1001,7 +1001,7 @@ const EnhancedOnboardingFlow: React.FC = () => {
                 language={language}
             />
 
-            {process.env.NODE_ENV === 'development' && (
+            {import.meta.env.DEV && (
                 <div className="fixed bottom-4 right-4 bg-black/80 text-white p-3 rounded-lg text-xs max-w-xs space-y-1">
                     <div className="font-bold">Debug</div>
                     <div>Step: {currentStep}</div>

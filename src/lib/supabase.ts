@@ -1,31 +1,30 @@
-// src/lib/supabase.ts - Supabase Client Configuration
+// Compatibility wrapper for legacy imports.
+// The onboarding frontend now talks to the Spring/MariaDB backend only.
 
-import { createClient } from '@supabase/supabase-js';
-import type { Database } from '@/integrations/supabase/types';
 import { authService } from '@/lib/auth-service';
 
-// Your Supabase project credentials
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-// Create the Supabase client with TypeScript types
-export const supabase = createClient < Database > (supabaseUrl, supabaseAnonKey, {
+export const supabase = {
     auth: {
-        persistSession: true,
-        autoRefreshToken: true,
+        async signOut() {
+            authService.logout();
+            return { error: null };
+        },
+        async getSession() {
+            const token = authService.getToken();
+            return {
+                data: {
+                    session: token ? { access_token: token, user: authService.getUser() } : null,
+                },
+                error: null,
+            };
+        },
     },
-});
-
-// Optional: Helper functions for common operations
-export const getCurrentUser = async () => {
-    const user = authService.getUser();
-    return user;
 };
+
+export const getCurrentUser = async () => authService.getUser();
 
 export const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
+    authService.logout();
 };
 
-// Export types for use in components
 export type { Database } from './database.types';

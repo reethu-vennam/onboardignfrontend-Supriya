@@ -403,7 +403,7 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
                     throw new Error('Not authenticated');
                 }
 
-                const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8888';
+                const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
                 const backendResponse = await fetch(`${API_URL}/api/distributor/save-bank-details`, {
                     method: 'POST',
                     headers: {

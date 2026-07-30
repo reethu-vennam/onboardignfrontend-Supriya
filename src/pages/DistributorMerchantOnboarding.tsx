@@ -603,7 +603,7 @@ export default function DistributorMerchantOnboarding() {
             </div>
 
             {/* Dev debug */}
-            {process.env.NODE_ENV === 'development' && (
+            {import.meta.env.DEV && (
                 <div className="fixed bottom-4 right-4 bg-black/80 text-white p-3 rounded-lg text-xs space-y-1 max-w-xs">
                     <div className="font-bold">Distributor Debug</div>
                     <div>Step: {currentStepId} ({stepIndex + 1}/{steps.length})</div>

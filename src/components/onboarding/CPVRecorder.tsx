@@ -100,7 +100,8 @@ export const CPVRecorder: React.FC<CPVRecorderProps> = ({ merchantId, userId, on
             formData.append('file', videoBlob, fileName);
 
             const token = localStorage.getItem('sabbpe_token') || '';
-            const uploadRes = await fetch('http://localhost:8080/api/upload/file', {
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+            const uploadRes = await fetch(`${API_URL}/api/upload/file`, {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${token}` },
                 body: formData,

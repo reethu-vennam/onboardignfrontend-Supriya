@@ -82,13 +82,6 @@ Output in `dist/` folder.
 
 ## 🌐 Deployment
 
-### Docker
-
-```bash
-docker build -t support-module .
-docker run -p 3002:80 support-module
-```
-
 ### Vercel
 
 ```bash

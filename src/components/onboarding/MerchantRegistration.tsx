@@ -394,8 +394,8 @@ const MerchantRegistration: React.FC<MerchantRegistrationProps & { merchantProfi
         }
     }, [data?.documents]);
 
-    const uploadToSupabase = async (file: File, documentType: string): Promise<string> => {
-    console.log('?? uploadToSupabase called', { file: file.name, documentType });
+    const uploadDocument = async (file: File, documentType: string): Promise<string> => {
+    console.log('Uploading document through backend API', { file: file.name, documentType });
     
     // ? CRITICAL FIX FOR DISTRIBUTOR FLOW:
     // For distributor flow: Use the DISTRIBUTOR's (current logged-in) user_id as the storage path
@@ -424,35 +424,22 @@ const MerchantRegistration: React.FC<MerchantRegistrationProps & { merchantProfi
     const fileName = `${documentType}_${Date.now()}.${fileExt}`;
     
     // ? CRITICAL: Path uses authenticated user's ID (distributor or merchant)
-    // This matches Supabase RLS policy expectations
+    // Keep a stable owner-prefixed path for existing document records.
     const filePath = `${uploadUserId}/${documentType}_${Date.now()}.${file.name.split('.').pop()}`;
     console.log('?? Upload path:', filePath);
     console.log('   - Path owner matches authenticated user?', uploadUserId === user?.id);
 
     try {
-        /* upload via api */
         console.log('   - Authenticated user:', user?.id);
         console.log('   - Upload path user_id:', uploadUserId);
         console.log('   - Are they the same?', user?.id === uploadUserId);
         console.log('   - This is distributor flow:', user?.id !== merchantProfile?.user_id);
         
-        const data = { path: filePath }; const error = null; /* storage upload replaced with api.uploadFile */
+        const uploadResult = await api.uploadFile(file, filePath);
+        const savedPath = uploadResult?.url || uploadResult?.filePath || uploadResult?.path || filePath;
 
-        if (error) {
-            console.error('? Supabase upload error:', error);
-            console.error('   - error.message:', error.message);
-            console.error('   - error.status:', error.status);
-            if (error.message?.includes('permission') || error.message?.includes('policy')) {
-                console.error('?? RLS POLICY ISSUE: Supabase rejected upload due to Row Level Security policy');
-                console.error('   Current user:', user?.id, '(distributor)');
-                console.error('   Path owner:', uploadUserId, '(should match current user)');
-                console.error('   For distributor flow, the backend service role may need to upload');
-            }
-            throw error;
-        }
-
-        console.log('? Supabase upload successful, data:', data);
-        return filePath;
+        console.log('Document upload successful:', savedPath);
+        return savedPath;
     } catch (err) {
         console.error('? Upload failed with error:', err);
         if (err instanceof Error) {
@@ -511,7 +498,7 @@ const MerchantRegistration: React.FC<MerchantRegistrationProps & { merchantProfi
             ocrProgress: 0
         });
 
-        const uploadPromise = uploadToSupabase(file, 'pan-cards');
+        const uploadPromise = uploadDocument(file, 'pan-cards');
         const ocrPromise = ocrService.processDocument(file, (progress) => {
             setPanDocument(prev => ({ ...prev, ocrProgress: progress }));
         });
@@ -623,7 +610,7 @@ const MerchantRegistration: React.FC<MerchantRegistrationProps & { merchantProfi
             ocrProgress: 0
         });
 
-        const uploadPromise = uploadToSupabase(file, 'aadhaar-cards');
+        const uploadPromise = uploadDocument(file, 'aadhaar-cards');
         const ocrPromise = ocrService.processDocument(file, (progress) => {
             setAadhaarDocument(prev => ({ ...prev, ocrProgress: progress }));
         });
@@ -722,7 +709,7 @@ const MerchantRegistration: React.FC<MerchantRegistrationProps & { merchantProfi
 
         try {
             const folder = docType === 'business' ? 'business-proofs' : 'bank-statements';
-            const uploadPath = await uploadToSupabase(file, folder);
+            const uploadPath = await uploadDocument(file, folder);
             console.log(`${docType} document uploaded to:`, uploadPath);
 
             if (docType === 'business') {
