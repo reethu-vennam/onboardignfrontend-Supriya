@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { authService } from '@/lib/auth-service';
 import { useToast } from './use-toast';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+const API_BASE = import.meta.env.VITE_API_URL || '';
 
 interface UploadProgress {
     progress: number;

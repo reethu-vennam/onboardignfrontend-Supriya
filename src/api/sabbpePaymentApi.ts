@@ -4,7 +4,7 @@ import { authService } from '@/lib/auth-service';
 
 const SABBPE_BASE_URL = import.meta.env.VITE_SABBPE_BASE_URL;
 const PAYMENT_API_URL = import.meta.env.VITE_PAYMENT_API_URL;
-const INTEGRATION_COST_API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+const INTEGRATION_COST_API_URL = import.meta.env.VITE_API_URL || '';
 const SABBPE_USER_ID = import.meta.env.VITE_SABBPE_USER_ID;
 const SABBPE_MERCHANT_ID = import.meta.env.VITE_SABBPE_MERCHANT_ID;
 const SABBPE_PASSWORD = import.meta.env.VITE_SABBPE_PASSWORD;

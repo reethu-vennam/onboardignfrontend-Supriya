@@ -119,6 +119,7 @@ export const translations: Partial<Record<LanguageCode | 'hi' | 'te', Translatio
             loading: 'Loading...',
             noTicketsRaised: 'No tickets raised yet.',
             whatsappSupport: 'WhatsApp Support',
+            upload: 'Upload',
             completed: 'Completed',
             applicationDetails: 'Application Details',
             personalInformation: 'Personal Information',
@@ -660,6 +661,7 @@ export const translations: Partial<Record<LanguageCode | 'hi' | 'te', Translatio
             selected: 'चुना गया',
             required: 'जरूरी',
             optional: 'यदि लागू हो',
+            upload: 'अपलोड',
         },
         landing: {
             adminDashboard: 'एडमिन डैशबोर्ड',

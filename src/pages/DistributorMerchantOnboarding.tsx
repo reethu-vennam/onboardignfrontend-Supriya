@@ -286,6 +286,7 @@ export default function DistributorMerchantOnboarding() {
                 businessName: onboardingData.businessName,
                 gstNumber: onboardingData.gstNumber || null,
                 entityType: onboardingData.entityType || null,
+                operatingAddressDifferent: onboardingData.operatingAddressDifferent,
             };
             if (addr && (addr.addressLine1 || addr.city || addr.state)) {
                 payload.businessAddressLine1 = addr.addressLine1 || null;

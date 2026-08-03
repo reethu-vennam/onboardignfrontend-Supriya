@@ -75,6 +75,7 @@ interface MerchantProfileShape {
     upi_mandate_status?: string | null;
     agreement_signed?: boolean | null;
     pg_agreement_signed?: boolean | null;
+    operating_address_different?: boolean | null;
 }
 
 interface BaseStepProps {
@@ -361,6 +362,7 @@ const EnhancedOnboardingFlow: React.FC = () => {
                     payload.entityType = merged.entityType || null;
                     payload.panNumber = merged.panNumber || null;
                     payload.aadhaarNumber = merged.aadhaarNumber || null;
+                    payload.operatingAddressDifferent = merged.operatingAddressDifferent;
                     const addr = merged.registeredAddress || merged.operatingAddress;
                     if (addr) {
                         payload.businessAddressLine1 = addr.addressLine1;
@@ -665,6 +667,7 @@ const EnhancedOnboardingFlow: React.FC = () => {
                 businessName: mp.businessName || mp.business_name || prev.businessName,
                 gstNumber: mp.gstNumber || mp.gst_number || prev.gstNumber,
                 entityType: (mp.entityType || mp.entity_type || prev.entityType) as EntityType || '',
+                operatingAddressDifferent: mp.operatingAddressDifferent ?? mp.operating_address_different ?? prev.operatingAddressDifferent,
 
                 registeredAddress: hasAddress ? {
                     addressLine1: addrLine1 || '',
@@ -842,12 +845,16 @@ const EnhancedOnboardingFlow: React.FC = () => {
             || (merchantProfile as any).verification_submitted === true
             || Boolean(kycData?.videoKycCompleted && kycData?.locationCaptured);
 
+        const opAddrDifferent = onboardingData.operatingAddressDifferent
+            || (merchantProfile as any)?.operatingAddressDifferent
+            || (merchantProfile as any)?.operating_address_different;
+
         if (!hasEntityType) { goToStep('entity-type'); }
         else if (!hasProducts) { goToStep('products'); }
         else if (!hasBusinessDetails) { goToStep('business-details'); }
         else if (!hasPersonDocs) { goToStep('person-kyc'); }
         else if (!hasEntityDocs) { goToStep('entity-documents'); }
-        else if (!hasDoingBusiness && onboardingData.operatingAddressDifferent) { goToStep('doing-business'); }
+        else if (!hasDoingBusiness && opAddrDifferent) { goToStep('doing-business'); }
         else if (!hasBankDetails) { goToStep('bank-details'); }
         else if (!hasKYC) { goToStep('kyc'); }
         else { goToStep('review'); }

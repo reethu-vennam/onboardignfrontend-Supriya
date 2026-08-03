@@ -26,11 +26,26 @@ const EMPTY_ACCOUNT: BankAccountData = {
     accountHolderName: '',
 };
 
+const normalizeBankAccounts = (bankAccounts?: BankAccountData[]): BankAccountData[] => {
+    if (!bankAccounts || bankAccounts.length === 0) {
+        return [{ ...EMPTY_ACCOUNT }];
+    }
+
+    return bankAccounts.map(account => ({ ...EMPTY_ACCOUNT, ...account }));
+};
+
 const ACCOUNT_REGEX = /^[0-9]{9,18}$/;
 
 interface AccountValidation {
     isValid: boolean;
     accountName?: string;
+    accountStatus?: string;
+    requestId?: string;
+    trackingRefNo?: string;
+    responseId?: string;
+    statusCode?: string;
+    status?: string;
+    message?: string;
     error?: string;
 }
 
@@ -64,12 +79,7 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
         getIFSCMessageColor,
     } = useBankValidation();
 
-    const [accounts, setAccounts] = useState<BankAccountData[]>(() => {
-        if (data?.bankAccounts && data.bankAccounts.length > 0) {
-            return data.bankAccounts.map(a => ({ ...a }));
-        }
-        return [{ ...EMPTY_ACCOUNT }];
-    });
+    const [accounts, setAccounts] = useState<BankAccountData[]>(() => normalizeBankAccounts(data?.bankAccounts));
 
     const [cancelledCheque, setCancelledCheque] = useState<File | null>(
         data?.documents?.cancelledCheque?.file || null
@@ -85,10 +95,14 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
 
     useEffect(() => {
         if (!data?.bankAccounts) return;
-        if (JSON.stringify(data.bankAccounts) !== JSON.stringify(accounts)) {
-            setAccounts(data.bankAccounts.map(a => ({ ...a })));
+        const normalizedAccounts = normalizeBankAccounts(data.bankAccounts);
+        if (JSON.stringify(normalizedAccounts) !== JSON.stringify(accounts)) {
+            setAccounts(normalizedAccounts);
+            if (data.bankAccounts.length === 0) {
+                onDataChange?.({ bankAccounts: normalizedAccounts });
+            }
         }
-    }, [data?.bankAccounts]);
+    }, [data?.bankAccounts, accounts, onDataChange]);
 
     const updateAccount = useCallback((index: number, field: keyof BankAccountData, value: string) => {
         setAccounts(prev => {
@@ -186,8 +200,8 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
                     const token = authService.getToken();
                     if (!token) throw new Error('Not authenticated');
 
-                    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
-                    const response = await fetch(`${API_URL}/api/merchant/validate-bank-account`, {
+                    const API_URL = import.meta.env.VITE_API_URL || '';
+                    const response = await fetch(`${API_URL}/api/merchants/validate-bank-account`, {
                         method: 'POST',
                         headers: {
                             'Authorization': `Bearer ${token}`,
@@ -211,9 +225,20 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
 
                     const result = await response.json();
                     if (result.success && result.data?.isValid) {
+                        const validationData = result.data;
                         setAccountValidations(prev => ({
                             ...prev,
-                            [index]: { isValid: true, accountName: result.data.accountName },
+                            [index]: {
+                                isValid: true,
+                                accountName: validationData.accountName,
+                                accountStatus: validationData.accountStatus,
+                                requestId: validationData.requestId,
+                                trackingRefNo: validationData.trackingRefNo,
+                                responseId: validationData.responseId,
+                                statusCode: validationData.statusCode,
+                                status: validationData.status,
+                                message: validationData.message,
+                            },
                         }));
                         const errKey = `${index}_accountNumber`;
                         setErrors(prev => { const next = { ...prev }; delete next[errKey]; return next; });
@@ -314,7 +339,7 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
                 const token = authService.getToken();
                 if (!token) throw new Error('Not authenticated');
 
-                const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+                const API_URL = import.meta.env.VITE_API_URL || '';
                 for (const a of accounts) {
                     const bkName = ifscValidations[accounts.indexOf(a)]?.bankName || a.bankName;
                     const backendResponse = await fetch(`${API_URL}/api/distributor/save-bank-details`, {
@@ -388,12 +413,14 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
                             Remove
                         </Button>
                     )}
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <CreditCard className="h-5 w-5 text-primary" />
-                            {accounts.length > 1 ? `Bank Account ${index + 1}` : t('bankDetails.accountInfo')}
-                        </CardTitle>
-                    </CardHeader>
+                    {accounts.length > 1 && (
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <CreditCard className="h-5 w-5 text-primary" />
+                                {`Bank Account ${index + 1}`}
+                            </CardTitle>
+                        </CardHeader>
+                    )}
                     <CardContent className="space-y-4">
                         {/* IFSC Code */}
                         <div>
@@ -464,13 +491,22 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
                                 </div>
                             </div>
                             {errors[`${index}_accountNumber`] && <p className="text-xs text-destructive mt-1">{errors[`${index}_accountNumber`]}</p>}
-                            {accountValidations[index]?.isValid && accountValidations[index]?.accountName && (
+                            {accountValidations[index]?.isValid && (
                                 <div className="mt-1 p-2 bg-green-50 border border-green-200 rounded-md">
                                     <div className="flex items-center gap-1.5">
                                         <CheckCircle className="h-3.5 w-3.5 text-green-600" />
                                         <span className="text-xs text-green-700 font-medium">Account Verified</span>
                                     </div>
-                                    <p className="text-xs text-green-600 mt-0.5">Name: {accountValidations[index].accountName}</p>
+                                    <div className="text-xs text-green-600 mt-0.5 space-y-0.5">
+                                        {accountValidations[index].accountName && <p>Name: {accountValidations[index].accountName}</p>}
+                                        {accountValidations[index].accountStatus && <p>Status: {accountValidations[index].accountStatus}</p>}
+                                        {accountValidations[index].message && <p>Message: {accountValidations[index].message}</p>}
+                                        {accountValidations[index].requestId && <p>Request ID: {accountValidations[index].requestId}</p>}
+                                        {accountValidations[index].trackingRefNo && <p>Tracking Ref: {accountValidations[index].trackingRefNo}</p>}
+                                        {accountValidations[index].responseId && <p>Response ID: {accountValidations[index].responseId}</p>}
+                                        {accountValidations[index].statusCode && <p>Status Code: {accountValidations[index].statusCode}</p>}
+                                        {accountValidations[index].status && <p>API Status: {accountValidations[index].status}</p>}
+                                    </div>
                                 </div>
                             )}
                         </div>

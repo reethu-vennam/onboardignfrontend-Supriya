@@ -63,7 +63,7 @@ import { useI18n } from '@/i18n/I18nProvider';
 
 // ─── OCR Service (calls Spring Boot backend /api/ocr/extract) ─────────────────
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+const API_URL = import.meta.env.VITE_API_URL || '';
 
 interface ExtractedData {
     panNumber?: string;

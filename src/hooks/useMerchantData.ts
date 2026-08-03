@@ -3,7 +3,7 @@ import { authService } from '@/lib/auth-service';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { useToast } from '@/hooks/use-toast';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+const API_BASE = import.meta.env.VITE_API_URL || '';
 
 async function apiGet(path: string) {
   const token = authService.getToken();
@@ -55,6 +55,7 @@ export interface MerchantProfile {
   businessState?: string;
   businessPostalCode?: string;
   businessCountry?: string;
+  operatingAddressDifferent?: boolean;
   selectedProducts?: any;
   totalIntegrationCost?: number;
   totalMonthlyCost?: number;
@@ -81,6 +82,7 @@ export interface MerchantProfile {
   business_state?: string;
   business_postal_code?: string;
   business_country?: string;
+  operating_address_different?: boolean;
   upi_vpa?: string;
   upi_qr_string?: string;
   upi_mandate_status?: string;
@@ -172,6 +174,7 @@ export const useMerchantData = () => {
           business_state: profile.businessState || profile.business_state,
           business_postal_code: profile.businessPostalCode || profile.business_postal_code,
           business_country: profile.businessCountry || profile.business_country,
+          operating_address_different: profile.operatingAddressDifferent ?? profile.operating_address_different,
           upi_vpa: profile.upiVpa || profile.upi_vpa,
           upi_qr_string: profile.upiQrString || profile.upi_qr_string,
           upi_mandate_status: profile.upiMandateStatus || profile.upi_mandate_status,
@@ -266,6 +269,7 @@ export const useMerchantData = () => {
       if (updates.businessState !== undefined) payload.businessState = updates.businessState;
       if (updates.businessPostalCode !== undefined) payload.businessPostalCode = updates.businessPostalCode;
       if (updates.businessCountry !== undefined) payload.businessCountry = updates.businessCountry;
+      if (updates.operatingAddressDifferent !== undefined) payload.operatingAddressDifferent = updates.operatingAddressDifferent;
       if (updates.selectedProducts !== undefined) payload.selectedProducts = updates.selectedProducts;
       const data = await apiPost('/merchant/profile', payload);
       setMerchantProfile(data);
