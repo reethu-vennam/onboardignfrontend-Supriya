@@ -1,27 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Upload, CheckCircle, AlertCircle, Loader2, CreditCard, FileText } from 'lucide-react';
+import { Upload, CheckCircle, AlertCircle, Loader2, CreditCard, FileText, Plus, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useBankValidation } from '@/hooks/useBankValidation';
 import { useMerchantData } from '@/hooks/useMerchantData';
-import { useAuth } from '@/components/auth/AuthProvider'; // ✅ NEW
+import { useAuth } from '@/components/auth/AuthProvider';
 import { authService } from '@/lib/auth-service';
 import { api } from '@/lib/rest-api';
-import { OnboardingData } from '@/types/onboarding';
+import { OnboardingData, BankAccountData } from '@/types/onboarding';
 import { RaiseTicketButton } from "@/components/RaiseTicketButton";
 import { ViewTicketButton } from "@/components/ViewTicketButton";
 import { useNavigate } from "react-router-dom";
 import { WhatsAppSupportButton } from './WhatsAppSupportButton';
 import { useI18n } from '@/i18n/I18nProvider';
-export interface BankDetailsData {
-    accountNumber: string;      // Remove '?'
-    confirmAccountNumber: string; // Remove '?'
-    ifscCode: string;           // Remove '?'
-    bankName: string;           // Remove '?'
-    accountHolderName: string;
+
+const EMPTY_ACCOUNT: BankAccountData = {
+    accountNumber: '',
+    confirmAccountNumber: '',
+    ifscCode: '',
+    bankName: '',
+    branchName: '',
+    accountHolderName: '',
+};
+
+const ACCOUNT_REGEX = /^[0-9]{9,18}$/;
+
+interface AccountValidation {
+    isValid: boolean;
+    accountName?: string;
+    error?: string;
 }
 
 interface BankDetailsProps {
@@ -29,7 +39,7 @@ interface BankDetailsProps {
     onPrev: () => void;
     data?: OnboardingData;
     onDataChange?: (data: Partial<OnboardingData>) => void;
-    merchantProfile?: Record<string, unknown>; // ✅ NEW: Optional prop for distributor flow
+    merchantProfile?: Record<string, unknown>;
 }
 
 export const BankDetails: React.FC<BankDetailsProps> = ({
@@ -37,713 +47,557 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
     onPrev,
     data,
     onDataChange,
-    merchantProfile: merchantProfileProp // ✅ NEW: Accept prop from parent
+    merchantProfile: merchantProfileProp,
 }) => {
     const { toast } = useToast();
     const { t } = useI18n();
-    const { user } = useAuth(); // ✅ NEW: Get authenticated user
-    const { saveBankDetails, merchantProfile: merchantProfileHook } = useMerchantData();
+    const { user } = useAuth();
+    const { merchantProfile: merchantProfileHook } = useMerchantData();
     const navigate = useNavigate();
-    
-    // ✅ NEW: Prefer prop (distributor flow) over hook (regular flow)
     const merchantProfile = merchantProfileProp || merchantProfileHook;
-    
+
     const {
         validateIfscCode,
-        validateAccountNumber,
+        validateAccountNumber: validateAccNum,
         getIFSCValidationStatus,
         getIFSCMessage,
         getIFSCMessageColor,
-        isValidatingIfsc,
-        ifscValidation
     } = useBankValidation();
 
-    // Form state - initialize from parent data
-    const [formData, setFormData] = useState<BankDetailsData>({
-        ifscCode: data?.bankDetails?.ifscCode || '',
-        accountNumber: data?.bankDetails?.accountNumber || '',
-        confirmAccountNumber: data?.bankDetails?.confirmAccountNumber || '',
-        accountHolderName: data?.bankDetails?.accountHolderName || '',
-        bankName: data?.bankDetails?.bankName || ''
+    const [accounts, setAccounts] = useState<BankAccountData[]>(() => {
+        if (data?.bankAccounts && data.bankAccounts.length > 0) {
+            return data.bankAccounts.map(a => ({ ...a }));
+        }
+        return [{ ...EMPTY_ACCOUNT }];
     });
 
     const [cancelledCheque, setCancelledCheque] = useState<File | null>(
         data?.documents?.cancelledCheque?.file || null
     );
-    const [errors, setErrors] = useState<Partial<Record<keyof BankDetailsData | 'cancelledCheque', string>>>({});
+    const [errors, setErrors] = useState<Record<string, string>>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isValidatingAccount, setIsValidatingAccount] = useState(false);
-  const [accountValidation, setAccountValidation] = useState<{
-    isValid: boolean;
-    accountName?: string;
-    error?: string;
-  }>({ isValid: false });
 
-    // Sync form fields when chatbot fills data
+    const [ifscValidations, setIfscValidations] = useState<Record<number, { isValid: boolean; bankName?: string; branchName?: string; error?: string }>>({});
+    const [accountValidations, setAccountValidations] = useState<Record<number, AccountValidation>>({});
+    const [validatingAccounts, setValidatingAccounts] = useState<Record<number, boolean>>({});
+
+    const accountValidationTimeouts = useRef<Record<number, ReturnType<typeof setTimeout>>>({});
+
     useEffect(() => {
-        if (!data?.bankDetails) return;
-        setFormData(prev => ({
-            ...prev,
-            ifscCode: data.bankDetails?.ifscCode || prev.ifscCode,
-            accountNumber: data.bankDetails?.accountNumber || prev.accountNumber,
-            confirmAccountNumber: data.bankDetails?.confirmAccountNumber || prev.confirmAccountNumber,
-            accountHolderName: data.bankDetails?.accountHolderName || prev.accountHolderName,
-            bankName: data.bankDetails?.bankName || prev.bankName,
-        }));
-    }, [data?.bankDetails]);
-     const clearError = (field: keyof BankDetailsData | 'cancelledCheque') => {
-        setErrors(prev => {
-            const newErrors = { ...prev };
-            delete newErrors[field];
-            return newErrors;
-        });
-    };
-
-    
-
-    // Handle input changes and update parent immediately
-    const handleInputChange = (field: keyof BankDetailsData) => (
-        e: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        const value = e.target.value;
-        let processedValue = value;
-
-        // Special handling for IFSC code
-        if (field === 'ifscCode') {
-            processedValue = value.trim().toUpperCase();
+        if (!data?.bankAccounts) return;
+        if (JSON.stringify(data.bankAccounts) !== JSON.stringify(accounts)) {
+            setAccounts(data.bankAccounts.map(a => ({ ...a })));
         }
+    }, [data?.bankAccounts]);
 
-        const newFormData: BankDetailsData = { ...formData, [field]: processedValue };
-        setFormData(newFormData);
-        clearError(field);
+    const updateAccount = useCallback((index: number, field: keyof BankAccountData, value: string) => {
+        setAccounts(prev => {
+            const updated = [...prev];
+            updated[index] = { ...updated[index], [field]: value };
 
-        if (field === 'accountNumber' || field === 'ifscCode') {
-            setAccountValidation({ isValid: false });
-        }
-
-        // ✅ UPDATE PARENT IMMEDIATELY
-        if (onDataChange) {
-            onDataChange({
-                bankDetails: newFormData
-            });
-        }
-    };
-
-    // Auto-validate Account Number via Backend API (Secure - No sensitive data in frontend)
-    useEffect(() => {
-        const accountNumber = formData.accountNumber.trim();
-        const ifscCode = formData.ifscCode.trim();
-
-        if (
-  accountNumber.length < 9 ||
-  !ifscCode ||
-  ifscCode.length !== 11 ||
-  !formData.accountHolderName.trim()
-) {
-            setAccountValidation({ isValid: false });
-            return;
-        }
-
-        const timeoutId = setTimeout(async () => {
-            setIsValidatingAccount(true);
-            try {
-                // Call secure backend API for validation
-                const token = authService.getToken();
-                if (!token) {
-                    throw new Error('Not authenticated');
-                }
-
-                const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
-                const response = await fetch(`${API_URL}/api/merchant/validate-bank-account`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        custName: formData.accountHolderName,
-                        custIfsc: ifscCode,
-                        custAcctNo: accountNumber,
-                    }),
-                });
-
-                let errorMsg = 'Account validation failed';
-                if (!response.ok) {
-                    try {
-                        const errBody = await response.json();
-                        errorMsg = errBody?.error?.message || errBody?.message || `HTTP ${response.status}`;
-                    } catch {
-                        errorMsg = `HTTP ${response.status} ${response.statusText}`;
-                    }
-                    throw new Error(errorMsg);
-                }
-
-                const result = await response.json();
-
-                if (result.success && result.data?.isValid) {
-                    setAccountValidation({
-                        isValid: true,
-                        accountName: result.data.accountName,
-                    });
-                    clearError('accountNumber');
-                } else {
-                    setAccountValidation({
-                        isValid: false,
-                        error: result.data?.error || result.data?.message || 'Account validation failed',
-                    });
-                }
-            } catch (error) {
-                const msg = error instanceof Error ? error.message : 'Validation service unavailable';
-                setAccountValidation({
-                    isValid: false,
-                    error: msg,
-                });
-            } finally {
-                setIsValidatingAccount(false);
+            if (field === 'accountNumber' || field === 'ifscCode') {
+                setAccountValidations(prev => ({ ...prev, [index]: { isValid: false } }));
             }
-        }, 500);
-
-        return () => clearTimeout(timeoutId);
-    }, [formData.accountNumber, formData.ifscCode, formData.accountHolderName]);
-
-    // Auto-validate IFSC when it's complete
-    useEffect(() => {
-        const ifscCode = formData.ifscCode.trim();
-
-        if (ifscCode.length === 11) {
-            const timeoutId = setTimeout(async () => {
-                try {
-                    const result = await validateIfscCode(ifscCode);
-                    if (!result.isValid && result.error) {
-                        setErrors(prev => ({ ...prev, ifscCode: result.error }));
-                    } else {
-                        clearError('ifscCode');
-                        // Update bank name from validation
-                        if (result.bankName) {
-                            const newFormData: BankDetailsData = { ...formData, bankName: result.bankName };
-                            setFormData(newFormData);
-                            if (onDataChange) {
-                                onDataChange({ bankDetails: newFormData });
-                            }
-                        }
-                    }
-                } catch (error) {
-                    console.error('IFSC validation failed:', error);
-                }
-            }, 500);
-
-            return () => clearTimeout(timeoutId);
-        }
-    }, [formData.ifscCode]);
-
-    // FIXED: Upload file and update parent state
-    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-
-        // Validate file
-        const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
-        const maxSize = 5 * 1024 * 1024; // 5MB
-
-        if (!validTypes.includes(file.type)) {
-            toast({
-                variant: "destructive",
-                title: "Invalid File Type",
-                description: "Please upload a JPG, PNG, or PDF file.",
-            });
-            return;
-        }
-
-        if (file.size > maxSize) {
-            toast({
-                variant: "destructive",
-                title: "File Too Large",
-                description: "Please upload a file smaller than 5MB.",
-            });
-            return;
-        }
-
-        try {
-            const user = authService.getUser();
-            if (!user) {
-                throw new Error("User not authenticated");
-            }
-
-            if (!merchantProfile?.id || merchantProfile.id === '') {
-                throw new Error('Merchant account not yet created. Please wait or reload the page.');
-            }
-
-            const uploadResult = await api.uploadFile(file);
-            if (!uploadResult) throw new Error('Upload failed');
-
-            const publicUrl = uploadResult.url || '';
-
-            await api.post('/merchant/profile', {
-                documents: [{
-                    fileName: file.name,
-                    filePath: publicUrl,
-                    fileSize: file.size,
-                    mimeType: file.type,
-                    documentType: 'cancelled_cheque',
-                    docCategory: 'bank',
-                }],
-            });
-
-            setCancelledCheque(file);
-            clearError('cancelledCheque');
 
             if (onDataChange) {
-                onDataChange({
-                    documents: {
-                        ...data?.documents,
-                        cancelledCheque: {
-                            file: file,
-                            path: publicUrl
-                        }
-                    }
-                });
+                onDataChange({ bankAccounts: updated });
+            }
+            return updated;
+        });
+        const errKey = `${index}_${field}`;
+        setErrors(prev => { const next = { ...prev }; delete next[errKey]; return next; });
+    }, [onDataChange]);
+
+    const addAccount = useCallback(() => {
+        setAccounts(prev => {
+            const updated = [...prev, { ...EMPTY_ACCOUNT }];
+            if (onDataChange) onDataChange({ bankAccounts: updated });
+            return updated;
+        });
+    }, [onDataChange]);
+
+    const removeAccount = useCallback((index: number) => {
+        setAccounts(prev => {
+            const updated = prev.filter((_, i) => i !== index);
+            if (onDataChange) onDataChange({ bankAccounts: updated });
+            return updated;
+        });
+        setAccountValidations(prev => {
+            const next = { ...prev };
+            delete next[index];
+            return next;
+        });
+        setIfscValidations(prev => {
+            const next = { ...prev };
+            delete next[index];
+            return next;
+        });
+        toast({ title: "Bank Account Removed", description: "The bank account entry has been removed." });
+    }, [onDataChange, toast]);
+
+    useEffect(() => {
+        const timeouts: ReturnType<typeof setTimeout>[] = [];
+        for (const [index, account] of accounts.entries()) {
+            const ifsc = account.ifscCode.trim();
+            if (ifsc.length === 11) {
+                setIfscValidations(prev => ({ ...prev, [index]: { isValid: undefined as any, bankName: undefined, branchName: undefined, error: undefined } }));
+                const timeoutId = setTimeout(async () => {
+                    try {
+                        const result = await validateIfscCode(ifsc);
+                        setIfscValidations(prev => ({
+                            ...prev,
+                            [index]: {
+                                isValid: result.isValid,
+                                bankName: result.bankName,
+                                branchName: result.branch,
+                                error: result.error,
+                            },
+                        }));
+                    } catch { }
+                }, 600);
+                timeouts.push(timeoutId);
+            } else {
+                setIfscValidations(prev => ({ ...prev, [index]: { isValid: false } }));
+            }
+        }
+        return () => timeouts.forEach(clearTimeout);
+    }, [accounts.map(a => a.ifscCode).join(',')]);
+
+    useEffect(() => {
+        for (const [index, account] of accounts.entries()) {
+            const acctNum = account.accountNumber.trim();
+            const ifsc = account.ifscCode.trim();
+            const holderName = account.accountHolderName.trim();
+
+            if (acctNum.length < 9 || ifsc.length !== 11 || !holderName) {
+                setAccountValidations(prev => ({ ...prev, [index]: { isValid: false } }));
+                continue;
             }
 
-            toast({
-                title: "File Uploaded",
-                description: "Cancelled cheque uploaded successfully",
-            });
+            if (accountValidations[accountValidationTimeouts.current[index] as unknown as number] !== undefined) continue;
 
+            if (accountValidationTimeouts.current[index]) {
+                clearTimeout(accountValidationTimeouts.current[index]);
+            }
+
+            accountValidationTimeouts.current[index] = setTimeout(async () => {
+                setValidatingAccounts(prev => ({ ...prev, [index]: true }));
+                try {
+                    const token = authService.getToken();
+                    if (!token) throw new Error('Not authenticated');
+
+                    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+                    const response = await fetch(`${API_URL}/api/merchant/validate-bank-account`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            custName: holderName,
+                            custIfsc: ifsc,
+                            custAcctNo: acctNum,
+                        }),
+                    });
+
+                    if (!response.ok) {
+                        let errorMsg = 'Account validation failed';
+                        try {
+                            const errBody = await response.json();
+                            errorMsg = errBody?.error?.message || errBody?.message || `HTTP ${response.status}`;
+                        } catch { }
+                        throw new Error(errorMsg);
+                    }
+
+                    const result = await response.json();
+                    if (result.success && result.data?.isValid) {
+                        setAccountValidations(prev => ({
+                            ...prev,
+                            [index]: { isValid: true, accountName: result.data.accountName },
+                        }));
+                        const errKey = `${index}_accountNumber`;
+                        setErrors(prev => { const next = { ...prev }; delete next[errKey]; return next; });
+                    } else {
+                        setAccountValidations(prev => ({
+                            ...prev,
+                            [index]: { isValid: false, error: result.data?.error || result.data?.message || 'Account validation failed' },
+                        }));
+                    }
+                } catch (error) {
+                    const msg = error instanceof Error ? error.message : 'Validation service unavailable';
+                    setAccountValidations(prev => ({
+                        ...prev,
+                        [index]: { isValid: false, error: msg },
+                    }));
+                } finally {
+                    setValidatingAccounts(prev => ({ ...prev, [index]: false }));
+                }
+            }, 500);
+        }
+
+        return () => {
+            for (const timeout of Object.values(accountValidationTimeouts.current)) {
+                clearTimeout(timeout);
+            }
+        };
+    }, [accounts.map(a => `${a.accountNumber}|${a.ifscCode}|${a.accountHolderName}`).join(',')]);
+
+    const clearError = (key: string) => {
+        setErrors(prev => { const next = { ...prev }; delete next[key]; return next; });
+    };
+
+    const handleUploadCheque = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        try {
+            const result = await api.uploadFile(file, `merchants/${merchantProfile?.id || user?.id}/documents`);
+            const publicUrl = result?.url || result?.filePath || result?.path || '';
+            setCancelledCheque(file);
+            if (onDataChange) {
+                onDataChange({ documents: { ...(data?.documents || {}), cancelledCheque: { file, path: publicUrl } } });
+            }
+            toast({ title: "File Uploaded", description: "Cancelled cheque uploaded successfully" });
         } catch (error) {
-            console.error('Upload error:', error);
-            toast({
-                variant: "destructive",
-                title: "Upload Failed",
-                description: error instanceof Error ? error.message : "Failed to upload file",
-            });
+            toast({ variant: "destructive", title: "Upload Failed", description: error instanceof Error ? error.message : "Failed to upload file" });
         }
     };
 
-    // Form validation
     const validateForm = (): boolean => {
-        const newErrors: Partial<Record<keyof BankDetailsData | 'cancelledCheque', string>> = {};
+        const newErrors: Record<string, string> = {};
 
-        // IFSC validation
-        if (!formData.ifscCode.trim()) {
-            newErrors.ifscCode = 'IFSC code is required';
-        } else if (formData.ifscCode.length !== 11) {
-            newErrors.ifscCode = 'IFSC code must be exactly 11 characters';
-        } else if (!ifscValidation.isValid) {
-            newErrors.ifscCode = ifscValidation.error || 'Invalid IFSC code';
+        if (!cancelledCheque && !data?.documents?.cancelledCheque?.file) {
+            newErrors['cancelledCheque'] = 'Cancelled cheque is required';
         }
 
-        // Account number validation
-        if (!formData.accountNumber.trim()) {
-            newErrors.accountNumber = 'Account number is required';
-        } else if (!validateAccountNumber(formData.accountNumber)) {
-            newErrors.accountNumber = 'Invalid account number (9-18 digits required)';
+        if (accounts.length === 0) {
+            newErrors['_noAccounts'] = 'At least one bank account is required';
         }
 
-        // Confirm account number
-        if (formData.accountNumber !== formData.confirmAccountNumber) {
-            newErrors.confirmAccountNumber = 'Account numbers do not match';
-        }
+        for (const [i, a] of accounts.entries()) {
+            if (!a.accountHolderName.trim()) newErrors[`${i}_accountHolderName`] = 'Account holder name is required';
+            if (!a.ifscCode.trim()) newErrors[`${i}_ifscCode`] = 'IFSC code is required';
+            else if (a.ifscCode.length !== 11) newErrors[`${i}_ifscCode`] = 'IFSC code must be exactly 11 characters';
+            else if (ifscValidations[i]?.isValid === false) newErrors[`${i}_ifscCode`] = ifscValidations[i].error || 'Invalid IFSC code';
+            else if (ifscValidations[i]?.isValid === undefined) newErrors[`${i}_ifscCode`] = 'Validating IFSC code, please wait...';
 
-        // Account holder name
-        if (!formData.accountHolderName.trim()) {
-            newErrors.accountHolderName = 'Account holder name is required';
-        }
+            if (!a.accountNumber.trim()) newErrors[`${i}_accountNumber`] = 'Account number is required';
+            else if (!ACCOUNT_REGEX.test(a.accountNumber)) newErrors[`${i}_accountNumber`] = 'Invalid account number (9-18 digits required)';
+            else if (validatingAccounts[i]) newErrors[`${i}_accountNumber`] = 'Validating account number, please wait...';
+            else if (accountValidations[i]?.isValid === false && accountValidations[i]?.error) {
+                newErrors[`${i}_accountNumber`] = accountValidations[i].error;
+            }
 
-        // Cancelled cheque - check both local and parent state
-        const hasCheque = cancelledCheque || data?.documents?.cancelledCheque?.file;
-        if (!hasCheque) {
-            newErrors.cancelledCheque = 'Cancelled cheque is required';
+            if (a.accountNumber !== a.confirmAccountNumber) newErrors[`${i}_confirmAccountNumber`] = 'Account numbers do not match';
         }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
-    // Handle form submission
     const handleNext = async () => {
         if (!validateForm()) {
-            toast({
-                variant: "destructive",
-                title: "Validation Error",
-                description: "Please fix the errors in the form.",
-            });
+            toast({ variant: "destructive", title: "Validation Error", description: "Please fix the errors in the form." });
             return;
         }
 
         if (!merchantProfile) {
-            toast({
-                variant: "destructive",
-                title: "Error",
-                description: "Merchant profile not found",
-            });
+            toast({ variant: "destructive", title: "Error", description: "Merchant profile not found" });
             return;
         }
 
         setIsSubmitting(true);
 
         try {
-            console.log('🏦 handleNext - Saving bank details');
-            console.log('   - merchantProfile.id:', merchantProfile.id);
-            console.log('   - merchantProfile.userId:', merchantProfile.userId);
-            console.log('   - merchantProfileProp exists:', (data as any)?.isDistributorFlow);
-            console.log('   - isDistributorFlow:', (data as any)?.isDistributorFlow);
-
-            // ✅ CRITICAL Fix: Use backend endpoint to save (bypasses RLS via service role)
-            // In distributor flow, we can't use authenticated client (authenticated as distributor)
-            // because RLS policy rejects writes by non-merchant users
-            
             const isDistributorFlow = !!(data as any)?.isDistributorFlow;
-            
+
             if (isDistributorFlow) {
-                // Call backend endpoint that uses service role to bypass RLS
-                console.log('   - Using distributor flow (backend bypass)');
-                
                 const token = authService.getToken();
-                if (!token) {
-                    throw new Error('Not authenticated');
-                }
+                if (!token) throw new Error('Not authenticated');
 
                 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
-                const backendResponse = await fetch(`${API_URL}/api/distributor/save-bank-details`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        merchantProfileId: merchantProfile.id,
-                        accountNumber: formData.accountNumber,
-                        ifscCode: formData.ifscCode,
-                        bankName: formData.bankName,
-                        accountHolderName: formData.accountHolderName,
-                    })
-                });
-
-                console.log('   - Backend response status:', backendResponse.status);
-
-                if (!backendResponse.ok) {
-                    const errorData = await backendResponse.json().catch(() => ({ error: { message: 'Unknown error' } }));
-                    console.error('   - Backend error:', errorData);
-                    throw new Error(errorData?.error?.message || `Failed to save bank details`);
+                for (const a of accounts) {
+                    const bkName = ifscValidations[accounts.indexOf(a)]?.bankName || a.bankName;
+                    const backendResponse = await fetch(`${API_URL}/api/distributor/save-bank-details`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({
+                            merchantProfileId: merchantProfile.id,
+                            accountNumber: a.accountNumber,
+                            ifscCode: a.ifscCode,
+                            bankName: bkName,
+                            accountHolderName: a.accountHolderName,
+                        }),
+                    });
+                    if (!backendResponse.ok) {
+                        const errorData = await backendResponse.json().catch(() => ({ error: { message: 'Unknown error' } }));
+                        throw new Error(errorData?.error?.message || 'Failed to save bank details');
+                    }
                 }
-
-                const result = await backendResponse.json();
-                console.log('   - Backend success:', result);
             } else {
-                // Regular merchant flow - use REST API
-                console.log('   - Using regular merchant flow (REST API)');
-                
-                const apiResult = await api.post('/merchant/profile', {
-                    bankDetails: {
-                        accountNumber: formData.accountNumber,
-                        ifscCode: formData.ifscCode,
-                        bankName: formData.bankName,
-                        accountHolderName: formData.accountHolderName,
-                    }
-                });
-
-                console.log('   - API save result:', apiResult);
+                const bankDetailsPayload = accounts.map((a, i) => ({
+                    accountNumber: a.accountNumber,
+                    ifscCode: a.ifscCode,
+                    bankName: ifscValidations[i]?.bankName || a.bankName,
+                    accountHolderName: a.accountHolderName,
+                }));
+                await api.post('/merchant/profile', { bankDetails: bankDetailsPayload });
             }
 
-            console.log('✅ Bank details saved successfully');
-
-            // Ensure parent has all the latest data before proceeding
             if (onDataChange) {
-                onDataChange({
-                    bankDetails: {
-                        ...formData,
-                        bankName: ifscValidation.bankName || formData.bankName
-                    }
-                });
+                onDataChange({ bankAccounts: accounts });
             }
 
-            toast({
-                title: "Bank Details Saved",
-                description: "Your bank information has been successfully recorded.",
-            });
-
+            toast({ title: "Bank Details Saved", description: "Your bank information has been successfully recorded." });
             onNext();
         } catch (error) {
             const message = error instanceof Error ? error.message : 'Failed to save';
-            console.error('❌ handleNext error:', error);
-            toast({
-                variant: "destructive",
-                title: "Save Failed",
-                description: message,
-            });
+            toast({ variant: "destructive", title: "Save Failed", description: message });
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    // Get IFSC field display state
-    const ifscStatus = getIFSCValidationStatus(formData.ifscCode);
-    const ifscMessage = getIFSCMessage(formData.ifscCode);
-    const ifscMessageColor = getIFSCMessageColor(formData.ifscCode);
-    const showIFSCError = errors.ifscCode && ifscStatus !== 'validating';
+    const getIFSCStatus = (ifsc: string): 'valid' | 'invalid' | 'validating' | '' => {
+        if (!ifsc || ifsc.length < 11) return '';
+        for (const [i, v] of Object.entries(ifscValidations)) {
+            if (accounts[Number(i)]?.ifscCode === ifsc) return v.isValid ? 'valid' : 'invalid';
+        }
+        return '';
+    };
 
     return (
         <div className="space-y-6">
             <div className="text-center">
                 <h2 className="text-2xl font-bold text-gray-900">{t('bankDetails.title')}</h2>
-                <p className="text-gray-600 mt-2">
-                    {t('bankDetails.subtitle')}
-                </p>
+                <p className="text-gray-600 mt-2">{t('bankDetails.subtitle')}</p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Bank Account Information */}
-                <Card>
+            {accounts.map((account, index) => (
+                <Card key={index} className="relative">
+                    {accounts.length > 1 && (
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="absolute top-3 right-3 text-red-500 hover:text-red-700"
+                            onClick={() => removeAccount(index)}
+                        >
+                            <Trash2 className="h-4 w-4 mr-1" />
+                            Remove
+                        </Button>
+                    )}
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
-                            <CreditCard className="h-5 w-5" />
-                            {t('bankDetails.accountInfo')}
+                            <CreditCard className="h-5 w-5 text-primary" />
+                            {accounts.length > 1 ? `Bank Account ${index + 1}` : t('bankDetails.accountInfo')}
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         {/* IFSC Code */}
                         <div>
-                            <Label htmlFor="ifscCode">{t('bankDetails.ifscCode')} *</Label>
+                            <Label>
+                                {t('bankDetails.ifscCode')} <span className="text-destructive">*</span>
+                            </Label>
                             <div className="relative">
                                 <Input
-                                    id="ifscCode"
-                                    value={formData.ifscCode}
-                                    onChange={handleInputChange('ifscCode')}
-                                    placeholder="e.g., SBIN0003301"
-                                    className={`${showIFSCError ? 'border-red-500' :
-                                        ifscStatus === 'valid' ? 'border-green-500' : ''} uppercase`}
+                                    value={account.ifscCode}
+                                    onChange={e => updateAccount(index, 'ifscCode', e.target.value.toUpperCase())}
+                                    placeholder="SBIN0003301"
                                     maxLength={11}
+                                    className={`${errors[`${index}_ifscCode`] ? 'border-destructive' : ''} pr-10`}
                                 />
-                                {isValidatingIfsc && (
-                                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                                        <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                                    </div>
-                                )}
-                                {ifscStatus === 'valid' && !isValidatingIfsc && (
-                                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                                        <CheckCircle className="h-4 w-4 text-green-500" />
-                                    </div>
-                                )}
-                            </div>
-
-                            {showIFSCError ? (
-                                <div className="flex items-center gap-1 mt-1">
-                                    <AlertCircle className="h-4 w-4 text-red-500" />
-                                    <p className="text-sm text-red-500">{errors.ifscCode}</p>
+                                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                                    {getIFSCStatus(account.ifscCode) === 'valid' && <CheckCircle className="h-5 w-5 text-green-500" />}
+                                    {getIFSCStatus(account.ifscCode) === 'invalid' && <AlertCircle className="h-5 w-5 text-red-500" />}
                                 </div>
-                            ) : ifscMessage && (
-                                <p className={`text-xs mt-1 ${ifscMessageColor}`}>
-                                    {ifscMessage}
-                                </p>
+                            </div>
+                            {errors[`${index}_ifscCode`] && <p className="text-xs text-destructive mt-1">{errors[`${index}_ifscCode`]}</p>}
+                            {account.ifscCode.length === 11 && ifscValidations[index]?.isValid && (
+                                <div className="mt-1 p-2 bg-green-50 border border-green-200 rounded-md">
+                                    <div className="flex items-center gap-1.5">
+                                        <CheckCircle className="h-3.5 w-3.5 text-green-600" />
+                                        <span className="text-xs text-green-700 font-medium">Bank Verified</span>
+                                    </div>
+                                    <p className="text-xs text-green-600 mt-0.5">
+                                        Bank: {ifscValidations[index].bankName}
+                                        {ifscValidations[index].branchName && ` | Branch: ${ifscValidations[index].branchName}`}
+                                    </p>
+                                </div>
                             )}
                         </div>
 
-                        {/* Bank Info Display */}
-                        {ifscStatus === 'valid' && ifscValidation.bankName && (
-                            <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                                <div className="flex items-center gap-2 mb-2">
-                                    <CheckCircle className="h-5 w-5 text-green-600" />
-                                    <span className="font-semibold text-green-800">{t('bankDetails.bankVerified')}</span>
-                                </div>
-                                <div className="space-y-1 text-sm">
-                                    <div>
-                                        <span className="text-gray-600">{t('bankDetails.bank')}</span>
-                                        <span className="ml-2 font-medium">{ifscValidation.bankName}</span>
-                                    </div>
-                                    <div>
-                                        <span className="text-gray-600">{t('bankDetails.branch')}</span>
-                                        <span className="ml-2 font-medium">{ifscValidation.branch}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
                         {/* Account Holder Name */}
                         <div>
-                            <Label htmlFor="accountHolderName">{t('bankDetails.accountHolderName')} *</Label>
+                            <Label>
+                                {t('bankDetails.accountHolderName')} <span className="text-destructive">*</span>
+                            </Label>
                             <Input
-                                id="accountHolderName"
-                                value={formData.accountHolderName}
-                                onChange={handleInputChange('accountHolderName')}
-                                placeholder={t('bankDetails.placeholderAccountHolder')}
-                                className={errors.accountHolderName ? 'border-red-500' : ''}
+                                value={account.accountHolderName}
+                                onChange={e => updateAccount(index, 'accountHolderName', e.target.value)}
+                                placeholder="Enter account holder name"
+                                className={errors[`${index}_accountHolderName`] ? 'border-destructive' : ''}
                             />
-                            {errors.accountHolderName && (
-                                <div className="flex items-center gap-1 mt-1">
-                                    <AlertCircle className="h-4 w-4 text-red-500" />
-                                    <p className="text-sm text-red-500">{errors.accountHolderName}</p>
-                                </div>
-                            )}
+                            {errors[`${index}_accountHolderName`] && <p className="text-xs text-destructive mt-1">{errors[`${index}_accountHolderName`]}</p>}
                         </div>
 
                         {/* Account Number */}
                         <div>
-                            <Label htmlFor="accountNumber">{t('bankDetails.accountNumber')} *</Label>
+                            <Label>
+                                {t('bankDetails.accountNumber')} <span className="text-destructive">*</span>
+                            </Label>
                             <div className="relative">
                                 <Input
-                                    id="accountNumber"
-                                    value={formData.accountNumber}
-                                    onChange={handleInputChange('accountNumber')}
-                                    placeholder={t('bankDetails.placeholderAccountNumber')}
-                                    className={errors.accountNumber ? 'border-red-500' : ''}
+                                    value={account.accountNumber}
+                                    onChange={e => updateAccount(index, 'accountNumber', e.target.value)}
+                                    placeholder="Enter account number"
+                                    maxLength={18}
+                                    className={`${errors[`${index}_accountNumber`] ? 'border-destructive' : ''} pr-10`}
                                 />
-                                {isValidatingAccount && (
-                                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                                        <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                                    </div>
-                                )}
-                                {accountValidation.isValid && !isValidatingAccount && (
-                                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                                        <CheckCircle className="h-4 w-4 text-green-500" />
-                                    </div>
-                                )}
+                                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                                    {validatingAccounts[index] && <Loader2 className="h-5 w-5 text-blue-500 animate-spin" />}
+                                    {accountValidations[index]?.isValid && <CheckCircle className="h-5 w-5 text-green-500" />}
+                                    {!validatingAccounts[index] && accountValidations[index]?.isValid === false && accountValidations[index]?.error && (
+                                        <AlertCircle className="h-5 w-5 text-red-500" />
+                                    )}
+                                </div>
                             </div>
-                            {isValidatingAccount && (
-                                <p className="text-xs mt-1 text-blue-600 flex items-center gap-1">
-                                    <Loader2 className="h-3 w-3 animate-spin" />
-                                    {t('bankDetails.validatingAccount')}
-                                </p>
-                            )}
-                            {accountValidation.isValid && (
-                                <p className="text-xs mt-1 text-green-600 flex items-center gap-1">
-                                    <CheckCircle className="h-3 w-3" />
-                                    {t('bankDetails.accountVerified')}
-                                </p>
-                            )}
-                            {errors.accountNumber && (
-                                <div className="flex items-center gap-1 mt-1">
-                                    <AlertCircle className="h-4 w-4 text-red-500" />
-                                    <p className="text-sm text-red-500">{errors.accountNumber}</p>
+                            {errors[`${index}_accountNumber`] && <p className="text-xs text-destructive mt-1">{errors[`${index}_accountNumber`]}</p>}
+                            {accountValidations[index]?.isValid && accountValidations[index]?.accountName && (
+                                <div className="mt-1 p-2 bg-green-50 border border-green-200 rounded-md">
+                                    <div className="flex items-center gap-1.5">
+                                        <CheckCircle className="h-3.5 w-3.5 text-green-600" />
+                                        <span className="text-xs text-green-700 font-medium">Account Verified</span>
+                                    </div>
+                                    <p className="text-xs text-green-600 mt-0.5">Name: {accountValidations[index].accountName}</p>
                                 </div>
                             )}
                         </div>
 
                         {/* Confirm Account Number */}
                         <div>
-                            <Label htmlFor="confirmAccountNumber">{t('bankDetails.confirmAccountNumber')} *</Label>
+                            <Label>
+                                {t('bankDetails.confirmAccount')} <span className="text-destructive">*</span>
+                            </Label>
                             <Input
-                                id="confirmAccountNumber"
-                                value={formData.confirmAccountNumber}
-                                onChange={handleInputChange('confirmAccountNumber')}
-                                placeholder={t('bankDetails.placeholderConfirmAccount')}
-                                className={errors.confirmAccountNumber ? 'border-red-500' : ''}
+                                value={account.confirmAccountNumber || ''}
+                                onChange={e => updateAccount(index, 'confirmAccountNumber', e.target.value)}
+                                placeholder="Re-enter account number"
+                                maxLength={18}
+                                className={errors[`${index}_confirmAccountNumber`] ? 'border-destructive' : ''}
                             />
-                            {errors.confirmAccountNumber && (
+                            {errors[`${index}_confirmAccountNumber`] && <p className="text-xs text-destructive mt-1">{errors[`${index}_confirmAccountNumber`]}</p>}
+                            {account.accountNumber && account.confirmAccountNumber && account.accountNumber === account.confirmAccountNumber && (
                                 <div className="flex items-center gap-1 mt-1">
-                                    <AlertCircle className="h-4 w-4 text-red-500" />
-                                    <p className="text-sm text-red-500">{errors.confirmAccountNumber}</p>
+                                    <CheckCircle className="h-3.5 w-3.5 text-green-500" />
+                                    <span className="text-xs text-green-600">Account numbers match</span>
                                 </div>
                             )}
                         </div>
-                    </CardContent>
-                </Card>
 
-                {/* Supporting Documents */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <FileText className="h-5 w-5" />
-                            {t('bankDetails.supportingDocs')}
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        {/* Cancelled Cheque Upload */}
-                        <div>
-                            <Label htmlFor="cancelledCheque">{t('bankDetails.uploadCancelledCheque')} *</Label>
-                            <div className="mt-2">
-                                <input
-                                    type="file"
-                                    id="cancelledCheque"
-                                    accept="image/*,.pdf"
-                                    onChange={handleFileUpload}
-                                    className="hidden"
-                                />
-                                <label
-                                    htmlFor="cancelledCheque"
-                                    className={`flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-gray-50 
-                                        ${errors.cancelledCheque ? 'border-red-500' : 'border-gray-300'}`}
-                                >
-                                    {(cancelledCheque || data?.documents?.cancelledCheque?.file) ? (
-                                        <div className="flex items-center gap-2">
-                                            <CheckCircle className="h-5 w-5 text-green-600" />
-                                            <span className="text-sm font-medium">
-                                                {(cancelledCheque || data?.documents?.cancelledCheque?.file)?.name}
-                                            </span>
-                                        </div>
-                                    ) : (
-                                        <>
-                                            <Upload className="h-8 w-8 text-gray-400" />
-                                            <span className="mt-2 text-sm text-gray-600">
-                                                {t('upload.clickToUploadCancelled')}
-                                            </span>
-                                            <span className="text-xs text-gray-400">
-                                                {t('upload.formats')}
-                                            </span>
-                                        </>
+                        {/* Bank Name (auto-filled from IFSC) */}
+                        {ifscValidations[index]?.isValid && ifscValidations[index]?.bankName && (
+                            <div>
+                                <Label>{t('bankDetails.bankName')}</Label>
+                                <div className="p-3 bg-muted/40 border border-border rounded-md">
+                                    <span className="text-sm font-medium text-foreground">{ifscValidations[index].bankName}</span>
+                                    {ifscValidations[index].branchName && (
+                                        <span className="text-xs text-muted-foreground ml-2">| {ifscValidations[index].branchName}</span>
                                     )}
-                                </label>
-                            </div>
-                            {errors.cancelledCheque && (
-                                <div className="flex items-center gap-1 mt-1">
-                                    <AlertCircle className="h-4 w-4 text-red-500" />
-                                    <p className="text-sm text-red-500">{errors.cancelledCheque}</p>
                                 </div>
-                            )}
-                        </div>
-
-                        {/* Requirements */}
-                        <div className="p-4 bg-blue-50 rounded-lg">
-                            <h4 className="font-semibold text-blue-900 mb-2">{t('bankDetails.requirementsTitle')}</h4>
-                            <ul className="text-sm text-blue-800 space-y-1">
-                                <li>• {t('bankDetails.reqSameAccount')}</li>
-                                <li>• {t('bankDetails.reqAccountVisible')}</li>
-                                <li>• {t('bankDetails.reqIfscVisible')}</li>
-                                <li>• {t('bankDetails.reqCancelledWritten')}</li>
-                                <li>• {t('bankDetails.reqClearImage')}</li>
-                            </ul>
-                        </div>
+                            </div>
+                        )}
                     </CardContent>
                 </Card>
-            </div>
-            <div className="flex gap-4 mt-6">
-                <ViewTicketButton />
-                <RaiseTicketButton
-                    module="settlement"
-                    referenceId={merchantProfile?.id as string}
-                />
-            </div>
+            ))}
 
-            {/* Navigation */}
-            <div className="flex justify-between pt-6">
-                <Button
-                    variant="outline"
-                    onClick={onPrev}
-                    disabled={isSubmitting}
-                >
-                    {t('common.back')}
-                </Button>
-                <Button
-                    onClick={handleNext}
-                    disabled={isSubmitting}
-                    className="min-w-[120px]"
-                >
-                    {isSubmitting ? (
-                        <>
-                            <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                            {t('common.saving')}
-                        </>
-                    ) : (
-                        t('bankDetails.nextReview')
-                    )}
-                </Button>
-            </div>
-            {/* WhatsApp Support (bottom of onboarding step) */}
-            <div style={{marginTop: '2rem', textAlign: 'center'}}>
-              <WhatsAppSupportButton />
+            {/* Add Account Button */}
+            <Button
+                type="button"
+                variant="outline"
+                onClick={addAccount}
+                className="w-full border-dashed border-2 hover:border-primary hover:text-primary"
+            >
+                <Plus className="h-4 w-4 mr-2" />
+                {t('bankDetails.addAccount') || 'Add Another Bank Account'}
+            </Button>
+
+            {/* Cancelled Cheque Upload */}
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                        <FileText className="h-5 w-5 text-primary" />
+                        {t('bankDetails.cancelledCheque')}
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                        {cancelledCheque ? (
+                            <div className="space-y-2">
+                                <CheckCircle className="h-8 w-8 text-green-500 mx-auto" />
+                                <p className="text-sm text-green-600">{cancelledCheque.name}</p>
+                                <Button variant="outline" size="sm" onClick={() => setCancelledCheque(null)}>
+                                    Change File
+                                </Button>
+                            </div>
+                        ) : (
+                            <div className="space-y-2">
+                                <Upload className="h-8 w-8 text-gray-400 mx-auto" />
+                                <p className="text-sm text-gray-500">{t('bankDetails.uploadChequePrompt') || 'Upload cancelled cheque (PDF/Image)'}</p>
+                                <Label className="cursor-pointer inline-block">
+                                    <span className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm hover:bg-primary/90">
+                                        {t('common.upload')}
+                                    </span>
+                                    <input type="file" className="hidden" accept="image/*,.pdf" onChange={handleUploadCheque} />
+                                </Label>
+                            </div>
+                        )}
+                    </div>
+                    {errors['cancelledCheque'] && <p className="text-xs text-destructive mt-1">{errors['cancelledCheque']}</p>}
+                </CardContent>
+            </Card>
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap justify-between gap-4 pt-4">
+                <div className="flex flex-wrap gap-2">
+                    <RaiseTicketButton
+                        variant="outline"
+                        size="sm"
+                        className="border-orange-200 text-orange-700 hover:bg-orange-50"
+                        source="onboarding-bank"
+                        sourceId={merchantProfile?.id as string || user?.id || ''}
+                    />
+                    <ViewTicketButton
+                        variant="ghost"
+                        size="sm"
+                        source="onboarding-bank"
+                        sourceId={merchantProfile?.id as string || user?.id || ''}
+                    />
+                    <WhatsAppSupportButton
+                        variant="ghost"
+                        size="sm"
+                        message={t('support.bankHelp') || 'Hi, I need help with adding my bank account during onboarding.'}
+                    />
+                </div>
+                <div className="flex gap-3">
+                    <Button variant="outline" onClick={onPrev} disabled={isSubmitting}>
+                        {t('common.back')}
+                    </Button>
+                    <Button onClick={handleNext} disabled={isSubmitting}>
+                        {isSubmitting ? (
+                            <>
+                                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                {t('common.saving')}
+                            </>
+                        ) : (
+                            t('common.continue')
+                        )}
+                    </Button>
+                </div>
             </div>
         </div>
     );
 };
 
-
-
+export default BankDetails;

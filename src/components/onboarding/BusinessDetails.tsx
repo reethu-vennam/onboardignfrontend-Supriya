@@ -417,24 +417,17 @@ const regDetails = (merchantProfile as any).registration_details as Record<strin
                 businessCountry: registeredAddress.country || 'India',
             };
 
-            let saveError = null;
+            const status = (merchantProfile as any)?.onboarding_status || (merchantProfile as any)?.onboardingStatus;
+            const isEditable = !status || status === 'draft' || status === 'rejected' || status === 'submitted';
 
-            try {
-                await api.post('/merchant/profile', updatePayload);
-            } catch (e: any) {
-                console.error('Failed to save business details:', e);
-                toast({ variant: 'destructive', title: t('businessDetails.saveFailedTitle'), description: t('businessDetails.saveFailedDesc') });
-                return;
-            }
-
-            if (saveError) {
-                console.error('Failed to save business details:', saveError);
-                toast({
-                    variant: 'destructive',
-                    title: t('businessDetails.saveFailedTitle'),
-                    description: t('businessDetails.saveFailedDesc'),
-                });
-                return;
+            if (isEditable) {
+                try {
+                    await api.post('/merchant/profile', updatePayload);
+                } catch (e: any) {
+                    console.error('Failed to save business details:', e);
+                    toast({ variant: 'destructive', title: t('businessDetails.saveFailedTitle'), description: t('businessDetails.saveFailedDesc') });
+                    return;
+                }
             }
 
             // Update parent state

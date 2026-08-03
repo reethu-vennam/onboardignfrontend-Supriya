@@ -1,8 +1,8 @@
-﻿// src/types/onboarding.ts
+// src/types/onboarding.ts
 // Single source of truth for onboarding data structures.
 // Imported by EnhancedMerchantOnboarding and DistributorMerchantOnboarding.
 
-// â”€â”€â”€ Entity Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Entity Types ─────────────────────────────────────────────────────────────
 
 export type EntityType =
     | 'proprietorship'
@@ -39,7 +39,7 @@ export type DocCategory =
     | 'bank'
     | 'entity_specific';
 
-// â”€â”€â”€ Person KYC â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Person KYC ───────────────────────────────────────────────────────────────
 
 export interface PersonKYCData {
     // Set after INSERT into merchant_persons " null before save
@@ -79,7 +79,7 @@ export interface PersonKYCData {
     authorityLetterDocId?: string;
 }
 
-// â”€â”€â”€ Entity-level documents â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Entity-level documents ───────────────────────────────────────────────────
 
 export interface EntityDocData {
     // Enum value from document_type
@@ -103,7 +103,7 @@ export interface EntityDocData {
     docId?: string;
 }
 
-// â”€â”€â”€ Address â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Address ──────────────────────────────────────────────────────────────────
 
 export interface Address {
     addressLine1: string;
@@ -113,20 +113,33 @@ export interface Address {
     country: string;
 }
 
-// â”€â”€â”€ Core OnboardingData â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+export interface BankAccountData {
+    id?: string;
+    accountNumber: string;
+    confirmAccountNumber?: string;
+    ifscCode: string;
+    bankName: string;
+    branchName?: string;
+    accountHolderName: string;
+    isValid?: boolean;
+    validationError?: string;
+    isBeingValidated?: boolean;
+}
+
+// ─── Core OnboardingData ──────────────────────────────────────────────────────
 
 export interface OnboardingData {
-    // â”€â”€ Step 1: Welcome â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Step 1: Welcome ─────────────────────────────────────────────────────
     // nothing persisted
 
-    // â”€â”€ Step 2: Entity Type â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Step 2: Entity Type ─────────────────────────────────────────────────
     entityType: EntityType | '';
 
-    // â”€â”€ Step 3: Products â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Step 3: Products ────────────────────────────────────────────────────
     selectedProducts?: string[];
     settlementType?: 'same_day' | 'next_day';
 
-    // â”€â”€ Step 4: Business Details â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Step 4: Business Details ────────────────────────────────────────────
     fullName: string;               // authorized person / primary contact
     mobileNumber: string;
     email: string;
@@ -143,7 +156,7 @@ export interface OnboardingData {
     // Gates the doing-business step.
     operatingAddressDifferent: boolean;
 
-    // â”€â”€ Step 5: Person KYC â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Step 5: Person KYC ──────────────────────────────────────────────────
     // Primary person PAN/Aadhaar " kept at top level for backward compat
     // with KYCVerification display and saveRegistrationData writes.
     // Also stored in persons[0] for the new structure.
@@ -157,26 +170,20 @@ export interface OnboardingData {
     // When true, an extra authorized_person entry is appended to persons[].
     authorizedSignatoryIsDifferent: boolean;
 
-    // â”€â”€ Step 6: Entity Documents â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Step 6: Entity Documents ────────────────────────────────────────────
     entityDocuments: EntityDocData[];
 
-    // â”€â”€ Step 7: Doing Business Address â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Step 7: Doing Business Address ──────────────────────────────────────
     doingBusinessDocPath?: string;
     doingBusinessDocName?: string;
     doingBusinessDocSize?: number;
     doingBusinessDocId?: string;
 
-    // â”€â”€ Step 8: Bank Details â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    bankDetails: {
-        accountNumber: string;
-        ifscCode: string;
-        bankName: string;
-        branchName?: string;
-        accountHolderName: string;
-        confirmAccountNumber?: string;
-    };
+    // ── Step 8: Bank Details ────────────────────────────────────────────────
+    bankAccounts: BankAccountData[];
+    cancelledCheque?: { file?: File; path?: string; };
 
-    // â”€â”€ Step 9: KYC Verification (Video + Location) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Step 9: KYC Verification (Video + Location) ─────────────────────────
     kycData: {
         isVideoCompleted: boolean;
         selfieUrl?: string;
@@ -191,13 +198,13 @@ export interface OnboardingData {
         country?: string | null;
     };
 
-    // â”€â”€ Step 10: Review & Submit â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Step 10: Review & Submit ─────────────────────────────────────────────
     agreementAccepted: boolean;
 
     // u{2500}u{2500} Commission (set by distributor) u{2500}u{2500}
     commission?: number;
 
-    // â”€â”€ Legacy doc map â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Legacy doc map ───────────────────────────────────────────────────────
     // Kept for backward compat with ReviewSubmit, BankDetails, handleFinalSubmit.
     // New uploads write to persons[].panDocPath etc. AND here for existing code.
     documents: {
@@ -213,7 +220,7 @@ export interface OnboardingData {
     currentStep: number;
 }
 
-// â”€â”€â”€ Default initial state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Default initial state ────────────────────────────────────────────────────
 
 export const EMPTY_ADDRESS: Address = {
     addressLine1: '',
@@ -247,14 +254,7 @@ export const INITIAL_ONBOARDING_DATA: OnboardingData = {
     doingBusinessDocName: undefined,
     doingBusinessDocSize: undefined,
     doingBusinessDocId: undefined,
-    bankDetails: {
-        accountNumber: '',
-        ifscCode: '',
-        bankName: '',
-        branchName: '',
-        accountHolderName: '',
-        confirmAccountNumber: '',
-    },
+    bankAccounts: [],
     kycData: {
         isVideoCompleted: false,
         selfieUrl: undefined,
@@ -268,7 +268,7 @@ export const INITIAL_ONBOARDING_DATA: OnboardingData = {
     currentStep: 0,
 };
 
-// â”€â”€â”€ Entity rules â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Entity rules ─────────────────────────────────────────────────────────────
 
 // Minimum number of persons required per entity type
 export const MIN_PERSONS: Record<EntityType, number> = {
@@ -345,7 +345,7 @@ export const AUTHORITY_LETTER_APPLICABLE: Record<EntityType, boolean> = {
     education:       false,
 };
 
-// â”€â”€â”€ Entity document requirements â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Entity document requirements ────────────────────────────────────────────
 // Returns the list of EntityDocData stubs for a given entity type.
 // isMandatory drives UI validation. filePath starts empty.
 
@@ -441,7 +441,7 @@ export function getEntityDocRequirements(entityType: EntityType): EntityDocData[
     }
 }
 
-// â”€â”€â”€ Step completion helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Step completion helpers ──────────────────────────────────────────────────
 
 export function isEntityTypeComplete(data: OnboardingData): boolean {
     return Boolean(data.entityType);
@@ -496,11 +496,12 @@ export function isDoingBusinessComplete(data: OnboardingData): boolean {
 }
 
 export function isBankDetailsComplete(data: OnboardingData): boolean {
-    return Boolean(
-        data.bankDetails.accountNumber?.trim() &&
-        data.bankDetails.ifscCode?.trim() &&
-        data.bankDetails.bankName?.trim() &&
-        data.bankDetails.accountHolderName?.trim()
+    if (!data.bankAccounts || data.bankAccounts.length === 0) return false;
+    return data.bankAccounts.some(
+        acct => acct.accountNumber?.trim() &&
+                acct.ifscCode?.trim() &&
+                acct.bankName?.trim() &&
+                acct.accountHolderName?.trim()
     );
 }
 
@@ -511,7 +512,7 @@ export function isKYCComplete(data: OnboardingData): boolean {
     );
 }
 
-// â”€â”€â”€ Distributor merchant state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Distributor merchant state ───────────────────────────────────────────────
 
 export interface DistributorMerchantState {
     merchantUserId: string;

@@ -15,6 +15,14 @@ async function request(method: string, path: string, body?: any): Promise<any> {
     body: body ? JSON.stringify(body) : undefined,
   });
   if (res.status === 404) throw new Error('NOT_FOUND');
+  if (!res.ok) {
+    let errorMessage = `Request failed (${res.status})`;
+    try {
+      const errorBody = await res.json();
+      errorMessage = errorBody.error?.message || errorMessage;
+    } catch {}
+    throw new Error(errorMessage);
+  }
   const data = await res.json();
   if (!data.success) {
     console.error(`API Error [${res.status}] ${method} ${path}:`, JSON.stringify(data));

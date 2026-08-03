@@ -365,21 +365,31 @@ React.useEffect(() => {
                             {t('review.bankDetails')}
                         </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-3">
-                        <div className="flex justify-between">
-                            <span className="text-muted-foreground">Bank Name:</span>
-                            <span className="font-medium">{data.bankDetails.bankName}</span>
-                        </div>
-                        <div className="flex justify-between">
-                            <span className="text-muted-foreground">Account Number:</span>
-                            <span className="font-medium">
-                                ****{data.bankDetails.accountNumber.slice(-4)}
-                            </span>
-                        </div>
-                        <div className="flex justify-between">
-                            <span className="text-muted-foreground">IFSC Code:</span>
-                            <span className="font-medium">{data.bankDetails.ifscCode}</span>
-                        </div>
+                    <CardContent className="space-y-4">
+                        {(data.bankAccounts || []).map((acct, i) => (
+                            <div key={i} className="space-y-2">
+                                {data.bankAccounts.length > 1 && (
+                                    <p className="text-sm font-semibold text-primary">Account {i + 1}</p>
+                                )}
+                                <div className="flex justify-between">
+                                    <span className="text-muted-foreground">Bank Name:</span>
+                                    <span className="font-medium">{acct.bankName}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-muted-foreground">Account Number:</span>
+                                    <span className="font-medium">
+                                        ****{acct.accountNumber.slice(-4)}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-muted-foreground">IFSC Code:</span>
+                                    <span className="font-medium">{acct.ifscCode}</span>
+                                </div>
+                            </div>
+                        ))}
+                        {(!data.bankAccounts || data.bankAccounts.length === 0) && (
+                            <p className="text-sm text-muted-foreground italic">No bank accounts added</p>
+                        )}
                     </CardContent>
                 </Card>
 

@@ -142,7 +142,7 @@ export const useMerchantData = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [merchantProfile, setMerchantProfile] = useState<MerchantProfile | null>(null);
-  const [bankDetails, setBankDetails] = useState<BankDetails | null>(null);
+  const [bankDetails, setBankDetails] = useState<BankDetails[]>([]);
   const [documents, setDocuments] = useState<DocumentUpload[]>([]);
   const [kycData, setKycData] = useState<KYCData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -193,13 +193,22 @@ export const useMerchantData = () => {
         setMerchantProfile(mapped);
         // Handle bank details - Spring Boot returns snake_case due to @JsonNaming(SnakeCaseStrategy.class)
         const bankData = profile.bankDetails || profile.bank_details;
-        if (bankData) {
-          setBankDetails({
+        if (bankData && Array.isArray(bankData)) {
+          setBankDetails(bankData.map((b: any, i: number) => ({
+            id: b.id || `${i}`,
+            accountNumber: b.accountNumber || b.account_number || '',
+            ifscCode: b.ifscCode || b.ifsc_code || '',
+            bankName: b.bankName || b.bank_name || '',
+            accountHolderName: b.accountHolderName || b.account_holder_name || '',
+          })));
+        } else if (bankData && !Array.isArray(bankData)) {
+          setBankDetails([{
+            id: bankData.id || '0',
             accountNumber: bankData.accountNumber || bankData.account_number || '',
             ifscCode: bankData.ifscCode || bankData.ifsc_code || '',
             bankName: bankData.bankName || bankData.bank_name || '',
             accountHolderName: bankData.accountHolderName || bankData.account_holder_name || '',
-          });
+          }]);
         }
         if (profile.documents || profile.documents_list) {
           const docs = (profile.documents || profile.documents_list || []);

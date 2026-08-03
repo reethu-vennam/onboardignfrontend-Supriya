@@ -89,6 +89,10 @@ export const KYCVerification: React.FC<KYCVerificationProps> = ({
         try {
             console.log('🎥 Starting camera...');
             setIsVideoActive(true);
+
+            // Wait for DOM to render the video element after state update
+            await new Promise(r => setTimeout(r, 300));
+
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: 'user' },
                 audio: false
@@ -100,10 +104,11 @@ export const KYCVerification: React.FC<KYCVerificationProps> = ({
                 videoRef.current.srcObject = stream;
                 streamRef.current = stream;
                 console.log('✅ Video stream assigned to videoRef');
-                // Force play
                 videoRef.current.play().catch(e => console.error('Play error:', e));
             } else {
                 console.error('❌ videoRef.current is null');
+                stream.getTracks().forEach(t => t.stop());
+                setIsVideoActive(false);
             }
         } catch (error) {
             console.error('❌ Error accessing camera:', error);

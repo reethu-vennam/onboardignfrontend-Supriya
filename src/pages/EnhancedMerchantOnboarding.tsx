@@ -170,11 +170,13 @@ function mapChatbotData(step: string, data: Record<string, any>): Partial<Onboar
             case 'ifscCode':
             case 'bankName':
             case 'branchName':
-                if (!result.bankDetails) {
-                    const existing = {} as any;
-                    result.bankDetails = existing;
+                if (!result.bankAccounts) {
+                    result.bankAccounts = [{} as any];
                 }
-                result.bankDetails[key] = strVal;
+                if (result.bankAccounts.length === 0) {
+                    result.bankAccounts.push({} as any);
+                }
+                result.bankAccounts[0][key] = strVal;
                 break;
             case 'addressLine1':
             case 'city':
@@ -409,13 +411,13 @@ const EnhancedOnboardingFlow: React.FC = () => {
                         payload.businessPostalCode = addr.pincode;
                         payload.businessCountry = addr.country || 'India';
                     }
-                    if (merged.bankDetails) {
-                        payload.bankDetails = {
-                            accountNumber: merged.bankDetails.accountNumber,
-                            ifscCode: merged.bankDetails.ifscCode,
-                            bankName: merged.bankDetails.bankName,
-                            accountHolderName: merged.bankDetails.accountHolderName,
-                        };
+                    if (merged.bankAccounts && merged.bankAccounts.length > 0) {
+                        payload.bankDetails = merged.bankAccounts.map(a => ({
+                            accountNumber: a.accountNumber,
+                            ifscCode: a.ifscCode,
+                            bankName: a.bankName,
+                            accountHolderName: a.accountHolderName,
+                        }));
                     }
                 }
 
@@ -473,12 +475,12 @@ const EnhancedOnboardingFlow: React.FC = () => {
                 aadhaarNumber: onboardingData.aadhaarNumber || existingProfile?.aadhaarNumber || existingProfile?.aadhaar_number || null,
                 gstNumber: onboardingData.gstNumber || existingProfile?.gstNumber || existingProfile?.gst_number || null,
                 entityType: onboardingData.entityType || existingProfile?.entityType || existingProfile?.entity_type || null,
-                bankDetails: onboardingData.bankDetails ? {
-                    accountNumber: onboardingData.bankDetails.accountNumber,
-                    ifscCode: onboardingData.bankDetails.ifscCode,
-                    bankName: onboardingData.bankDetails.bankName,
-                    accountHolderName: onboardingData.bankDetails.accountHolderName,
-                } : undefined,
+                bankDetails: onboardingData.bankAccounts?.length ? onboardingData.bankAccounts.map(a => ({
+                    accountNumber: a.accountNumber,
+                    ifscCode: a.ifscCode,
+                    bankName: a.bankName,
+                    accountHolderName: a.accountHolderName,
+                })) : undefined,
                 persons: onboardingData.persons?.length ? onboardingData.persons.map(p => ({
                     role: p.role,
                     fullName: p.fullName,
@@ -558,10 +560,10 @@ const EnhancedOnboardingFlow: React.FC = () => {
         const hasBankDetails = Boolean(
             isBankDetailsComplete(onboardingData) ||
             (
-                bankDetails?.accountNumber &&
-                bankDetails?.ifscCode &&
-                bankDetails?.bankName &&
-                bankDetails?.accountHolderName
+                bankDetails?.[0]?.accountNumber &&
+                bankDetails?.[0]?.ifscCode &&
+                bankDetails?.[0]?.bankName &&
+                bankDetails?.[0]?.accountHolderName
             )
         );
 
@@ -639,7 +641,19 @@ const EnhancedOnboardingFlow: React.FC = () => {
             const kycArr = mp.kyc || [];
             const kyc = kycArr.length > 0 ? kycArr[0] : null;
 
-            const bankDto = mp.bankDetails || mp.bank_details || null;
+            const bankDtos = mp.bankDetails || mp.bank_details || null;
+
+            const bankAccounts: BankAccountData[] = (() => {
+                if (!bankDtos) return prev.bankAccounts || [];
+                const list = Array.isArray(bankDtos) ? bankDtos : [bankDtos];
+                return list.map((b: any) => ({
+                    accountNumber: b.accountNumber || b.account_number || '',
+                    ifscCode: b.ifscCode || b.ifsc_code || '',
+                    bankName: b.bankName || b.bank_name || '',
+                    accountHolderName: b.accountHolderName || b.account_holder_name || '',
+                    confirmAccountNumber: '',
+                }));
+            })();
 
             return {
                 ...prev,
@@ -678,12 +692,7 @@ const EnhancedOnboardingFlow: React.FC = () => {
                     pincode: kyc.pincode || '',
                 } : prev.kycData,
 
-                bankDetails: bankDto ? {
-                    accountNumber: bankDto.accountNumber || bankDto.account_number || prev.bankDetails?.accountNumber || '',
-                    ifscCode: bankDto.ifscCode || bankDto.ifsc_code || prev.bankDetails?.ifscCode || '',
-                    bankName: bankDto.bankName || bankDto.bank_name || prev.bankDetails?.bankName || '',
-                    accountHolderName: bankDto.accountHolderName || bankDto.account_holder_name || prev.bankDetails?.accountHolderName || '',
-                } : prev.bankDetails,
+                bankAccounts: bankAccounts.length > 0 ? bankAccounts : prev.bankAccounts,
 
                 selectedProducts: (() => {
                     try {
@@ -827,7 +836,7 @@ const EnhancedOnboardingFlow: React.FC = () => {
             d => d.documentType === 'utility_bill' || d.documentType === 'rent_agreement'
         );
 
-        const hasBankDetails = Boolean(bankDetails?.accountNumber);
+        const hasBankDetails = Boolean(bankDetails?.[0]?.accountNumber);
         const hasKYC = merchantProfile.cpv_status === 'cpv_verified'
             || (merchantProfile as any).cpvSubmitted === true
             || (merchantProfile as any).verification_submitted === true

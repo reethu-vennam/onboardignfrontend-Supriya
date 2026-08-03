@@ -375,10 +375,11 @@ export default function DistributorMerchantOnboarding() {
             if (!onboardingData.fullName)                               errors.push('Full name');
             if (!onboardingData.mobileNumber)                           errors.push('Mobile number');
             if (!onboardingData.businessName)                           errors.push('Business name');
-            if (!onboardingData.bankDetails.accountNumber?.trim())      errors.push('Bank account number');
-            if (!onboardingData.bankDetails.ifscCode?.trim())           errors.push('IFSC code');
-            if (!onboardingData.bankDetails.bankName?.trim())           errors.push('Bank name');
-            if (!onboardingData.bankDetails.accountHolderName?.trim())  errors.push('Account holder name');
+            const firstBank = onboardingData.bankAccounts?.[0] || {};
+            if (!firstBank.accountNumber?.trim())      errors.push('Bank account number');
+            if (!firstBank.ifscCode?.trim())           errors.push('IFSC code');
+            if (!firstBank.bankName?.trim())           errors.push('Bank name');
+            if (!firstBank.accountHolderName?.trim())  errors.push('Account holder name');
             if (!isEmployee && !onboardingData.kycData.isVideoCompleted) errors.push('Video KYC');
             if (!isEmployee && !onboardingData.kycData.locationVerified) errors.push('Location verification');
 
@@ -411,7 +412,12 @@ export default function DistributorMerchantOnboarding() {
                     aadhaarNumber:  onboardingData.aadhaarNumber,
                     gstNumber:      onboardingData.gstNumber,
                     entityType:     onboardingData.entityType || null,
-                    bankDetails:    onboardingData.bankDetails,
+                    bankDetails:    onboardingData.bankAccounts?.[0] ? {
+                        accountNumber: onboardingData.bankAccounts[0].accountNumber,
+                        ifscCode: onboardingData.bankAccounts[0].ifscCode,
+                        bankName: onboardingData.bankAccounts[0].bankName,
+                        accountHolderName: onboardingData.bankAccounts[0].accountHolderName,
+                    } : undefined,
                     kycData:        onboardingData.kycData,
                     documents:      onboardingData.documents,
                     // New structured data

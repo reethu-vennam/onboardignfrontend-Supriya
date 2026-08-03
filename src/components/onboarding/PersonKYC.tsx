@@ -675,19 +675,23 @@ export const PersonKYC: React.FC<PersonKYCProps> = ({
 
             // Save persons via API
             if (merchantId && personKYCData.length > 0) {
-                try {
-                    await api.post('/merchant/profile', {
-                        persons: personKYCData.map(p => ({
-                            role: p.role,
-                            fullName: p.fullName,
-                            panNumber: p.panNumber || null,
-                            addressProofType: p.addressProofType || null,
-                            isAuthorizedSignatory: p.isAuthorizedSignatory,
-                            sequenceOrder: p.sequenceOrder,
-                        }))
-                    });
-                } catch (e: any) {
-                    console.error('Failed to save persons:', e);
+                const status = (merchantProfile as any)?.onboarding_status || (merchantProfile as any)?.onboardingStatus;
+                const isEditable = !status || status === 'draft' || status === 'rejected' || status === 'submitted';
+                if (isEditable) {
+                    try {
+                        await api.post('/merchant/profile', {
+                            persons: personKYCData.map(p => ({
+                                role: p.role,
+                                fullName: p.fullName,
+                                panNumber: p.panNumber || null,
+                                addressProofType: p.addressProofType || null,
+                                isAuthorizedSignatory: p.isAuthorizedSignatory,
+                                sequenceOrder: p.sequenceOrder,
+                            }))
+                        });
+                    } catch (e: any) {
+                        console.error('Failed to save persons:', e);
+                    }
                 }
             }
 

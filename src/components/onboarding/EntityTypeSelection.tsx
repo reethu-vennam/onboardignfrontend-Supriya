@@ -265,7 +265,7 @@ export const EntityTypeSelection: React.FC<EntityTypeSelectionProps> = ({
 
             try {
                 const status = (merchantProfile as any)?.onboarding_status || (merchantProfile as any)?.onboardingStatus;
-                const isEditable = !status || status === 'draft' || status === 'rejected';
+                const isEditable = !status || status === 'draft' || status === 'rejected' || status === 'submitted';
                 if (isEditable) {
                     await api.post('/merchant/profile', { entityType: selected });
                 }
