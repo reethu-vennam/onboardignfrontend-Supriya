@@ -51,7 +51,7 @@ interface MerchantDocument {
     file_name: string;
 }
 
-interface MerchantBankDetails {
+interface MerchantBankDetailItem {
     bank_name: string;
     account_number: string;
     ifsc_code: string;
@@ -61,7 +61,6 @@ interface MerchantBankDetails {
     branch_address?: string;
     city?: string;
     state?: string;
-    pincode?: string;
 }
 
 interface MerchantKYC {
@@ -97,7 +96,7 @@ export const BankDashboard: React.FC = () => {
     const [commercials, setCommercials] = useState(JSON.parse(JSON.stringify(DEFAULT_COMMERCIALS)));
 
     const [documents, setDocuments] = useState<MerchantDocument[]>([]);
-    const [bankDetails, setBankDetails] = useState<MerchantBankDetails | null>(null);
+    const [bankDetails, setBankDetails] = useState<MerchantBankDetailItem[] | null>(null);
     const [kycData, setKycData] = useState<MerchantKYC | null>(null);
 
     // Agreement link states
@@ -569,13 +568,22 @@ export const BankDashboard: React.FC = () => {
                                 Bank Details
                             </h2>
                             {bankDetails ? (
-                                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                    <div><label className="text-xs font-medium text-gray-500">Bank Name</label><p>{bankDetails.bank_name}</p></div>
-                                    <div><label className="text-xs font-medium text-gray-500">Account Holder</label><p>{bankDetails.account_holder_name}</p></div>
-                                    <div><label className="text-xs font-medium text-gray-500">Account Number</label><p className="font-mono">{bankDetails.account_number}</p></div>
-                                    <div><label className="text-xs font-medium text-gray-500">IFSC</label><p className="font-mono">{bankDetails.ifsc_code}</p></div>
-                                    <div><label className="text-xs font-medium text-gray-500">Account Type</label><p>{bankDetails.account_type || 'N/A'}</p></div>
-                                    <div><label className="text-xs font-medium text-gray-500">Branch</label><p>{bankDetails.branch_name || 'N/A'}</p></div>
+                                <div className="space-y-4">
+                                    {bankDetails.map((bank, idx) => (
+                                        <div key={idx} className={idx > 0 ? 'pt-4 border-t border-gray-200' : ''}>
+                                            {bankDetails.length > 1 && (
+                                                <p className="text-sm font-medium text-teal-600 mb-2">Account {idx + 1}</p>
+                                            )}
+                                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                                <div><label className="text-xs font-medium text-gray-500">Bank Name</label><p>{bank.bank_name}</p></div>
+                                                <div><label className="text-xs font-medium text-gray-500">Account Holder</label><p>{bank.account_holder_name}</p></div>
+                                                <div><label className="text-xs font-medium text-gray-500">Account Number</label><p className="font-mono">{bank.account_number}</p></div>
+                                                <div><label className="text-xs font-medium text-gray-500">IFSC</label><p className="font-mono">{bank.ifsc_code}</p></div>
+                                                <div><label className="text-xs font-medium text-gray-500">Account Type</label><p>{bank.account_type || 'N/A'}</p></div>
+                                                <div><label className="text-xs font-medium text-gray-500">Branch</label><p>{bank.branch_name || 'N/A'}</p></div>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                             ) : <p className="text-gray-500 italic text-sm">Bank details not provided</p>}
                         </div>
@@ -841,17 +849,26 @@ export const BankDashboard: React.FC = () => {
                                 Bank Details
                             </h2>
                             {bankDetails ? (
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="space-y-3">
-                                        <div><label className="text-sm font-medium text-gray-600">Bank Name</label><p>{bankDetails.bank_name}</p></div>
-                                        <div><label className="text-sm font-medium text-gray-600">Account Holder</label><p>{bankDetails.account_holder_name}</p></div>
-                                        <div><label className="text-sm font-medium text-gray-600">Account Type</label><p>{bankDetails.account_type || 'N/A'}</p></div>
-                                    </div>
-                                    <div className="space-y-3">
-                                        <div><label className="text-sm font-medium text-gray-600">Account Number</label><p className="font-mono">{bankDetails.account_number}</p></div>
-                                        <div><label className="text-sm font-medium text-gray-600">IFSC Code</label><p className="font-mono">{bankDetails.ifsc_code}</p></div>
-                                        <div><label className="text-sm font-medium text-gray-600">Branch</label><p>{bankDetails.branch_name || 'N/A'}</p></div>
-                                    </div>
+                                <div className="space-y-4">
+                                    {bankDetails.map((bank, idx) => (
+                                        <div key={idx} className={idx > 0 ? 'pt-4 border-t border-gray-200' : ''}>
+                                            {bankDetails.length > 1 && (
+                                                <p className="text-sm font-medium text-teal-600 mb-2">Account {idx + 1}</p>
+                                            )}
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div className="space-y-3">
+                                                    <div><label className="text-sm font-medium text-gray-600">Bank Name</label><p>{bank.bank_name}</p></div>
+                                                    <div><label className="text-sm font-medium text-gray-600">Account Holder</label><p>{bank.account_holder_name}</p></div>
+                                                    <div><label className="text-sm font-medium text-gray-600">Account Type</label><p>{bank.account_type || 'N/A'}</p></div>
+                                                </div>
+                                                <div className="space-y-3">
+                                                    <div><label className="text-sm font-medium text-gray-600">Account Number</label><p className="font-mono">{bank.account_number}</p></div>
+                                                    <div><label className="text-sm font-medium text-gray-600">IFSC Code</label><p className="font-mono">{bank.ifsc_code}</p></div>
+                                                    <div><label className="text-sm font-medium text-gray-600">Branch</label><p>{bank.branch_name || 'N/A'}</p></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                             ) : <p className="text-gray-500 italic">Bank details not provided</p>}
                         </div>

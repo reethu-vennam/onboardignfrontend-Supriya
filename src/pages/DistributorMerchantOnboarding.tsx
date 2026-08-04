@@ -414,12 +414,12 @@ export default function DistributorMerchantOnboarding() {
                     aadhaarNumber:  onboardingData.aadhaarNumber,
                     gstNumber:      onboardingData.gstNumber,
                     entityType:     onboardingData.entityType || null,
-                    bankDetails:    onboardingData.bankAccounts?.[0] ? {
-                        accountNumber: onboardingData.bankAccounts[0].accountNumber,
-                        ifscCode: onboardingData.bankAccounts[0].ifscCode,
-                        bankName: onboardingData.bankAccounts[0].bankName,
-                        accountHolderName: onboardingData.bankAccounts[0].accountHolderName,
-                    } : undefined,
+                    bankDetails:    onboardingData.bankAccounts?.length ? onboardingData.bankAccounts.map(a => ({
+                        accountNumber: a.accountNumber,
+                        ifscCode: a.ifscCode,
+                        bankName: a.bankName,
+                        accountHolderName: a.accountHolderName,
+                    })) : undefined,
                     kycData:        onboardingData.kycData,
                     documents:      onboardingData.documents,
                     // New structured data

@@ -27,7 +27,7 @@ interface MerchantApplication {
     entity_type: string; created_at: string; updated_at: string;
     submitted_at: string | null; rejection_reason: string | null;
     selected_products?: any; split_payment_config?: string | null;
-    merchant_bank_details: { bank_name: string; account_number: string; ifsc_code: string; account_holder_name: string; } | null;
+    merchant_bank_details: Array<{ bank_name: string; account_number: string; ifsc_code: string; account_holder_name: string; }> | null;
     merchant_documents?: MerchantDocument[];
     merchant_kyc?: MerchantKYC | null;
     merchant_product_selections?: any[];
@@ -132,10 +132,21 @@ function ApplicationDetailModal({ application, onClose, onValidate, onReject, on
                     </DetailSection>
 
                     <DetailSection title="Banking Details">
-                        <DetailItem label="Bank Name" value={application.merchant_bank_details?.bank_name||'N/A'}/>
-                        <DetailItem label="Account Holder" value={application.merchant_bank_details?.account_holder_name||'N/A'}/>
-                        <DetailItem label="Account Number" value={application.merchant_bank_details?.account_number||'N/A'}/>
-                        <DetailItem label="IFSC Code" value={application.merchant_bank_details?.ifsc_code||'N/A'}/>
+                        {application.merchant_bank_details && application.merchant_bank_details.length > 0 ? (
+                            application.merchant_bank_details.map((bank, idx) => (
+                                <div key={idx} className={idx > 0 ? 'mt-3 pt-3 border-t border-gray-200' : ''}>
+                                    {application.merchant_bank_details.length > 1 && (
+                                        <p className="text-sm font-medium text-primary mb-1">Account {idx + 1}</p>
+                                    )}
+                                    <DetailItem label="Bank Name" value={bank.bank_name || 'N/A'} />
+                                    <DetailItem label="Account Holder" value={bank.account_holder_name || 'N/A'} />
+                                    <DetailItem label="Account Number" value={bank.account_number || 'N/A'} />
+                                    <DetailItem label="IFSC Code" value={bank.ifsc_code || 'N/A'} />
+                                </div>
+                            ))
+                        ) : (
+                            <p className="text-sm text-gray-400">No bank details</p>
+                        )}
                     </DetailSection>
 
                     <DetailSection title="Settlement & Reserve Terms">
