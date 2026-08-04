@@ -10,7 +10,7 @@ export default defineConfig({
   preview: {
     port: 8877,
     host: '0.0.0.0',
-    allowedHosts: ['onboarding.sabbpe.com', 'onboardingprodbckend.sabbpe.com', 'sabbpe.com']
+    allowedHosts: ['onboardinguat.sabbpe.com', 'onboardingbckenduat.sabbpe.com', 'sabbpe.com']
   },
   plugins: [
     react(),
