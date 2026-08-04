@@ -9,6 +9,7 @@ import { I18nProvider } from "@/i18n/I18nProvider";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
+
 import Auth from "./pages/Auth";
 import RoleSelection from "./pages/RoleSelection";
 import EnhancedMerchantOnboarding from "./pages/EnhancedMerchantOnboarding";
