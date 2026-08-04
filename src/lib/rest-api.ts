@@ -2,6 +2,19 @@ import { authService } from './auth-service';
 
 const API_BASE = import.meta.env.VITE_API_URL || '';
 
+function formatApiErrorMessage(body: any): string | undefined {
+  const message = body?.error?.message;
+  const details = body?.error?.details;
+  if (Array.isArray(details) && details.length > 0) {
+    return `${message}: ${details.join(', ')}`;
+  }
+  if (details && typeof details === 'object') {
+    const fieldErrors = Object.values(details).filter((v): v is string => typeof v === 'string');
+    if (fieldErrors.length > 0) return `${message}: ${fieldErrors.join(', ')}`;
+  }
+  return message;
+}
+
 async function request(method: string, path: string, body?: any): Promise<any> {
   const token = authService.getToken();
   if (!token) throw new Error('Not authenticated');
@@ -19,14 +32,14 @@ async function request(method: string, path: string, body?: any): Promise<any> {
     let errorMessage = `Request failed (${res.status})`;
     try {
       const errorBody = await res.json();
-      errorMessage = errorBody.error?.message || errorMessage;
+      errorMessage = formatApiErrorMessage(errorBody) || errorMessage;
     } catch {}
     throw new Error(errorMessage);
   }
   const data = await res.json();
   if (!data.success) {
     console.error(`API Error [${res.status}] ${method} ${path}:`, JSON.stringify(data));
-    throw new Error(data.error?.message || `Request failed (${res.status})`);
+    throw new Error(formatApiErrorMessage(data) || `Request failed (${res.status})`);
   }
   return data.data;
 }
