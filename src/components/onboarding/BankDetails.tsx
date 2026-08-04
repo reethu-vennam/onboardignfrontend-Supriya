@@ -598,21 +598,11 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
             <div className="flex flex-wrap justify-between gap-4 pt-4">
                 <div className="flex flex-wrap gap-2">
                     <RaiseTicketButton
-                        variant="outline"
-                        size="sm"
-                        className="border-orange-200 text-orange-700 hover:bg-orange-50"
-                        source="onboarding-bank"
-                        sourceId={merchantProfile?.id as string || user?.id || ''}
+                        module="onboarding-bank"
+                        referenceId={merchantProfile?.id as string || user?.id || ''}
                     />
-                    <ViewTicketButton
-                        variant="ghost"
-                        size="sm"
-                        source="onboarding-bank"
-                        sourceId={merchantProfile?.id as string || user?.id || ''}
-                    />
+                    <ViewTicketButton />
                     <WhatsAppSupportButton
-                        variant="ghost"
-                        size="sm"
                         message={t('support.bankHelp') || 'Hi, I need help with adding my bank account during onboarding.'}
                     />
                 </div>

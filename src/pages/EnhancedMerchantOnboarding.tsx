@@ -44,6 +44,7 @@ import { OnboardingChatbot } from '@/components/OnboardingChatbot';
 
 import {
     OnboardingData,
+    BankAccountData,
     INITIAL_ONBOARDING_DATA,
     EntityType,
     isEntityTypeComplete,

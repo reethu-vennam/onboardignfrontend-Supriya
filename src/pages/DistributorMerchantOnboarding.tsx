@@ -34,6 +34,7 @@ import { ReviewSubmit } from '@/components/onboarding/ReviewSubmit';
 // ── Shared types ──────────────────────────────────────────────────────────────
 import {
     OnboardingData,
+    BankAccountData,
     INITIAL_ONBOARDING_DATA,
     DistributorMerchantState,
     EntityType,
@@ -376,7 +377,7 @@ export default function DistributorMerchantOnboarding() {
             if (!onboardingData.fullName)                               errors.push('Full name');
             if (!onboardingData.mobileNumber)                           errors.push('Mobile number');
             if (!onboardingData.businessName)                           errors.push('Business name');
-            const firstBank = onboardingData.bankAccounts?.[0] || {};
+            const firstBank: Partial<BankAccountData> = onboardingData.bankAccounts?.[0] || {};
             if (!firstBank.accountNumber?.trim())      errors.push('Bank account number');
             if (!firstBank.ifscCode?.trim())           errors.push('IFSC code');
             if (!firstBank.bankName?.trim())           errors.push('Bank name');
