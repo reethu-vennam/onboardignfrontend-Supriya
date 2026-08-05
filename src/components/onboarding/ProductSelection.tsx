@@ -367,7 +367,7 @@ export const ProductSelectionEnhanced: React.FC<ProductSelectionProps> = ({ onNe
                 product_code: 'PROD_004',
                 product_name: product?.product_name || 'Payment Gateway',
                 pricing_type: pricing?.selectedOption || 'integration',
-                price: product?.price_integration_fee || 60000,
+                price: product?.price_integration_fee || 0,
             };
             const currentProducts = Array.from(newSelected).map(code => {
                 if (code === 'PROD_004') return pgProduct;
@@ -381,7 +381,7 @@ export const ProductSelectionEnhanced: React.FC<ProductSelectionProps> = ({ onNe
                 };
             });
             await apiClient.post('/products/merchant/update-products', {
-                products: currentProducts,
+                selectedProducts: JSON.stringify(currentProducts),
             });
             console.log('✅ Products saved after commercials accept');
         } catch (e) {

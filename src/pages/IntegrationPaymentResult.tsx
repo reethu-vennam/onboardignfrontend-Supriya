@@ -107,7 +107,7 @@ export default function IntegrationPaymentResult() {
 
       const response = await storeSabbpeTxnDetails(payload);
 
-      if (response.data?.success) {
+      if (response.success) {
         console.log("✅ SabbPe payment details saved successfully");
         toast({
           title: "Payment Saved",
@@ -116,11 +116,10 @@ export default function IntegrationPaymentResult() {
         return true;
       }
 
-      const data = response.data;
-      console.error("❌ Failed to save payment details:", data);
+      console.error("❌ Failed to save payment details:", response);
       toast({
         title: "Save Failed",
-        description: data.message || "Failed to save payment details.",
+        description: response.message || "Failed to save payment details.",
         variant: "destructive",
       });
       return false;

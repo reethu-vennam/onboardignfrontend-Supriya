@@ -14,6 +14,17 @@ const CUSTOMER_FIRSTNAME = import.meta.env.VITE_SABBPE_CUSTOMER_FIRSTNAME;
 const CUSTOMER_EMAIL = import.meta.env.VITE_SABBPE_CUSTOMER_EMAIL;
 const CUSTOMER_PHONE = import.meta.env.VITE_SABBPE_CUSTOMER_PHONE;
 
+const resolveFrontendUrl = () => {
+  const configuredUrl = String(FRONTEND_URL || '').trim();
+  const fallbackUrl = typeof window !== 'undefined' ? window.location.origin : '';
+  const url = configuredUrl || fallbackUrl;
+
+  if (!url) return '';
+  if (/^https?:\/\//i.test(url)) return url.replace(/\/+$/, '');
+
+  return `https://${url.replace(/\/+$/, '')}`;
+};
+
 export interface SabbpeHostedPaymentCustomer {
   firstname: string;
   email: string;
@@ -94,7 +105,7 @@ const ensureConfigured = () => {
     ['VITE_SABBPE_USER_ID', SABBPE_USER_ID],
     ['VITE_SABBPE_MERCHANT_ID', SABBPE_MERCHANT_ID],
     ['VITE_SABBPE_PASSWORD', SABBPE_PASSWORD],
-    ['VITE_FRONTEND_URL', FRONTEND_URL],
+    ['VITE_FRONTEND_URL or browser origin', resolveFrontendUrl()],
     ['VITE_SABBPE_PRODUCT_INFO', PRODUCT_INFO],
     ['VITE_SABBPE_CUSTOMER_FIRSTNAME', CUSTOMER_FIRSTNAME],
     ['VITE_SABBPE_CUSTOMER_EMAIL', CUSTOMER_EMAIL],
@@ -173,7 +184,7 @@ export const startSabbpeHostedPayment = async (
     sabbpe_token: sabbpeToken,
     amount,
     productinfo: PRODUCT_INFO,
-    frontend_url: FRONTEND_URL,
+    frontend_url: resolveFrontendUrl(),
     customer: { firstname: CUSTOMER_FIRSTNAME, email: CUSTOMER_EMAIL, phone: CUSTOMER_PHONE },
   };
   const initiateResponse = await axios.post<SabbpeInitiateResponse>(

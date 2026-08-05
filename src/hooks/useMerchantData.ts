@@ -103,6 +103,7 @@ export interface MerchantProfile {
   created_at?: string;
   updated_at?: string;
   txn_details?: any;
+  transaction_id?: string;
   total_monthly_cost?: number;
   total_onetime_cost?: number;
   total_integration_cost?: number;
@@ -187,6 +188,7 @@ export const useMerchantData = () => {
           created_at: profile.createdAt || profile.created_at,
           updated_at: profile.updatedAt || profile.updated_at,
           txn_details: profile.txnDetails || profile.txn_details,
+          transaction_id: profile.transactionId || profile.transaction_id,
           total_monthly_cost: profile.totalMonthlyCost || profile.total_monthly_cost,
           total_onetime_cost: profile.totalOnetimeCost || profile.total_onetime_cost,
           total_integration_cost: profile.totalIntegrationCost || profile.total_integration_cost,

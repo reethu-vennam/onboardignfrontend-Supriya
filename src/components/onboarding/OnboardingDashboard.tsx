@@ -175,7 +175,7 @@ export const OnboardingDashboard: React.FC = () => {
     };
 
     const handleViewTransactionDetails = async () => {
-        const transactionId = merchantProfile?.['Transaction Id'];
+        const transactionId = merchantProfile?.transaction_id;
 
         if (!transactionId) {
             toast({
@@ -190,8 +190,8 @@ export const OnboardingDashboard: React.FC = () => {
             setIsTxnDetailsLoading(true);
             setTxnDetailsError('');
 
-            const { data } = await fetchSabbpeTxnDetails(transactionId);
-            const details = data?.data?.txnDetails ?? null;
+            const response = await fetchSabbpeTxnDetails(transactionId);
+            const details = response?.data?.txnDetails ?? null;
 
             setTxnDetails(details);
             setIsTxnDetailsOpen(true);
@@ -570,7 +570,7 @@ export const OnboardingDashboard: React.FC = () => {
                                     </div>
                                 </div>
 
-                                {paymentCompleted && merchantProfile?.['Transaction Id'] && (
+                                {paymentCompleted && merchantProfile?.transaction_id && (
                                     <div className="mt-6 space-y-3">
                                         <div className="flex items-center justify-between gap-3">
                                             <div>
