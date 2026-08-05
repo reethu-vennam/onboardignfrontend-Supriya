@@ -36,7 +36,6 @@ export const useKYCValidation = () => {
 
                         try {
                             // perform reverse geocoding using OpenStreetMap Nominatim
-                            // Note: This may fail in browsers due to CORS; we fall back to coordinates
                             const resp = await fetch(
 `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`
                             );
@@ -49,8 +48,7 @@ export const useKYCValidation = () => {
                                 console.log('✅ Reverse geocoding successful:', displayAddress);
                             }
                         } catch (e) {
-                            // CORS or network error from Nominatim is expected in some browser contexts
-                            // Just use coordinates as fallback silently
+                            // Just use coordinates as fallback silently.
                         }
 
                         // fallback if reverse lookup didn't populate displayAddress

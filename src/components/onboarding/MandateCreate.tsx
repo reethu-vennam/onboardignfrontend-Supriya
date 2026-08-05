@@ -173,17 +173,13 @@ const MandateCreate: React.FC<MandateCreateProps> = ({
             ? "pending"
             : "failed";
 
-      // Save to Supabase
-      const updatePayload = {
-        upi_mandate_status: mapped,
-        upi_mandate_ref_no: mandateRefNo,
-        updated_at: new Date().toISOString(),
-      } as any;
-
-      if (merchantProfile?.id) {
-        /* supabase removed */
-      } else if (user?.id) {
-        /* supabase removed */
+      try {
+        await api.post('/merchant/mandate-status', {
+          upiMandateStatus: mapped,
+          upiMandateRefNo: mandateRefNo,
+        });
+      } catch (persistError) {
+        console.error('Failed to persist mandate status:', persistError);
       }
 
       if (mapped === "active" || mapped === "failed") {

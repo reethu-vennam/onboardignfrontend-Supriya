@@ -48,7 +48,9 @@ export const bankLogin = async (payload: BankLoginPayload): Promise<BankLoginRes
         body: JSON.stringify(payload)
     });
     if (!response.ok) throw new Error('Login failed');
-    return response.json();
+    const body = await response.json();
+    if (!body.success || !body.data) throw new Error(body.message || 'Login failed');
+    return { success: body.success, message: body.message, ...body.data };
 };
 
 export const getPendingApplications = async (token: string): Promise<Application[]> => {
@@ -76,7 +78,9 @@ export const sendAgreementLink = async (token: string, appId: string, agreementL
         body: JSON.stringify({ agreement_link: agreementLink })
     });
     if (!response.ok) throw new Error('Failed to send agreement link');
-    return response.json();
+    const body = await response.json();
+    if (!body.success) throw new Error(body.error?.message || 'Failed to send agreement link');
+    return body;
 };
 
 export const getApplicationDetails = async (token: string, appId: string): Promise<any> => {
@@ -103,10 +107,12 @@ export const sendAgreement = async (token: string, appId: string, commercials: a
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ commercials, notes })
+        body: JSON.stringify({ bank_commercials: commercials, notes })
     });
     if (!response.ok) throw new Error('Failed to send agreement');
-    return response.json();
+    const body = await response.json();
+    if (!body.success) throw new Error(body.error?.message || 'Failed to send agreement');
+    return body;
 };
 
 export const finalDecision = async (token: string, appId: string, decision: 'approve' | 'reject', notes: string): Promise<any> => {
@@ -119,7 +125,9 @@ export const finalDecision = async (token: string, appId: string, decision: 'app
         body: JSON.stringify({ decision, notes })
     });
     if (!response.ok) throw new Error('Final decision failed');
-    return response.json();
+    const body = await response.json();
+    if (!body.success) throw new Error(body.error?.message || 'Final decision failed');
+    return body;
 };
 
 export const decideApplication = async (token: string, appId: string, payload: ApplicationDecision): Promise<any> => {
@@ -132,7 +140,9 @@ export const decideApplication = async (token: string, appId: string, payload: A
         body: JSON.stringify(payload)
     });
     if (!response.ok) throw new Error('Decision failed');
-    return response.json();
+    const body = await response.json();
+    if (!body.success) throw new Error(body.error?.message || 'Decision failed');
+    return body;
 };
 
 export const handleError = (error: unknown): string => {

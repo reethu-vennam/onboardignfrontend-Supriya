@@ -55,6 +55,7 @@ interface BankDetailsProps {
     data?: OnboardingData;
     onDataChange?: (data: Partial<OnboardingData>) => void;
     merchantProfile?: Record<string, unknown>;
+    refetchMerchant?: () => void;
 }
 
 export const BankDetails: React.FC<BankDetailsProps> = ({
@@ -63,6 +64,7 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
     data,
     onDataChange,
     merchantProfile: merchantProfileProp,
+    refetchMerchant,
 }) => {
     const { toast } = useToast();
     const { t } = useI18n();
@@ -167,6 +169,12 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
                                 error: result.error,
                             },
                         }));
+                        if (result.isValid && result.bankName) {
+                            updateAccount(index, 'bankName', result.bankName);
+                            if (result.branch) {
+                                updateAccount(index, 'branchName', result.branch);
+                            }
+                        }
                     } catch { }
                 }, 600);
                 timeouts.push(timeoutId);
@@ -175,7 +183,7 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
             }
         }
         return () => timeouts.forEach(clearTimeout);
-    }, [accounts.map(a => a.ifscCode).join(',')]);
+    }, [accounts.map(a => a.ifscCode).join(','), updateAccount]);
 
     useEffect(() => {
         for (const [index, account] of accounts.entries()) {
@@ -375,6 +383,8 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
                 onDataChange({ bankAccounts: accounts });
             }
 
+            refetchMerchant?.();
+
             toast({ title: "Bank Details Saved", description: "Your bank information has been successfully recorded." });
             onNext();
         } catch (error) {
@@ -498,14 +508,7 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
                                         <span className="text-xs text-green-700 font-medium">Account Verified</span>
                                     </div>
                                     <div className="text-xs text-green-600 mt-0.5 space-y-0.5">
-                                        {accountValidations[index].accountName && <p>Name: {accountValidations[index].accountName}</p>}
                                         {accountValidations[index].accountStatus && <p>Status: {accountValidations[index].accountStatus}</p>}
-                                        {accountValidations[index].message && <p>Message: {accountValidations[index].message}</p>}
-                                        {accountValidations[index].requestId && <p>Request ID: {accountValidations[index].requestId}</p>}
-                                        {accountValidations[index].trackingRefNo && <p>Tracking Ref: {accountValidations[index].trackingRefNo}</p>}
-                                        {accountValidations[index].responseId && <p>Response ID: {accountValidations[index].responseId}</p>}
-                                        {accountValidations[index].statusCode && <p>Status Code: {accountValidations[index].statusCode}</p>}
-                                        {accountValidations[index].status && <p>API Status: {accountValidations[index].status}</p>}
                                     </div>
                                 </div>
                             )}

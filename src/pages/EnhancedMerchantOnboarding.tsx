@@ -90,6 +90,7 @@ interface BaseStepProps {
     currentStep?: string;
     merchantProfile?: MerchantProfileShape;
     isSubmitting?: boolean;
+    refetchMerchant?: () => void;
 }
 
 interface StepInfo {
@@ -431,10 +432,16 @@ const EnhancedOnboardingFlow: React.FC = () => {
             }
         } catch (err) {
             console.error(`Error saving step ${currentStep}:`, err);
+            toast({
+                variant: 'destructive',
+                title: 'Save Failed',
+                description: err instanceof Error ? err.message : 'Could not save your details. Please try again.',
+            });
+            return;
         }
 
         nextStep();
-    }, [currentStep, nextStep, user, onboardingData, merchantProfile]);
+    }, [currentStep, nextStep, user, onboardingData, merchantProfile, toast]);
 
     const handleGoToStep = React.useCallback((stepId: string) => {
         const exists = ONBOARDING_STEPS.find(s => s.id === stepId);
@@ -615,9 +622,10 @@ const EnhancedOnboardingFlow: React.FC = () => {
         currentStep,
         merchantProfile: merchantProfile as MerchantProfileShape,
         isSubmitting,
+        refetchMerchant: refetch,
     }), [
         onboardingData, handleDataChange, handleNextStep, prevStep,
-        handleGoToStep, handleFinalSubmit, currentStep, merchantProfile, isSubmitting,
+        handleGoToStep, handleFinalSubmit, currentStep, merchantProfile, isSubmitting, refetch,
     ]);
 
     useEffect(() => {
