@@ -40,18 +40,34 @@ export const authService = {
         body: JSON.stringify({ email, password, fullName, mobileNumber, role }),
       });
       const data = await res.json();
-      if (data.success && data.data) {
-        localStorage.setItem(TOKEN_KEY, data.data.token);
-        if (data.data.refreshToken) localStorage.setItem(REFRESH_KEY, data.data.refreshToken);
+
+      const normalized = data.user && data.token
+        ? {
+            success: true,
+            data: {
+              token: data.token,
+              refreshToken: data.refreshToken,
+              userId: data.user.id,
+              email: data.user.email,
+              fullName: data.user.name || fullName,
+              roles: data.user.role ? [data.user.role] : [],
+              merchantId: data.user.merchantId,
+            },
+          }
+        : data;
+
+      if (normalized.success && normalized.data) {
+        localStorage.setItem(TOKEN_KEY, normalized.data.token);
+        if (normalized.data.refreshToken) localStorage.setItem(REFRESH_KEY, normalized.data.refreshToken);
         localStorage.setItem(USER_KEY, JSON.stringify({
-          id: data.data.userId,
-          email: data.data.email,
-          fullName: data.data.fullName || fullName,
-          roles: data.data.roles,
-          merchantId: data.data.merchantId,
+          id: normalized.data.userId,
+          email: normalized.data.email,
+          fullName: normalized.data.fullName || fullName,
+          roles: normalized.data.roles,
+          merchantId: normalized.data.merchantId,
         }));
       }
-      return data;
+      return normalized;
     } catch (err: any) {
       return { success: false, error: { code: 'NETWORK_ERROR', message: err.message } };
     }
@@ -65,18 +81,34 @@ export const authService = {
         body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
-      if (data.success && data.data) {
-        localStorage.setItem(TOKEN_KEY, data.data.token);
-        if (data.data.refreshToken) localStorage.setItem(REFRESH_KEY, data.data.refreshToken);
+
+      const normalized = data.user && data.token
+        ? {
+            success: true,
+            data: {
+              token: data.token,
+              refreshToken: data.refreshToken,
+              userId: data.user.id,
+              email: data.user.email,
+              fullName: data.user.name || '',
+              roles: data.user.role ? [data.user.role] : [],
+              merchantId: data.user.merchantId,
+            },
+          }
+        : data;
+
+      if (normalized.success && normalized.data) {
+        localStorage.setItem(TOKEN_KEY, normalized.data.token);
+        if (normalized.data.refreshToken) localStorage.setItem(REFRESH_KEY, normalized.data.refreshToken);
         localStorage.setItem(USER_KEY, JSON.stringify({
-          id: data.data.userId,
-          email: data.data.email,
-          fullName: data.data.fullName || '',
-          roles: data.data.roles,
-          merchantId: data.data.merchantId,
+          id: normalized.data.userId,
+          email: normalized.data.email,
+          fullName: normalized.data.fullName || '',
+          roles: normalized.data.roles,
+          merchantId: normalized.data.merchantId,
         }));
       }
-      return data;
+      return normalized;
     } catch (err: any) {
       return { success: false, error: { code: 'NETWORK_ERROR', message: err.message } };
     }
