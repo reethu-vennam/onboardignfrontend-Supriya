@@ -32,6 +32,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useMerchantData } from '@/hooks/useMerchantData';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { api } from '@/lib/rest-api';
+import { authService } from '@/lib/auth-service';
 import {
     OnboardingData,
     PersonKYCData,
@@ -75,13 +76,18 @@ interface ExtractedData {
 
 class RealOCRService {
 
-    async processDocument(file: File, onProgress?: (p: number) => void): Promise<ExtractedData> {
+    async processDocument(file: File, documentType: 'PAN' | 'AADHAAR', onProgress?: (p: number) => void): Promise<ExtractedData> {
         onProgress?.(10);
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append('doc_front_image', file);
+        formData.append('doc_type', documentType);
         onProgress?.(30);
-        const response = await fetch(`${API_URL}/api/ocr/extract`, {
+        const token = authService.getToken();
+        const headers: Record<string, string> = {};
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+        const response = await fetch(`${API_URL}/api/kyc/ocr`, {
             method: 'POST',
+            headers,
             body: formData,
         });
         if (!response.ok) throw new Error(`OCR service error: ${response.statusText}`);
@@ -413,7 +419,7 @@ export const PersonKYC: React.FC<PersonKYCProps> = ({
 
         const [uploadResult, ocrResult] = await Promise.allSettled([
             uploadToStorage(file, 'pan-cards'),
-            ocrService.processDocument(file, p =>
+            ocrService.processDocument(file, 'PAN', p =>
                 updatePerson(index, { panSlot: { uploadStatus: 'uploading', ocrStatus: 'processing', ocrProgress: p } })
             ),
         ]);
@@ -473,7 +479,7 @@ export const PersonKYC: React.FC<PersonKYCProps> = ({
 
         const [uploadResult, ocrResult] = await Promise.allSettled([
             uploadToStorage(file, 'aadhaar-cards'),
-            ocrService.processDocument(file, p =>
+            ocrService.processDocument(file, 'AADHAAR', p =>
                 updatePerson(index, { aadhaarSlot: { uploadStatus: 'uploading', ocrStatus: 'processing', ocrProgress: p } })
             ),
         ]);
@@ -858,6 +864,7 @@ export const PersonKYC: React.FC<PersonKYCProps> = ({
                                 required={!isOptionalKYC}
                                 slot={person.panSlot}
                                 onUpload={f => handlePanUpload(index, f)}
+                                accept="image/*"
                                 hint={t('personKyc.uploadPanHint')}
                             />
                         </div>
@@ -893,6 +900,7 @@ export const PersonKYC: React.FC<PersonKYCProps> = ({
                                     required={true}
                                     slot={person.aadhaarSlot}
                                     onUpload={f => handleAadhaarUpload(index, f)}
+                                    accept="image/*"
                                     hint={t('personKyc.uploadAadhaarHint')}
                                 />
                             </div>
