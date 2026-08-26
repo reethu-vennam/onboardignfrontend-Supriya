@@ -62,20 +62,52 @@ const GOOGLE_TRANSLATE_LANGS = new Set([
   'kk','km','rw','ko','ku','ky','lo','lv','lt','lb','mk','mg','ms','ml','mt','mi',
   'mr','mn','my','ne','no','ny','or','ps','fa','pl','pt','pa','ro','ru','sm','gd',
   'sr','st','sn','sd','si','sk','sl','so','es','su','sw','sv','tl','tg','ta','tt',
-  'te','th','tr','tk','uk','ur','ug','uz','vi','cy','xh','yi','yo','zu'
+  'te','th','tr','tk','uk','ur','ug','uz','vi','cy','xh','yi','yo','zu',
+  'as','brx','doi','ks','gom','mai','mni','sa','sat'
 ]);
+
+const translateViaGoogle = async (text: string, targetLang: string): Promise<string | null> => {
+    try {
+        const res = await fetch(
+            `https://clients5.google.com/translate_a/t?client=dict-chrome-ex&sl=en&tl=${targetLang}&q=${encodeURIComponent(text)}`
+        );
+        const data = await res.json();
+        if (Array.isArray(data) && typeof data[0] === 'string') {
+            return data[0];
+        }
+        if (Array.isArray(data) && Array.isArray(data[0])) {
+            const result = data[0].map((s: any) => (Array.isArray(s) ? s[0] : s)).join('');
+            if (result) return result;
+        }
+    } catch {}
+    return null;
+};
+
+const translateViaMyMemory = async (text: string, targetLang: string): Promise<string | null> => {
+    try {
+        const res = await fetch(
+            `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${targetLang}&de=${encodeURIComponent('no-reply@sabbpe.com')}`
+        );
+        const data = await res.json();
+        const translated = data?.responseData?.translatedText;
+        if (
+            typeof translated === 'string' &&
+            translated &&
+            translated !== text &&
+            !translated.includes('MYMEMORY WARNING') &&
+            !translated.includes('QUERY LENGTH LIMIT') &&
+            !translated.includes('INVALID SOURCE LANGUAGE') &&
+            !translated.includes('INVALID TARGET LANGUAGE')
+        ) {
+            return translated;
+        }
+    } catch {}
+    return null;
+};
 
 const translateViaApi = async (text: string, targetLang: string): Promise<string | null> => {
     if (!GOOGLE_TRANSLATE_LANGS.has(targetLang)) return null;
-    try {
-        const res = await fetch(
-            `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`
-        );
-        const data = await res.json();
-        const result = data?.[0]?.map((s: any) => s[0]).join('') ?? null;
-        if (result) return result;
-    } catch {}
-    return null;
+    return (await translateViaGoogle(text, targetLang)) ?? (await translateViaMyMemory(text, targetLang));
 };
 
 const collectKeys = (obj: Record<string, unknown>, prefix = ''): string[] => {
