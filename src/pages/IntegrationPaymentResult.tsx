@@ -11,7 +11,6 @@ import {
   markSabbpePaymentComplete,
   getSabbpePaymentMerchantId,
   clearSabbpePaymentMerchantId,
-  getSabbpePaymentToken,
   clearSabbpePaymentToken,
 } from "@/lib/sabbpePaymentState";
 import {
@@ -146,14 +145,7 @@ export default function IntegrationPaymentResult() {
           return;
         }
 
-        const sabbpeToken = getSabbpePaymentToken();
-        if (!sabbpeToken) {
-          setCallbackError("SabbPe token not found for this payment session.");
-          return;
-        }
-
         const decryptedResponse = await decryptSabbpePaymentToken({
-          sabbpeToken,
           txnid: paymentData.txnid,
         });
 

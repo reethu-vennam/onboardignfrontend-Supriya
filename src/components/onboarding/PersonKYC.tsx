@@ -352,6 +352,57 @@ export const PersonKYC: React.FC<PersonKYCProps> = ({
         });
     }, [data?.panNumber, data?.aadhaarNumber]);
 
+    // ── Pre-fill from Quick Scan results ──────────────────────────────────────
+    useEffect(() => {
+        if (!data?.scanResults) return;
+        const sr = data.scanResults;
+
+        setPersons(prev => {
+            if (prev.length === 0) return prev;
+            const updated = [...prev];
+            const p = { ...updated[0] };
+
+            // From PAN card scan
+            if (sr.pan) {
+                if (sr.pan.name) { p.fullName = sr.pan.name; p.nameAutoFilled = true; }
+                if (sr.pan.number) { p.panNumber = sr.pan.number; p.panAutoFilled = true; }
+                p.panSlot = {
+                    uploadStatus: 'success',
+                    ocrStatus: 'success',
+                    ocrProgress: 100,
+                    fileName: sr.pan.fileName,
+                    filePath: sr.pan.filePath,
+                };
+            }
+
+            // From Aadhaar card scan
+            if (sr.aadhaarFront) {
+                if (sr.aadhaarFront.name && !p.fullName) { p.fullName = sr.aadhaarFront.name; p.nameAutoFilled = true; }
+                if (sr.aadhaarFront.number) { p.aadhaarNumber = sr.aadhaarFront.number; p.aadhaarAutoFilled = true; }
+                p.aadhaarSlot = {
+                    uploadStatus: 'success',
+                    ocrStatus: 'success',
+                    ocrProgress: 100,
+                    fileName: sr.aadhaarFront.fileName,
+                    filePath: sr.aadhaarFront.filePath,
+                };
+                // Auto-set address proof to Aadhaar
+                if (!p.addressProofType) p.addressProofType = 'aadhaar';
+                // Set address proof upload as done (reuse Aadhaar file)
+                p.addressProofSlot = {
+                    uploadStatus: 'success',
+                    ocrStatus: 'idle',
+                    ocrProgress: 100,
+                    fileName: sr.aadhaarFront.fileName,
+                    filePath: sr.aadhaarFront.filePath,
+                };
+            }
+
+            updated[0] = p;
+            return updated;
+        });
+    }, [data?.scanResults]);
+
     // ── Upload to Supabase Storage ─────────────────────────────────────────────
     const uploadToStorage = useCallback(async (
         file: File,
@@ -785,6 +836,20 @@ export const PersonKYC: React.FC<PersonKYCProps> = ({
                                 : t('personKyc.governmentPsu'),
                         })}
                     </p>
+                </div>
+            )}
+
+            {/* Quick Scan complete banner */}
+            {data?.scanResults && (data.scanResults.pan || data.scanResults.aadhaarFront) && (
+                <div className="flex items-start gap-3 p-4 rounded-lg bg-green-50 border border-green-200 text-sm text-green-800">
+                    <CheckCircle className="h-4 w-4 flex-shrink-0 mt-0.5 text-green-600" />
+                    <div>
+                        <p className="font-medium">Quick Scan complete</p>
+                        <p className="text-xs text-green-700 mt-0.5">
+                            PAN and Aadhaar details auto-filled from your scanned documents.
+                            Review and correct if needed.
+                        </p>
+                    </div>
                 </div>
             )}
 

@@ -101,6 +101,16 @@ export const DoingBusinessAddress: React.FC<DoingBusinessAddressProps> = ({
     const isSuccess = uploadStatus === 'success';
     const isFailed = uploadStatus === 'failed';
 
+    // ── Pre-fill from Quick Scan results ──────────────────────────────────────
+    React.useEffect(() => {
+        if (!data?.scanResults?.addressProof) return;
+        const ap = data.scanResults.addressProof;
+        setFilePath(ap.filePath);
+        setFileName(ap.fileName);
+        setFileSize(0);
+        setUploadStatus('success');
+    }, [data?.scanResults]);
+
     // ── Upload ────────────────────────────────────────────────────────────────
 
     const handleUpload = useCallback(async (file: File) => {
@@ -196,6 +206,19 @@ export const DoingBusinessAddress: React.FC<DoingBusinessAddressProps> = ({
                     {t('doingBusiness.subtitle')}
                 </p>
             </div>
+
+            {/* Quick Scan complete banner */}
+            {data?.scanResults?.addressProof && (
+                <div className="flex items-start gap-3 p-4 rounded-lg bg-green-50 border border-green-200 text-sm text-green-800">
+                    <CheckCircle className="h-4 w-4 flex-shrink-0 mt-0.5 text-green-600" />
+                    <div>
+                        <p className="font-medium">Quick Scan complete</p>
+                        <p className="text-xs text-green-700 mt-0.5">
+                            Address proof uploaded from Quick Scan. Just select the document type below.
+                        </p>
+                    </div>
+                </div>
+            )}
 
             {/* Address comparison */}
             <div className="grid sm:grid-cols-2 gap-4">

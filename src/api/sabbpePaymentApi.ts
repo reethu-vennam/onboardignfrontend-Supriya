@@ -159,13 +159,14 @@ export const generateSabbpePaymentToken = async (orderReference?: string): Promi
   return sabbpeToken;
 };
 
+// Only the encrypted txnid from the callback URL is sent; including sabbpe_token makes SabbPe return 401.
 export const decryptSabbpePaymentToken = async ({
-  sabbpeToken, txnid,
-}: { sabbpeToken: string; txnid: string }): Promise<SabbpeDecryptTokenResponse> => {
+  txnid,
+}: { txnid: string }): Promise<SabbpeDecryptTokenResponse> => {
   if (!PAYMENT_API_URL) throw new Error('Missing VITE_PAYMENT_API_URL');
   const response = await axios.post<SabbpeDecryptTokenResponse>(
     `${PAYMENT_API_URL}/decrypt-token`,
-    { sabbpe_token: sabbpeToken, txnid },
+    { txnid },
     { headers: { 'Content-Type': 'application/json' } }
   );
   return response.data;

@@ -60,6 +60,13 @@ export const api = {
   validateBankAccount: (data: any) => api.post('/merchant/validate-bank-account', data),
   getIntegrationCost: () => api.post('/merchant/integration-cost'),
 
+  // Ecosystem mandate (Onboarding Team's onboard -> token -> mandate -> status -> subscription
+  // flow, proxied server-side so secret_key/service credentials never reach the browser)
+  createEcosystemMandate: (data: { vpa: string; payerName: string; amount: string; startDate: string; endDate: string }) =>
+    api.post('/merchant/ecosystem/mandate/create', data),
+  pollEcosystemMandateStatus: (trxnno: string) =>
+    api.post('/merchant/ecosystem/mandate/status', { trxnno }),
+
   // Admin
   getAdminMerchants: (status?: string) => api.get(`/admin/merchants${status ? `?status=${status}` : ''}`),
   validateMerchant: (id: string) => api.post(`/admin/merchants/${id}/validate`),

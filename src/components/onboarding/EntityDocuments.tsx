@@ -207,6 +207,20 @@ export const EntityDocuments: React.FC<EntityDocumentsProps> = ({
 
     const [saving, setSaving] = useState(false);
 
+    // ── Pre-fill GST certificate from Quick Scan results ──────────────────
+    React.useEffect(() => {
+        if (!data?.scanResults?.gst) return;
+        const gst = data.scanResults.gst;
+        setSlots(prev => ({
+            ...prev,
+            gst_certificate: {
+                uploadStatus: 'success',
+                fileName: gst.fileName,
+                filePath: gst.filePath,
+            },
+        }));
+    }, [data?.scanResults]);
+
     const uploadToStorage = useCallback(async (file: File, folder: string): Promise<string> => {
         const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'application/pdf'];
         if (!allowed.includes(file.type)) throw new Error('Unsupported file type. Use JPG, PNG, or PDF.');
@@ -384,6 +398,19 @@ export const EntityDocuments: React.FC<EntityDocumentsProps> = ({
                     {t('entityDocuments.subtitle', { entity: entityLabel })}
                 </p>
             </div>
+
+            {/* Quick Scan complete banner */}
+            {data?.scanResults?.gst && (
+                <div className="flex items-start gap-3 p-4 rounded-lg bg-green-50 border border-green-200 text-sm text-green-800">
+                    <CheckCircle className="h-4 w-4 flex-shrink-0 mt-0.5 text-green-600" />
+                    <div>
+                        <p className="font-medium">Quick Scan complete</p>
+                        <p className="text-xs text-green-700 mt-0.5">
+                            GST Certificate uploaded from Quick Scan. Upload any remaining entity documents below.
+                        </p>
+                    </div>
+                </div>
+            )}
 
             {totalMandatory > 0 && (
                 <div className="flex items-center gap-4 p-4 rounded-xl bg-muted/40 border border-border text-sm">

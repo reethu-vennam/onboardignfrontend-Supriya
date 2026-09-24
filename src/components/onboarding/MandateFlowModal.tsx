@@ -50,6 +50,16 @@ export const MandateFlowModal: React.FC<MandateFlowModalProps> = ({
           } else {
             console.log("✅ Fresh data from backend:", result.data);
             setFreshProfile(result.data);
+
+            // Resume an already-submitted mandate instead of always restarting at VPA
+            // validation — otherwise a page refresh loses all memory of a mandate that's
+            // still pending (or has since gone active) on the ecosystem's side.
+            if (result.data.upi_mandate_status === 'active') {
+              onComplete();
+            } else if (result.data.upi_mandate_ref_no) {
+              setValidationData({ vpa: result.data.upi_vpa || '', payer_name: '' });
+              setStep('mandate');
+            }
           }
         } catch (err) {
           console.error("❌ Exception fetching merchant profile:", err);

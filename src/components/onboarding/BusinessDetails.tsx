@@ -32,7 +32,9 @@ import {
     Address,
     EMPTY_ADDRESS,
     EntityType,
+    ScanResults,
 } from '@/types/onboarding';
+import { BatchDocumentScanner } from '@/components/onboarding/BatchDocumentScanner';
 import { useI18n } from '@/i18n/I18nProvider';
 import {
     Building2,
@@ -43,6 +45,9 @@ import {
     AlertCircle,
     CheckCircle2,
     Copy,
+    Zap,
+    Sparkles,
+    Camera,
 } from 'lucide-react';
 
 // â”€â”€â”€ Indian states list â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -107,9 +112,10 @@ interface AddressFormProps {
     value: Address;
     onChange: (addr: Address) => void;
     errors: Partial<Record<keyof Address, string>>;
+    scanResults?: OnboardingData['scanResults'];
 }
 
-const AddressForm: React.FC<AddressFormProps> = ({ label, value, onChange, errors }) => {
+const AddressForm: React.FC<AddressFormProps> = ({ label, value, onChange, errors, scanResults }) => {
     const { t } = useI18n();
     const set = (field: keyof Address) => (
         e: React.ChangeEvent<HTMLInputElement>
@@ -125,10 +131,15 @@ const AddressForm: React.FC<AddressFormProps> = ({ label, value, onChange, error
                 {label}
             </h3>
 
-            <div className="grid gap-4">
+                <div className="grid gap-4">
                 <div>
-                    <Label>
+                    <Label className="flex items-center gap-1.5">
                         {t('businessDetails.addressLine1')} <span className="text-destructive">*</span>
+                        {scanResults?.aadhaarBack?.addressLine1 && (
+                            <span className="flex items-center gap-1 text-xs text-green-600 bg-green-50 px-1.5 py-0.5 rounded">
+                                <Sparkles className="h-3 w-3" /> Auto-filled
+                            </span>
+                        )}
                     </Label>
                     <Input
                         value={value.addressLine1}
@@ -143,8 +154,13 @@ const AddressForm: React.FC<AddressFormProps> = ({ label, value, onChange, error
 
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <Label>
+                        <Label className="flex items-center gap-1.5">
                             {t('businessDetails.city')} <span className="text-destructive">*</span>
+                            {scanResults?.aadhaarBack?.city && (
+                                <span className="flex items-center gap-1 text-xs text-green-600 bg-green-50 px-1.5 py-0.5 rounded">
+                                    <Sparkles className="h-3 w-3" /> Auto-filled
+                                </span>
+                            )}
                         </Label>
                         <Input
                             value={value.city}
@@ -158,8 +174,13 @@ const AddressForm: React.FC<AddressFormProps> = ({ label, value, onChange, error
                     </div>
 
                     <div>
-                        <Label>
+                        <Label className="flex items-center gap-1.5">
                             {t('businessDetails.pincode')} <span className="text-destructive">*</span>
+                            {scanResults?.aadhaarBack?.pincode && (
+                                <span className="flex items-center gap-1 text-xs text-green-600 bg-green-50 px-1.5 py-0.5 rounded">
+                                    <Sparkles className="h-3 w-3" /> Auto-filled
+                                </span>
+                            )}
                         </Label>
                         <Input
                             value={value.pincode}
@@ -176,8 +197,13 @@ const AddressForm: React.FC<AddressFormProps> = ({ label, value, onChange, error
 
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <Label>
+                        <Label className="flex items-center gap-1.5">
                             {t('businessDetails.state')} <span className="text-destructive">*</span>
+                            {scanResults?.aadhaarBack?.state && (
+                                <span className="flex items-center gap-1 text-xs text-green-600 bg-green-50 px-1.5 py-0.5 rounded">
+                                    <Sparkles className="h-3 w-3" /> Auto-filled
+                                </span>
+                            )}
                         </Label>
                         <Select value={value.state} onValueChange={setSelect('state')}>
                             <SelectTrigger className={errors.state ? 'border-destructive' : ''}>
@@ -279,6 +305,33 @@ const [mobileNumber, setMobileNumber] = useState(
 
     const [errors, setErrors] = useState<FieldErrors>({});
     const [saving, setSaving] = useState(false);
+    const [showScanner, setShowScanner] = useState(false);
+
+    const requiresAadhaar = entityType === 'proprietorship' || entityType === 'individual';
+
+    // ── Pre-fill from scan results ──────────────────────────────────────────
+    useEffect(() => {
+        if (!data?.scanResults) return;
+        const sr = data.scanResults;
+
+        if (sr.gst) {
+            if (sr.gst.businessName) setBusinessName(sr.gst.businessName);
+            if (sr.gst.number) setGstNumber(sr.gst.number);
+            if (sr.gst.state) {
+                setRegisteredAddress(prev => ({ ...prev, state: sr.gst!.state || '' }));
+            }
+        }
+
+        if (sr.aadhaarBack) {
+            setRegisteredAddress(prev => ({
+                ...prev,
+                addressLine1: sr.aadhaarBack!.addressLine1 || prev.addressLine1,
+                city: sr.aadhaarBack!.city || prev.city,
+                state: sr.aadhaarBack!.state || prev.state,
+                pincode: sr.aadhaarBack!.pincode || prev.pincode,
+            }));
+        }
+    }, [data?.scanResults]);
 
     // Pre-fill from merchantProfile on mount
     useEffect(() => {
@@ -469,6 +522,81 @@ const regDetails = (merchantProfile as any).registration_details as Record<strin
     return (
         <div className="max-w-3xl mx-auto space-y-8 pb-12">
 
+            {/* Quick Scan Banner */}
+            {!data?.scanResults && (
+                <div className="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-r from-primary/5 to-primary/10 border border-primary/20">
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <Zap className="h-5 w-5 text-primary" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-foreground">
+                            Quick Scan — Upload all documents at once
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                            We'll auto-fill your forms from PAN, Aadhaar, GST & bank details
+                        </p>
+                    </div>
+                    <Button
+                        size="sm"
+                        onClick={() => setShowScanner(true)}
+                        className="flex-shrink-0"
+                    >
+                        <Camera className="h-4 w-4 mr-1" />
+                        Start Quick Scan
+                    </Button>
+                </div>
+            )}
+
+            {/* Scan Complete Banner */}
+            {data?.scanResults && (
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-green-50 border border-green-200 text-sm text-green-800">
+                    <CheckCircle2 className="h-4 w-4 flex-shrink-0" />
+                    <p>
+                        <span className="font-medium">Quick Scan complete.</span>{' '}
+                        Forms pre-filled from your documents. Review and edit below.
+                    </p>
+                    <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => setShowScanner(true)}
+                        className="ml-auto flex-shrink-0 text-green-700"
+                    >
+                        Re-scan
+                    </Button>
+                </div>
+            )}
+
+            {/* Scanner Modal */}
+            {showScanner && (
+                <BatchDocumentScanner
+                    entityType={entityType as EntityType}
+                    requiresAadhaar={requiresAadhaar}
+                    requiresGst={shouldCollectGST}
+                    onComplete={(results) => {
+                        onDataChange?.({ scanResults: results });
+                        setShowScanner(false);
+                        // Pre-fill from results
+                        if (results.gst) {
+                            if (results.gst.businessName) setBusinessName(results.gst.businessName);
+                            if (results.gst.number) setGstNumber(results.gst.number);
+                            if (results.gst.state) {
+                                setRegisteredAddress(prev => ({ ...prev, state: results.gst!.state || '' }));
+                            }
+                        }
+                        if (results.aadhaarBack) {
+                            setRegisteredAddress(prev => ({
+                                ...prev,
+                                addressLine1: results.aadhaarBack!.addressLine1 || prev.addressLine1,
+                                city: results.aadhaarBack!.city || prev.city,
+                                state: results.aadhaarBack!.state || prev.state,
+                                pincode: results.aadhaarBack!.pincode || prev.pincode,
+                            }));
+                        }
+                    }}
+                    onClose={() => setShowScanner(false)}
+                />
+            )}
+
             {/* Header */}
             <div className="text-center space-y-2">
                 <h2 className="text-3xl font-bold text-foreground">{t('businessDetails.title')}</h2>
@@ -499,8 +627,13 @@ const regDetails = (merchantProfile as any).registration_details as Record<strin
 
                     {/* Business name */}
                     <div>
-                        <Label>
+                        <Label className="flex items-center gap-1.5">
                             {t('businessDetails.businessName')} <span className="text-destructive">*</span>
+                            {data?.scanResults?.gst?.businessName && (
+                                <span className="flex items-center gap-1 text-xs text-green-600 bg-green-50 px-1.5 py-0.5 rounded">
+                                    <Sparkles className="h-3 w-3" /> Auto-filled
+                                </span>
+                            )}
                         </Label>
                         <Input
                             value={businessName}
@@ -582,8 +715,13 @@ const regDetails = (merchantProfile as any).registration_details as Record<strin
                     {/* GST number */}
                     {hasGST && !isEducation && !isGovt && (
                         <div>
-                            <Label>
+                            <Label className="flex items-center gap-1.5">
                                 {t('businessDetails.gstNumber')} <span className="text-destructive">*</span>
+                                {data?.scanResults?.gst?.number && (
+                                    <span className="flex items-center gap-1 text-xs text-green-600 bg-green-50 px-1.5 py-0.5 rounded">
+                                        <Sparkles className="h-3 w-3" /> Auto-filled
+                                    </span>
+                                )}
                             </Label>
                             <Input
                                 value={gstNumber}
@@ -654,6 +792,7 @@ const regDetails = (merchantProfile as any).registration_details as Record<strin
                         value={registeredAddress}
                         onChange={setRegisteredAddress}
                         errors={errors.registeredAddress || {}}
+                        scanResults={data?.scanResults}
                     />
                 </CardContent>
             </Card>
@@ -701,6 +840,7 @@ const regDetails = (merchantProfile as any).registration_details as Record<strin
                                 value={operatingAddress}
                                 onChange={setOperatingAddress}
                                 errors={errors.operatingAddress || {}}
+                                scanResults={data?.scanResults}
                             />
                         </div>
                     ) : (

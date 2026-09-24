@@ -93,6 +93,27 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
     const [accountValidations, setAccountValidations] = useState<Record<number, AccountValidation>>({});
     const [validatingAccounts, setValidatingAccounts] = useState<Record<number, boolean>>({});
 
+    // ── Pre-fill from Quick Scan results ──────────────────────────────────────
+    useEffect(() => {
+        if (!data?.scanResults?.cheque) return;
+        const ch = data.scanResults.cheque;
+        setAccounts(prev => {
+            if (prev.length === 0) return prev;
+            const updated = [...prev];
+            updated[0] = {
+                ...updated[0],
+                ifscCode: ch.ifscCode || updated[0].ifscCode,
+                accountNumber: ch.number || updated[0].accountNumber,
+                bankName: ch.bankName || updated[0].bankName,
+                branchName: ch.branchName || updated[0].branchName,
+                accountHolderName: ch.accountHolderName || updated[0].accountHolderName,
+            };
+            onDataChange?.({ bankAccounts: updated });
+            return updated;
+        });
+        setCancelledCheque(new File([], ch.fileName || 'cancelled-cheque.jpg'));
+    }, [data?.scanResults]);
+
     const accountValidationTimeouts = useRef<Record<number, ReturnType<typeof setTimeout>>>({});
 
     useEffect(() => {
@@ -409,6 +430,19 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
                 <h2 className="text-2xl font-bold text-gray-900">{t('bankDetails.title')}</h2>
                 <p className="text-gray-600 mt-2">{t('bankDetails.subtitle')}</p>
             </div>
+
+            {/* Quick Scan complete banner */}
+            {data?.scanResults?.cheque && (
+                <div className="flex items-start gap-3 p-4 rounded-lg bg-green-50 border border-green-200 text-sm text-green-800">
+                    <CheckCircle className="h-4 w-4 flex-shrink-0 mt-0.5 text-green-600" />
+                    <div>
+                        <p className="font-medium">Quick Scan complete</p>
+                        <p className="text-xs text-green-700 mt-0.5">
+                            Bank details auto-filled from your cancelled cheque. Review and confirm below.
+                        </p>
+                    </div>
+                </div>
+            )}
 
             {accounts.map((account, index) => (
                 <Card key={index} className="relative">

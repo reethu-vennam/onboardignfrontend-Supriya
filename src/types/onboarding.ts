@@ -126,6 +126,38 @@ export interface BankAccountData {
     isBeingValidated?: boolean;
 }
 
+// ─── Quick Scan Results ──────────────────────────────────────────────────────
+
+export interface ScanResult {
+    name?: string;
+    number: string;
+    filePath: string;
+    fileName: string;
+    // Aadhaar back address fields
+    addressLine1?: string;
+    city?: string;
+    state?: string;
+    pincode?: string;
+    // GST fields
+    businessName?: string;
+    entityType?: string;
+    stateCode?: string;
+    // Cheque fields
+    ifscCode?: string;
+    bankName?: string;
+    branchName?: string;
+    accountHolderName?: string;
+}
+
+export interface ScanResults {
+    pan?: ScanResult;
+    aadhaarFront?: ScanResult;
+    aadhaarBack?: ScanResult;
+    gst?: ScanResult;
+    cheque?: ScanResult;
+    addressProof?: ScanResult;
+}
+
 // ─── Core OnboardingData ──────────────────────────────────────────────────────
 
 export interface OnboardingData {
@@ -138,6 +170,9 @@ export interface OnboardingData {
     // ── Step 3: Products ────────────────────────────────────────────────────
     selectedProducts?: string[];
     settlementType?: 'same_day' | 'next_day';
+
+    // ── Quick Scan Results ──────────────────────────────────────────────────
+    scanResults?: ScanResults;
 
     // ── Step 4: Business Details ────────────────────────────────────────────
     fullName: string;               // authorized person / primary contact
@@ -234,6 +269,7 @@ export const INITIAL_ONBOARDING_DATA: OnboardingData = {
     entityType: '',
     selectedProducts: [],
     settlementType: undefined,
+    scanResults: undefined,
     fullName: '',
     mobileNumber: '',
     email: '',

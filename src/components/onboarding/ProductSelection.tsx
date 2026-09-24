@@ -212,17 +212,28 @@ export const ProductSelectionEnhanced: React.FC<ProductSelectionProps> = ({ onNe
         try {
             const response = await apiClient.get(`/api/products/sub-catalog/${parentCode}`);
             const subsData = Array.isArray(response.data) ? response.data : response.subProducts || response.data?.subProducts || [];
-            const subs = subsData.map((s: any) => ({
-                ...s,
-                features: typeof s.features === 'string' ? JSON.parse(s.features) : s.features,
-                use_cases: typeof s.use_cases === 'string' ? JSON.parse(s.use_cases) : s.use_cases,
-            }));
+            const subs = subsData.map((s: any) => {
+                const price = s.price_amount ?? s.priceAmount ?? s.price;
+                return {
+                    ...s,
+                    sub_product_code: s.sub_product_code || s.productCode || s.product_code,
+                    sub_product_name: s.sub_product_name || s.productName || s.product_name,
+                    sub_product_description: s.sub_product_description || s.productDescription || s.product_description,
+                    price_amount: price,
+                    price_type: s.price_type || s.priceType || (price == null ? 'custom' : 'fixed'),
+                    features: typeof s.features === 'string' ? JSON.parse(s.features) : s.features,
+                    use_cases: typeof s.use_cases === 'string' ? JSON.parse(s.use_cases) : s.use_cases,
+                };
+            });
             setSubProducts(subs);
 
             // Also load merchant's saved sub-product selections
             try {
                 const savedRes = await apiClient.get(`/api/products/merchant/selected-sub-products/${parentCode}`);
-                const savedCodes: string[] = savedRes.data.selectedCodes || [];
+                const savedList = Array.isArray(savedRes.data) ? savedRes.data : savedRes.data?.selectedCodes || [];
+                const savedCodes: string[] = savedList.map((s: any) =>
+                    typeof s === 'string' ? s : s.productCode || s.sub_product_code
+                ).filter(Boolean);
                 if (savedCodes.length > 0) {
                     setSelectedSubProductCodes(new Set(savedCodes));
                 }

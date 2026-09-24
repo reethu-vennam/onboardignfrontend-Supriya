@@ -51,6 +51,20 @@ const MandateCreate: React.FC<MandateCreateProps> = ({
     }
   }, [merchantProfile]);
 
+  // Resume an already-submitted mandate on mount (e.g. after a page refresh) instead of
+  // restarting the flow from scratch — the trxnno/status live in the browser's memory only
+  // otherwise, so a refresh would silently lose track of a mandate the merchant already
+  // submitted, even one that has since gone active on the ecosystem's side.
+  useEffect(() => {
+    const persistedRefNo = merchantProfile?.upi_mandate_ref_no;
+    const persistedStatus = merchantProfile?.upi_mandate_status;
+    if (persistedRefNo && persistedStatus !== "active" && persistedStatus !== "failed") {
+      setMandateRefNo(persistedRefNo);
+      setMandateSubmitted(true);
+      setTimeRemaining(600);
+    }
+  }, [merchantProfile?.upi_mandate_ref_no]);
+
   // Initialize dates
   useEffect(() => {
     const today = new Date();
@@ -89,65 +103,34 @@ const MandateCreate: React.FC<MandateCreateProps> = ({
     return () => clearInterval(interval);
   }, [mandateSubmitted, timeRemaining]);
 
-  const formatDateForApi = (date: string): string => {
-    const [y, m, d] = date.split("-");
-    return `${d}${m}${y}`;
-  };
-
-  const generateTrxnNo = () => {
-    const chars = "abcdef0123456789";
-    return Array.from({ length: 20 })
-      .map(() => chars[Math.floor(Math.random() * chars.length)])
-      .join("");
-  };
-
-  // Create mandate
+  // Create mandate — via backend-spring, which onboards the merchant into the SabbPe
+  // ecosystem, fetches a service token, and creates the mandate there (secret_key and
+  // service credentials stay server-side; see SabbpeEcosystemService).
   const handleSubmit = async () => {
     setLoading(true);
     setError("");
 
     try {
-      const payload = {
-        trxnno: generateTrxnNo(),
+      const result = await api.createEcosystemMandate({
+        vpa,
+        payerName,
         amount,
-        pattern: "ASPRESENTED",
-        mandatestartdate: formatDateForApi(startDate),
-        mandateenddate: formatDateForApi(endDate),
-        payervpa: vpa,
-        revokeable: "Y", // For real prod - N, For prodTest - Y
-        payername: payerName,
-        authorize: import.meta.env.VITE_MANDATE_AUTHORIZE, // For real prod - Y, For prodTest - N
-        instaauth: "N",
-        mandateexpirytime: 10,
-        redirecturl: import.meta.env.VITE_REDIRECT_URL,
-        debiturl: import.meta.env.VITE_DEBIT_URL,
-      };
-
-      console.log("📤 Creating mandate with amount:", amount);
-
-      const res = await fetch(import.meta.env.VITE_MANDATE_CREATE_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        startDate,
+        endDate,
       });
 
-      const data = await res.json();
-
-      if (data.errCode === "1111" && data.status === "PENDING") {
-        setMandateSubmitted(true);
-        setMandateRefNo(data.cp_mdt_ref_no);
-        setTimeRemaining(600);
-      } else {
-        setError(data.errDesc || "Failed to create mandate.");
-      }
-    } catch {
-      setError("Failed to create mandate.");
+      setMandateSubmitted(true);
+      setMandateRefNo(result.trxnno);
+      setTimeRemaining(600);
+    } catch (err: any) {
+      setError(err?.message || "Failed to create mandate.");
     } finally {
       setLoading(false);
     }
   };
 
-  // Check mandate status
+  // Check mandate status (backend polls the ecosystem, persists it, and — once active —
+  // creates the first product's subscription)
   const checkMandateStatus = async (auto = false) => {
     if (!mandateRefNo) return;
 
@@ -155,44 +138,17 @@ const MandateCreate: React.FC<MandateCreateProps> = ({
     setError("");
 
     try {
-      const res = await fetch(
-        import.meta.env.VITE_MANDATE_STATUS_URL,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ref: mandateRefNo }),
-        }
-      );
+      const result = await api.pollEcosystemMandateStatus(mandateRefNo);
 
-      const text = (await res.text()).trim().toUpperCase();
-
-      const mapped =
-        text === "ACTIVE"
-          ? "active"
-          : text === "PENDING"
-            ? "pending"
-            : "failed";
-
-      try {
-        await api.post('/merchant/mandate-status', {
-          upiMandateStatus: mapped,
-          upiMandateRefNo: mandateRefNo,
-        });
-      } catch (persistError) {
-        console.error('Failed to persist mandate status:', persistError);
-      }
-
-      if (mapped === "active" || mapped === "failed") {
+      if (result.status === "active" || result.status === "failed") {
         if (pollIntervalId) clearInterval(pollIntervalId);
         await refetchMerchant();
         onSuccess();
-      } else {
-        if (!auto) {
-          setError("Authorization pending. Approve in your UPI app.");
-        }
+      } else if (!auto) {
+        setError("Authorization pending. Approve in your UPI app.");
       }
-    } catch {
-      setError("Failed to check mandate status.");
+    } catch (err: any) {
+      setError(err?.message || "Failed to check mandate status.");
     } finally {
       if (!auto) setCheckingStatus(false);
     }
@@ -227,7 +183,7 @@ const MandateCreate: React.FC<MandateCreateProps> = ({
 
           <h3 className="text-xl font-semibold">Authorize Mandate</h3>
           <p className="text-sm text-gray-600">
-            Please approve the mandate in your UPI app.
+            Please approve the mandate request in your UPI app. We'll detect it automatically once you do.
           </p>
 
           {/* Timer */}

@@ -365,6 +365,10 @@ const EnhancedOnboardingFlow: React.FC = () => {
                     payload.panNumber = merged.panNumber || null;
                     payload.aadhaarNumber = merged.aadhaarNumber || null;
                     payload.operatingAddressDifferent = merged.operatingAddressDifferent;
+                    // Persist scan results
+                    if (merged.scanResults) {
+                        payload.scanResults = merged.scanResults;
+                    }
                     const addr = merged.registeredAddress || merged.operatingAddress;
                     if (addr) {
                         payload.businessAddressLine1 = addr.addressLine1;
@@ -725,6 +729,15 @@ const EnhancedOnboardingFlow: React.FC = () => {
                 )
                     ? getEntityDocRequirements((mp.entityType || mp.entity_type) as EntityType)
                     : prev.entityDocuments,
+
+                // Restore scan results from DB
+                scanResults: (() => {
+                    const sr = (mp as any).scanResults || (mp as any).scan_results;
+                    if (sr && typeof sr === 'object' && Object.keys(sr).length > 0) {
+                        return sr;
+                    }
+                    return prev.scanResults;
+                })(),
             };
         });
     }, [merchantProfile]);
