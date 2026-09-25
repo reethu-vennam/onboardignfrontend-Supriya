@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
+import { api } from "@/lib/rest-api";
 
 export interface VpaValidationData {
   vpa: string;
@@ -28,13 +29,7 @@ export const MandateVpaValidate: React.FC<MandateVpaValidateProps> = ({ onSucces
     setError("");
 
     try {
-      const response = await fetch(import.meta.env.VITE_VALID_VPA_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ vpa }),
-      });
-
-      const data = await response.json();
+      const data = await api.post('/merchant/ecosystem/vpa/validate', { vpa });
 
       console.log("✅ VPA Validation Response:", data);
 
