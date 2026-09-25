@@ -25,6 +25,13 @@ const resolveFrontendUrl = () => {
   return `https://${url.replace(/\/+$/, '')}`;
 };
 
+const normalizeCustomerPhone = (value: string) => {
+  const digits = value.replace(/\D/g, '');
+  if (digits.startsWith('91') && digits.length === 12) return digits.slice(2);
+  if (digits.startsWith('0') && digits.length === 11) return digits.slice(1);
+  return digits;
+};
+
 export interface SabbpeHostedPaymentCustomer {
   firstname: string;
   email: string;
@@ -107,9 +114,6 @@ const ensureConfigured = () => {
     ['VITE_SABBPE_PASSWORD', SABBPE_PASSWORD],
     ['VITE_FRONTEND_URL or browser origin', resolveFrontendUrl()],
     ['VITE_SABBPE_PRODUCT_INFO', PRODUCT_INFO],
-    ['VITE_SABBPE_CUSTOMER_FIRSTNAME', CUSTOMER_FIRSTNAME],
-    ['VITE_SABBPE_CUSTOMER_EMAIL', CUSTOMER_EMAIL],
-    ['VITE_SABBPE_CUSTOMER_PHONE', CUSTOMER_PHONE],
   ].filter(([, value]) => !value);
   if (missing.length > 0) {
     throw new Error(`Missing SabbPe payment configuration: ${missing.map(([name]) => name).join(', ')}`);
@@ -181,18 +185,38 @@ export const startSabbpeHostedPayment = async (
   if (!Number.isFinite(amount) || amount <= 0) {
     throw new Error('Invalid SabbPe payment amount from integration-cost API');
   }
+  const customer = {
+    firstname: (CUSTOMER_FIRSTNAME || '').trim(),
+    email: (CUSTOMER_EMAIL || '').trim().toLowerCase(),
+    phone: normalizeCustomerPhone(CUSTOMER_PHONE || ''),
+  };
+  if (!customer.firstname || !customer.email || !/^\d{10}$/.test(customer.phone)) {
+    throw new Error('Invalid customer details for SabbPe payment. Use a valid email and 10-digit phone number.');
+  }
+
   const initiatePayload = {
     sabbpe_token: sabbpeToken,
     amount,
     productinfo: PRODUCT_INFO,
     frontend_url: resolveFrontendUrl(),
-    customer: { firstname: CUSTOMER_FIRSTNAME, email: CUSTOMER_EMAIL, phone: CUSTOMER_PHONE },
+    customer,
   };
-  const initiateResponse = await axios.post<SabbpeInitiateResponse>(
-    `${SABBPE_BASE_URL}/sabbpe/v1/initiate`,
-    initiatePayload,
-    { headers: { 'Content-Type': 'application/json' } }
-  );
+  let initiateResponse;
+  try {
+    initiateResponse = await axios.post<SabbpeInitiateResponse>(
+      `${SABBPE_BASE_URL}/sabbpe/v1/initiate`,
+      initiatePayload,
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+  } catch (error) {
+    const responseData = axios.isAxiosError(error) ? error.response?.data : undefined;
+    const message = typeof responseData?.message === 'string'
+      ? responseData.message
+      : typeof responseData?.error === 'string'
+        ? responseData.error
+        : undefined;
+    throw new Error(message || 'SabbPe payment initiation request failed');
+  }
   const paymentUrl = initiateResponse.data?.payment_url;
   if (!initiateResponse.data?.status || !paymentUrl) {
     throw new Error(initiateResponse.data?.message || 'SabbPe payment initiation failed');

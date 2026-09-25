@@ -17,6 +17,8 @@ interface MandateVpaValidateProps {
   onSuccess: (data: VpaValidationData) => void; // ✅ Changed to pass object instead of string
 }
 
+
+
 export const MandateVpaValidate: React.FC<MandateVpaValidateProps> = ({ onSuccess }) => {
   const [vpa, setVpa] = useState("");
   const [loading, setLoading] = useState(false);
