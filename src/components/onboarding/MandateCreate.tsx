@@ -23,8 +23,8 @@ const MandateCreate: React.FC<MandateCreateProps> = ({
   user,
   refetchMerchant,
 }) => {
-  // ✅ CHANGED: Get amount from merchantProfile, default to "4.00" if not available
-  const [amount, setAmount] = useState("4.00");
+  // ✅ CHANGED: Get amount from merchantProfile, default to "1.00" if not available
+  const [amount, setAmount] = useState("1.00");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [loading, setLoading] = useState(false);
@@ -47,7 +47,7 @@ const MandateCreate: React.FC<MandateCreateProps> = ({
       setAmount(monthlyCost);
       console.log("💰 Updated mandate amount from profile:", monthlyCost);
     } else {
-      console.warn("⚠️ No total_monthly_cost found, using default 4.00");
+      console.warn("⚠️ No total_monthly_cost found, using default 1.00");
     }
   }, [merchantProfile]);
 
@@ -157,7 +157,7 @@ const MandateCreate: React.FC<MandateCreateProps> = ({
   // Auto-poll every 1 minute
   useEffect(() => {
     if (mandateSubmitted && mandateRefNo) {
-      const id = setInterval(() => checkMandateStatus(true), 60000);
+      const id = setInterval(() => checkMandateStatus(true), 30000);
       setPollIntervalId(id);
       return () => clearInterval(id);
     }
