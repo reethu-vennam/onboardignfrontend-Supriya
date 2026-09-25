@@ -3,7 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
-import { api } from "@/lib/rest-api";
+
+const ECOSYSTEM_BASE_URL = import.meta.env.VITE_SABBPE_ECOSYSTEM_BASE_URL || "https://ecosystemuat.sabbpe.com";
+const TOKEN_URL = `${ECOSYSTEM_BASE_URL}/sabbpe/v1/token`;
+const VALIDATE_VPA_URL = `${ECOSYSTEM_BASE_URL}/api/v1/validvpa`;
 
 export interface VpaValidationData {
   vpa: string;
@@ -29,14 +32,50 @@ export const MandateVpaValidate: React.FC<MandateVpaValidateProps> = ({ onSucces
     setError("");
 
     try {
-      const data = await api.post('/merchant/ecosystem/vpa/validate', { vpa });
+      const userId = import.meta.env.VITE_SABBPE_ECOSYSTEM_USER_ID || import.meta.env.VITE_SABBPE_USER_ID;
+      const merchantId = import.meta.env.VITE_SABBPE_ECOSYSTEM_MERCHANT_ID || import.meta.env.VITE_SABBPE_MERCHANT_ID;
+      const password = import.meta.env.VITE_SABBPE_ECOSYSTEM_PASSWORD || import.meta.env.VITE_SABBPE_PASSWORD;
+
+      if (!userId || !merchantId || !password) {
+        throw new Error("Ecosystem token configuration is missing");
+      }
+
+      const tokenResponse = await fetch(TOKEN_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sabbpe_userid: userId,
+          sabbpe_merchantid: merchantId,
+          sabbpe_password: password,
+          timestamp: new Date().toLocaleString("sv-SE", { timeZone: "Asia/Kolkata" }).replace("T", " ").slice(0, 19),
+          merchant_order_ref: `ORD-VPA-${Date.now()}`,
+          service_code: "NACH_MANDATE",
+        }),
+      });
+      const tokenData = await tokenResponse.json();
+      if (!tokenResponse.ok || !tokenData.status || !tokenData.sabbpe_token) {
+        throw new Error(tokenData.message || tokenData.errDesc || "Failed to obtain ecosystem token");
+      }
+
+      const validationResponse = await fetch(VALIDATE_VPA_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sabbpe_token: tokenData.sabbpe_token,
+          vpa: vpa.trim(),
+        }),
+      });
+      const data = await validationResponse.json();
+      if (!validationResponse.ok) {
+        throw new Error(data.errDesc || data.message || "VPA validation request failed");
+      }
 
       console.log("✅ VPA Validation Response:", data);
 
       if (data.errCode === "1111" && data.is_vpa_valid === "Y") {
         // ✅ Pass the full data including payer_name
         onSuccess({
-          vpa: vpa,
+          vpa: vpa.trim(),
           payer_name: data.payer_name || "Unknown", // Extract payer_name from response
         });
       } else {
