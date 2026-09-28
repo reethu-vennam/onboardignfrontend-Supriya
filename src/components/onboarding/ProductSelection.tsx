@@ -1,5 +1,5 @@
 // src/components/onboarding/ProductSelection.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -104,6 +104,7 @@ export const ProductSelectionEnhanced: React.FC<ProductSelectionProps> = ({ onNe
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
+    const savePromiseRef = useRef<Promise<boolean> | null>(null);
 
     // PG Commercials modal state
     const [showCommercialsModal, setShowCommercialsModal] = useState(false);
@@ -241,16 +242,6 @@ export const ProductSelectionEnhanced: React.FC<ProductSelectionProps> = ({ onNe
                 // ignore if not saved yet
             }
 
-            // Load saved split config if PG_SUB_004 was selected
-            try {
-                const splitRes = await apiClient.get('/api/merchants/split-config');
-                const config = splitRes.data.splitAccounts;
-                if (Array.isArray(config) && config.length > 0) {
-                    setSplitAccounts(config);
-                }
-            } catch (e) {
-                // ignore if not saved yet
-            }
         } catch (error) {
             console.error('Error fetching sub-products:', error);
         } finally {
@@ -267,17 +258,6 @@ export const ProductSelectionEnhanced: React.FC<ProductSelectionProps> = ({ onNe
             else next.add(code);
             return next;
         });
-    };
-
-    const saveSubProducts = async (parentCode: string, codes: string[]) => {
-        try {
-            await apiClient.post('/api/products/merchant/update-sub-products', {
-                parentProductCode: parentCode,
-                subProductCodes: codes,
-            });
-        } catch (error) {
-            console.error('Error saving sub-products:', error);
-        }
     };
 
     const addSplitAccount = () => {
@@ -510,11 +490,20 @@ export const ProductSelectionEnhanced: React.FC<ProductSelectionProps> = ({ onNe
     };
 
     const saveProductSelection = async (): Promise<boolean> => {
+        if (savePromiseRef.current) return savePromiseRef.current;
+
+        const savePromise = (async (): Promise<boolean> => {
         setSaveStatus('saving');
         try {
             const selectedProducts = buildSelectedProductsArray();
             await apiClient.post('/products/merchant/update-products', {
                 selectedProducts: JSON.stringify(selectedProducts),
+                subProducts: [{
+                    parentProductCode: 'PROD_004',
+                    subProductCodes: selectedProductCodes.has('PROD_004')
+                        ? Array.from(selectedSubProductCodes).filter(code => code !== 'NO_ADDONS')
+                        : [],
+                }],
             });
             setSaveStatus('saved');
             setTimeout(() => setSaveStatus('idle'), 2000);
@@ -528,6 +517,14 @@ export const ProductSelectionEnhanced: React.FC<ProductSelectionProps> = ({ onNe
                 description: 'Failed to save product selection',
             });
             return false;
+        }
+        })();
+
+        savePromiseRef.current = savePromise;
+        try {
+            return await savePromise;
+        } finally {
+            if (savePromiseRef.current === savePromise) savePromiseRef.current = null;
         }
     };
 
@@ -783,10 +780,12 @@ export const ProductSelectionEnhanced: React.FC<ProductSelectionProps> = ({ onNe
                                             </p>
                                             <Button
                                                 size="sm"
-                                                onClick={() => {
+                                                onClick={async () => {
                                                     const toSave = Array.from(selectedSubProductCodes).filter(c => c !== 'NO_ADDONS');
-                                                    saveSubProducts('PROD_004', toSave);
-                                                    toast({ title: 'Saved', description: selectedSubProductCodes.has('NO_ADDONS') ? 'No add-ons selected.' : `${toSave.length} feature${toSave.length > 1 ? 's' : ''} saved.` });
+                                                    const saved = await saveProductSelection();
+                                                    if (saved) {
+                                                        toast({ title: 'Saved', description: selectedSubProductCodes.has('NO_ADDONS') ? 'No add-ons selected.' : `${toSave.length} feature${toSave.length > 1 ? 's' : ''} saved.` });
+                                                    }
                                                 }}
                                                 disabled={selectedSubProductCodes.size === 0}
                                             >

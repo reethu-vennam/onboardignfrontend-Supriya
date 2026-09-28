@@ -23,8 +23,8 @@ const MandateCreate: React.FC<MandateCreateProps> = ({
   user,
   refetchMerchant,
 }) => {
-  // ✅ CHANGED: Get amount from merchantProfile, default to "1.00" if not available
-  const [amount, setAmount] = useState("1.00");
+  // Get amount from merchantProfile, defaulting to the one-rupee test amount.
+  const [amount, setAmount] = useState("2.00");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [loading, setLoading] = useState(false);
@@ -41,9 +41,10 @@ const MandateCreate: React.FC<MandateCreateProps> = ({
     console.log("🔍 MandateCreate - merchantProfile changed:", merchantProfile);
     console.log("🔍 MandateCreate - total_monthly_cost:", merchantProfile?.total_monthly_cost);
 
-    if (merchantProfile?.total_monthly_cost) {
+    const monthlyCostValue = Number(merchantProfile?.total_monthly_cost);
+    if (Number.isFinite(monthlyCostValue) && monthlyCostValue > 0) {
       // Convert to string with 2 decimal places
-      const monthlyCost = parseFloat(merchantProfile.total_monthly_cost).toFixed(2);
+      const monthlyCost = monthlyCostValue.toFixed(2);
       setAmount(monthlyCost);
       console.log("💰 Updated mandate amount from profile:", monthlyCost);
     } else {
@@ -248,7 +249,7 @@ const MandateCreate: React.FC<MandateCreateProps> = ({
             disabled
             className="bg-gray-100 cursor-not-allowed"
           />
-          {merchantProfile?.total_monthly_cost && (
+          {Number(merchantProfile?.total_monthly_cost) > 0 && (
             <p className="text-xs text-gray-500 mt-1">
               Monthly recurring amount from your selected products
             </p>
