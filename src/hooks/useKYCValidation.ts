@@ -27,6 +27,10 @@ export const useKYCValidation = () => {
                     reject(new Error('Geolocation is not supported'));
                     return;
                 }
+                if (!window.isSecureContext) {
+                    reject(new Error('Location access requires HTTPS. Open the secure UAT URL and try again.'));
+                    return;
+                }
 
                 navigator.geolocation.getCurrentPosition(
                     async (position) => {
@@ -67,7 +71,14 @@ export const useKYCValidation = () => {
                         resolve({ lat: latitude, lng: longitude, address: displayAddress, addressDetails });
                     },
                     (error) => {
-                        reject(new Error(`Location error: ${error.message}`));
+                        const message = error.code === error.PERMISSION_DENIED
+                            ? 'Location permission is blocked. Allow Location for this UAT site in your browser site settings, then reload and try again.'
+                            : error.code === error.POSITION_UNAVAILABLE
+                                ? 'Your device could not determine its location. Check that device location services are enabled and try again.'
+                                : error.code === error.TIMEOUT
+                                    ? 'Location request timed out. Check your GPS or network connection and try again.'
+                                    : `Location error: ${error.message}`;
+                        reject(new Error(message));
                     },
                     { timeout: 10000, enableHighAccuracy: true }
                 );

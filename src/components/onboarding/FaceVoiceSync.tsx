@@ -41,6 +41,12 @@ export const FaceVoiceSync: React.FC<FaceVoiceSyncProps> = ({ onSuccess, onFailu
     setVerificationComplete(false);
     setVerificationSuccess(false);
   };
+
+  const stopMediaStream = () => {
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    streamRef.current = null;
+    if (videoRef.current) videoRef.current.srcObject = null;
+  };
   
   const formatPhoneForWhatsApp = (num?: string) => {
     if (!num) return null;
@@ -54,30 +60,6 @@ export const FaceVoiceSync: React.FC<FaceVoiceSyncProps> = ({ onSuccess, onFailu
     setStatus('preparing');
 
     try {
-      // preflight: check permissions where supported to provide clearer guidance
-      const checkPermission = async () => {
-        try {
-          if (!(navigator as any).permissions) return 'prompt';
-          const cam = await (navigator as any).permissions.query({ name: 'camera' as any }).catch(() => ({ state: 'prompt' }));
-          const mic = await (navigator as any).permissions.query({ name: 'microphone' as any }).catch(() => ({ state: 'prompt' }));
-          if (cam.state === 'denied' || mic.state === 'denied') return 'denied';
-          if (cam.state === 'granted' && mic.state === 'granted') return 'granted';
-          return 'prompt';
-        } catch (e) {
-          return 'prompt';
-        }
-      };
-
-      const perm = await checkPermission();
-      if (perm === 'denied') {
-        toast({
-          variant: 'destructive',
-          title: 'Permissions blocked',
-          description: 'Camera or microphone permission is blocked. Please enable them in your browser site settings and try again.'
-        });
-        setStatus('idle');
-        return;
-      }
       // Use prop-passed mobile number if available, otherwise fall back to merchantProfile
       const rawTo = propMobileNumber || merchantProfile?.mobileNumber || merchantProfile?.mobile_number;
       const to = formatPhoneForWhatsApp(rawTo);
@@ -87,6 +69,20 @@ export const FaceVoiceSync: React.FC<FaceVoiceSyncProps> = ({ onSuccess, onFailu
         setStatus('idle');
         return;
       }
+
+      if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
+        toast({
+          variant: 'destructive',
+          title: 'Secure connection required',
+          description: 'Camera and microphone require HTTPS. Open the secure UAT URL and try again.'
+        });
+        setStatus('idle');
+        return;
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      streamRef.current = stream;
+      if (videoRef.current) videoRef.current.srcObject = stream;
 
       // use shared base URL helper (already ensures '/api' suffix)
       const resp = await fetch(`${API_BASE_URL}/api/whatsapp/send-otp`, {
@@ -104,12 +100,14 @@ export const FaceVoiceSync: React.FC<FaceVoiceSyncProps> = ({ onSuccess, onFailu
         json = await resp.json();
       } catch (e) {
         console.error('Invalid JSON from send-otp', e);
+        stopMediaStream();
         toast({ variant: 'destructive', title: 'Send failed', description: 'Unexpected server response when sending OTP' });
         setStatus('idle');
         return;
       }
 
       if (!json.success) {
+        stopMediaStream();
         const errorMsg = typeof json.error === 'string' 
           ? json.error 
           : (json.error?.message || 'Failed to send OTP');
@@ -119,13 +117,6 @@ export const FaceVoiceSync: React.FC<FaceVoiceSyncProps> = ({ onSuccess, onFailu
       }
 
       setOtpSent(true);
-
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-      streamRef.current = stream;
-
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
 
       // start speech recognition
       const SpeechRecognition =
@@ -279,13 +270,14 @@ export const FaceVoiceSync: React.FC<FaceVoiceSyncProps> = ({ onSuccess, onFailu
       setStatus('recording');
     } catch (err: any) {
       console.error('Failed to access media devices', err);
+      stopMediaStream();
 
       // Provide specific guidance based on error type
       if (err && (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError')) {
         toast({
           variant: 'destructive',
           title: 'Permission Denied',
-          description: 'You have denied access to camera or microphone. Enable permissions in your browser settings and reload the page.'
+          description: 'Allow Camera and Microphone for this UAT site in your browser site settings, then reload and try again.'
         });
       } else if (err && err.name === 'NotFoundError') {
         toast({
@@ -312,10 +304,7 @@ export const FaceVoiceSync: React.FC<FaceVoiceSyncProps> = ({ onSuccess, onFailu
     if (recognitionRef.current) {
       recognitionRef.current.stop();
     }
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach((t) => t.stop());
-      streamRef.current = null;
-    }
+    stopMediaStream();
     setRecording(false);
   };
 
