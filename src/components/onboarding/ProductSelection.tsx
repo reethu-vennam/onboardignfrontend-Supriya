@@ -339,35 +339,6 @@ export const ProductSelectionEnhanced: React.FC<ProductSelectionProps> = ({ onNe
             console.warn('Could not save commercials acceptance:', e);
         }
 
-        // Explicitly save product selection — don't rely on auto-save debounce
-        // which may capture stale closure before PROD_004 is in selectedProductCodes
-        try {
-            const pricing = pricingSelections.get('PROD_004');
-            const pgProduct: SelectedProduct = {
-                product_code: 'PROD_004',
-                product_name: product?.product_name || 'Payment Gateway',
-                pricing_type: pricing?.selectedOption || 'integration',
-                price: product?.price_integration_fee || 0,
-            };
-            const currentProducts = Array.from(newSelected).map(code => {
-                if (code === 'PROD_004') return pgProduct;
-                const p = products.find(pr => pr.product_code === code);
-                const pr = pricingSelections.get(code);
-                return {
-                    product_code: code,
-                    product_name: p?.product_name || '',
-                    pricing_type: pr?.selectedOption || 'monthly',
-                    price: 0,
-                };
-            });
-            await apiClient.post('/products/merchant/update-products', {
-                selectedProducts: JSON.stringify(currentProducts),
-            });
-            console.log('✅ Products saved after commercials accept');
-        } catch (e) {
-            console.warn('Could not save product selection after commercials:', e);
-        }
-
         toast({
             title: 'Commercials Accepted',
             description: 'Payment Gateway product added to your selection.',
