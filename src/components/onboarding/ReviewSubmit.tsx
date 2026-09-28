@@ -94,18 +94,38 @@ const [loading, setLoading] = useState(false);
         setLoadingProducts(true);
         try {
             const response = await apiClient.get('/api/products/merchant/selected-products');
-            if (response.data?.selectedProducts) {
-                setSelectedProducts(response.data.selectedProducts);
-                setCosts(response.data.costs);
+            const productData = response.data;
+            let productsPayload = typeof productData === 'string'
+                ? JSON.parse(productData)
+                : productData?.selectedProducts ?? productData?.products ?? productData;
+            if (!Array.isArray(productsPayload)) {
+                productsPayload = [];
+            }
+            setSelectedProducts(productsPayload);
+            if (productData && typeof productData === 'object' && productData.costs) {
+                setCosts(productData.costs);
             }
             // Also fetch sub-products for PROD_004 if PG is selected
             try {
                 const subRes = await apiClient.get('/api/products/merchant/selected-sub-products/PROD_004');
-                if (subRes.data?.subProductCodes?.length > 0) {
+                const selectedSubProductsData = Array.isArray(subRes.data)
+                    ? subRes.data
+                    : subRes.data?.subProducts || subRes.data?.subProductCodes || [];
+                const selectedCodes = selectedSubProductsData.map((sub: any) =>
+                    typeof sub === 'string' ? sub : sub.productCode || sub.sub_product_code || sub.product_code
+                ).filter(Boolean);
+                if (selectedCodes.length > 0) {
                     // Fetch sub-product details
                     const catalogRes = await apiClient.get('/api/products/sub-catalog/PROD_004');
-                    const allSubs = catalogRes.data?.subProducts || [];
-                    const selected = allSubs.filter((s: any) => subRes.data.subProductCodes.includes(s.sub_product_code));
+                    const catalogData = Array.isArray(catalogRes.data)
+                        ? catalogRes.data
+                        : catalogRes.data?.subProducts || [];
+                    const allSubs = catalogData.map((sub: any) => ({
+                        ...sub,
+                        sub_product_code: sub.sub_product_code || sub.productCode || sub.product_code,
+                        sub_product_name: sub.sub_product_name || sub.productName || sub.product_name,
+                    }));
+                    const selected = allSubs.filter((sub: any) => selectedCodes.includes(sub.sub_product_code));
                     setSelectedSubProducts(selected);
                 }
             } catch (e) {
