@@ -156,17 +156,6 @@ export const ProductSelectionEnhanced: React.FC<ProductSelectionProps> = ({ onNe
         setCosts(calculatedCosts);
     }, [selectedProductCodes, pricingSelections]);
 
-    // Auto-save with debounce
-    useEffect(() => {
-        if (selectedProductCodes.size === 0) return;
-
-        const timeoutId = setTimeout(() => {
-            void saveProductSelection();
-        }, 1000);
-
-        return () => clearTimeout(timeoutId);
-    }, [selectedProductCodes, pricingSelections, settlementType]);
-
     const fetchProducts = async () => {
         try {
             const response = await apiClient.get('/api/products/catalog');
