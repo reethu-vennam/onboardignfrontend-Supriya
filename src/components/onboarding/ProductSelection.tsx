@@ -122,6 +122,7 @@ export const ProductSelectionEnhanced: React.FC<ProductSelectionProps> = ({ onNe
     // Sub-products state (for PROD_004 Payment Gateway)
     const [subProducts, setSubProducts] = useState<SubProduct[]>([]);
     const [selectedSubProductCodes, setSelectedSubProductCodes] = useState<Set<string>>(new Set());
+    const [savedSubProductCodes, setSavedSubProductCodes] = useState<Set<string>>(new Set());
     const [subProductsExpanded, setSubProductsExpanded] = useState(false);
     const [subProductModal, setSubProductModal] = useState<SubProduct | null>(null);
     const [subProductsLoading, setSubProductsLoading] = useState(false);
@@ -226,6 +227,7 @@ export const ProductSelectionEnhanced: React.FC<ProductSelectionProps> = ({ onNe
                 ).filter(Boolean);
                 if (savedCodes.length > 0) {
                     setSelectedSubProductCodes(new Set(savedCodes));
+                    setSavedSubProductCodes(new Set(savedCodes));
                 }
             } catch (e) {
                 // ignore if not saved yet
@@ -456,15 +458,37 @@ export const ProductSelectionEnhanced: React.FC<ProductSelectionProps> = ({ onNe
         setSaveStatus('saving');
         try {
             const selectedProducts = buildSelectedProductsArray();
-            await apiClient.post('/products/merchant/update-products', {
-                selectedProducts: JSON.stringify(selectedProducts),
-                subProducts: [{
-                    parentProductCode: 'PROD_004',
-                    subProductCodes: selectedProductCodes.has('PROD_004')
-                        ? Array.from(selectedSubProductCodes).filter(code => code !== 'NO_ADDONS')
-                        : [],
-                }],
-            });
+
+            // Only send sub-products that are NOT already saved in the DB
+            const currentSubCodes = selectedProductCodes.has('PROD_004')
+                ? Array.from(selectedSubProductCodes).filter(code => code !== 'NO_ADDONS')
+                : [];
+            const newSubCodes = currentSubCodes.filter(code => !savedSubProductCodes.has(code));
+
+            // Only call update if there are new sub-products to add
+            if (newSubCodes.length > 0) {
+                await apiClient.post('/products/merchant/update-products', {
+                    selectedProducts: JSON.stringify(selectedProducts),
+                    subProducts: [{
+                        parentProductCode: 'PROD_004',
+                        subProductCodes: newSubCodes,
+                    }],
+                });
+            } else if (currentSubCodes.length === 0 && savedSubProductCodes.size > 0) {
+                // User removed all sub-products - need to update the saved products (selected_products JSON) only
+                await apiClient.post('/products/merchant/update-products', {
+                    selectedProducts: JSON.stringify(selectedProducts),
+                    subProducts: [],
+                });
+            } else {
+                // Only products update, no new sub-products
+                await apiClient.post('/products/merchant/update-products', {
+                    selectedProducts: JSON.stringify(selectedProducts),
+                });
+            }
+
+            // Update the saved set to reflect what's now in the DB
+            setSavedSubProductCodes(new Set(currentSubCodes));
             setSaveStatus('saved');
             setTimeout(() => setSaveStatus('idle'), 2000);
             return true;
