@@ -27,7 +27,6 @@ async function request(method: string, path: string, body?: any): Promise<any> {
     headers,
     body: body ? JSON.stringify(body) : undefined,
   });
-  if (res.status === 404) throw new Error('NOT_FOUND');
   if (!res.ok) {
     let errorMessage = `Request failed (${res.status})`;
     try {
