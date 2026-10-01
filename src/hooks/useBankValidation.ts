@@ -134,13 +134,11 @@ export const useBankValidation = () => {
             }
 
         } catch (error) {
-            console.warn('IFSC API failed, using format validation:', error);
+            console.warn('IFSC API failed:', error);
 
-            // Fallback: Accept if format is valid
             const fallbackResult: BankValidationResult = {
-                isValid: true,
-                bankName: 'Bank details temporarily unavailable',
-                branch: 'Please verify with your bank',
+                isValid: false,
+                error: 'IFSC verification failed',
             };
 
             setValidationState(prev => ({

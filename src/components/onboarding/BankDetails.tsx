@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Upload, CheckCircle, AlertCircle, Loader2, CreditCard, FileText, Plus, Trash2 } from 'lucide-react';
+import { Upload, CheckCircle, AlertCircle, XCircle, Loader2, CreditCard, FileText, Plus, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useBankValidation } from '@/hooks/useBankValidation';
 import { useMerchantData } from '@/hooks/useMerchantData';
@@ -89,7 +89,7 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const [ifscValidations, setIfscValidations] = useState<Record<number, { isValid: boolean; bankName?: string; branchName?: string; error?: string }>>({});
+    const [ifscValidations, setIfscValidations] = useState<Record<number, { isValid: boolean | undefined; bankName?: string; branchName?: string; error?: string }>>({});
     const [accountValidations, setAccountValidations] = useState<Record<number, AccountValidation>>({});
     const [validatingAccounts, setValidatingAccounts] = useState<Record<number, boolean>>({});
 
@@ -132,6 +132,11 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
             const updated = [...prev];
             updated[index] = { ...updated[index], [field]: value };
 
+            if (field === 'ifscCode') {
+                updated[index] = { ...updated[index], bankName: '', branchName: '' };
+                setIfscValidations(prev => ({ ...prev, [index]: { isValid: undefined } }));
+            }
+
             if (field === 'accountNumber' || field === 'ifscCode') {
                 setAccountValidations(prev => ({ ...prev, [index]: { isValid: false } }));
             }
@@ -173,21 +178,23 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
     }, [onDataChange, toast]);
 
     useEffect(() => {
+        let isCurrent = true;
         const timeouts: ReturnType<typeof setTimeout>[] = [];
         for (const [index, account] of accounts.entries()) {
             const ifsc = account.ifscCode.trim();
             if (ifsc.length === 11) {
-                setIfscValidations(prev => ({ ...prev, [index]: { isValid: undefined as any, bankName: undefined, branchName: undefined, error: undefined } }));
+                setIfscValidations(prev => ({ ...prev, [index]: { isValid: undefined, bankName: undefined, branchName: undefined, error: undefined } }));
                 const timeoutId = setTimeout(async () => {
                     try {
                         const result = await validateIfscCode(ifsc);
+                        if (!isCurrent) return;
                         setIfscValidations(prev => ({
                             ...prev,
                             [index]: {
                                 isValid: result.isValid,
-                                bankName: result.bankName,
-                                branchName: result.branch,
-                                error: result.error,
+                                bankName: result.isValid ? result.bankName : undefined,
+                                branchName: result.isValid ? result.branch : undefined,
+                                error: result.isValid ? result.error : t('bankDetails.bankNotVerified'),
                             },
                         }));
                         if (result.isValid && result.bankName) {
@@ -195,6 +202,9 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
                             if (result.branch) {
                                 updateAccount(index, 'branchName', result.branch);
                             }
+                        } else if (!result.isValid) {
+                            updateAccount(index, 'bankName', '');
+                            updateAccount(index, 'branchName', '');
                         }
                     } catch { }
                 }, 600);
@@ -203,7 +213,10 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
                 setIfscValidations(prev => ({ ...prev, [index]: { isValid: false } }));
             }
         }
-        return () => timeouts.forEach(clearTimeout);
+        return () => {
+            isCurrent = false;
+            timeouts.forEach(clearTimeout);
+        };
     }, [accounts.map(a => a.ifscCode).join(','), updateAccount]);
 
     useEffect(() => {
@@ -419,7 +432,10 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
     const getIFSCStatus = (ifsc: string): 'valid' | 'invalid' | 'validating' | '' => {
         if (!ifsc || ifsc.length < 11) return '';
         for (const [i, v] of Object.entries(ifscValidations)) {
-            if (accounts[Number(i)]?.ifscCode === ifsc) return v.isValid ? 'valid' : 'invalid';
+            if (accounts[Number(i)]?.ifscCode === ifsc) {
+                if (v.isValid === undefined) return '';
+                return v.isValid ? 'valid' : 'invalid';
+            }
         }
         return '';
     };
@@ -481,10 +497,21 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
                                 />
                                 <div className="absolute right-3 top-1/2 -translate-y-1/2">
                                     {getIFSCStatus(account.ifscCode) === 'valid' && <CheckCircle className="h-5 w-5 text-green-500" />}
-                                    {getIFSCStatus(account.ifscCode) === 'invalid' && <AlertCircle className="h-5 w-5 text-red-500" />}
+                                    {getIFSCStatus(account.ifscCode) === 'invalid' && <XCircle className="h-5 w-5 text-red-500" />}
                                 </div>
                             </div>
-                            {errors[`${index}_ifscCode`] && <p className="text-xs text-destructive mt-1">{errors[`${index}_ifscCode`]}</p>}
+                            {errors[`${index}_ifscCode`] && !(account.ifscCode.trim().length === 11 && ifscValidations[index]?.isValid === false) && (
+                                <p className="text-xs text-destructive mt-1">{errors[`${index}_ifscCode`]}</p>
+                            )}
+                            {account.ifscCode.trim().length === 11 && ifscValidations[index]?.isValid === false && (
+                                <div className="mt-1 p-2 bg-red-50 border border-red-200 rounded-md">
+                                    <div className="flex items-center gap-1.5">
+                                        <XCircle className="h-3.5 w-3.5 text-red-600" />
+                                        <span className="text-xs text-red-700 font-medium">{t('bankDetails.bankNotVerified')}</span>
+                                    </div>
+                                    <p className="text-xs text-red-600 mt-0.5">{t('bankDetails.ifscCheckWithBank')}</p>
+                                </div>
+                            )}
                             {account.ifscCode.length === 11 && ifscValidations[index]?.isValid && (
                                 <div className="mt-1 p-2 bg-green-50 border border-green-200 rounded-md">
                                     <div className="flex items-center gap-1.5">
