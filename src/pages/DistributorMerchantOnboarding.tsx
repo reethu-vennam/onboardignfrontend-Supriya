@@ -609,18 +609,6 @@ export default function DistributorMerchantOnboarding() {
                     <CurrentStepComponent {...stepProps} />
                 )}
             </div>
-
-            {/* Dev debug */}
-            {import.meta.env.DEV && (
-                <div className="fixed bottom-4 right-4 bg-black/80 text-white p-3 rounded-lg text-xs space-y-1 max-w-xs">
-                    <div className="font-bold">Distributor Debug</div>
-                    <div>Step: {currentStepId} ({stepIndex + 1}/{steps.length})</div>
-                    <div>Entity: {onboardingData.entityType || '—'}</div>
-                    <div>Persons: {onboardingData.persons.length}</div>
-                    <div>OpAddr diff: {String(onboardingData.operatingAddressDifferent)}</div>
-                    <div>Merchant ID: {merchantState.merchantProfileId ? '✓' : '⏳'}</div>
-                </div>
-            )}
         </div>
     );
 }

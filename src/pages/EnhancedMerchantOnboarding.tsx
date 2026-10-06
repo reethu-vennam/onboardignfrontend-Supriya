@@ -1038,18 +1038,6 @@ const EnhancedOnboardingFlow: React.FC = () => {
                 }}
                 language={language}
             />
-
-            {import.meta.env.DEV && (
-                <div className="fixed bottom-4 right-4 bg-black/80 text-white p-3 rounded-lg text-xs max-w-xs space-y-1">
-                    <div className="font-bold">Debug</div>
-                    <div>Step: {currentStep}</div>
-                    <div>Entity: {onboardingData.entityType || '"”'}</div>
-                    <div>Persons: {onboardingData.persons.length}</div>
-                    <div>Progress: {Math.round(progress)}%</div>
-                    <div>Status: {merchantProfile?.onboarding_status || '"”'}</div>
-                    <div>OpAddr diff: {String(onboardingData.operatingAddressDifferent)}</div>
-                </div>
-            )}
         </div>
     );
 };

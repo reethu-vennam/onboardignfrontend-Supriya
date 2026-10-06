@@ -27,20 +27,31 @@ async function request(method: string, path: string, body?: any): Promise<any> {
     headers,
     body: body ? JSON.stringify(body) : undefined,
   });
+  const text = await res.text();
+  let data: any = null;
+  if (text) {
+    try {
+      data = JSON.parse(text);
+    } catch {
+      data = null;
+    }
+  }
+
   if (!res.ok) {
     let errorMessage = `Request failed (${res.status})`;
-    try {
-      const errorBody = await res.json();
-      errorMessage = formatApiErrorMessage(errorBody) || errorMessage;
-    } catch {}
+    if (data) {
+      errorMessage = formatApiErrorMessage(data) || data.message || errorMessage;
+    } else if (text && text.length < 200) {
+      errorMessage = text;
+    }
     throw new Error(errorMessage);
   }
-  const data = await res.json();
-  if (!data.success) {
+
+  if (data && data.success === false) {
     console.error(`API Error [${res.status}] ${method} ${path}:`, JSON.stringify(data));
     throw new Error(formatApiErrorMessage(data) || `Request failed (${res.status})`);
   }
-  return data.data;
+  return data?.data !== undefined ? data.data : data;
 }
 
 export const api = {
@@ -97,9 +108,19 @@ export const api = {
     const headers: Record<string, string> = {};
     if (token) headers['Authorization'] = `Bearer ${token}`;
     const res = await fetch(`${API_BASE}/api/upload/file`, { method: 'POST', headers, body: formData });
-    const data = await res.json();
-    if (!data.success) throw new Error(data.error?.message || 'Upload failed');
-    return data.data;
+    const text = await res.text();
+    let data: any = null;
+    if (text) {
+      try {
+        data = JSON.parse(text);
+      } catch {
+        data = null;
+      }
+    }
+    if (!res.ok || (data && data.success === false)) {
+      throw new Error(data?.error?.message || data?.message || (text && text.length < 200 ? text : `Upload failed (${res.status})`));
+    }
+    return data?.data !== undefined ? data.data : data;
   },
 
   // Settlement

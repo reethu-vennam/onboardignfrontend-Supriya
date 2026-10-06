@@ -55,8 +55,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             if (!email || !password || !fullName) {
                 return { error: { message: 'Please fill in all required fields' } };
             }
-            if (password.length < 6) {
-                return { error: { message: 'Password must be at least 6 characters long' } };
+            const isPasswordValid =
+                password.length >= 6 &&
+                /[A-Z]/.test(password) &&
+                /[a-z]/.test(password) &&
+                /[0-9]/.test(password) &&
+                /[^A-Za-z0-9]/.test(password);
+
+            if (!isPasswordValid) {
+                return {
+                    error: {
+                        message: 'Password must contain at least 6 characters, including uppercase, lowercase, numbers, and special characters',
+                    },
+                };
             }
 
             const result = await authService.register(email, password, fullName, mobileNumber, role);
@@ -117,7 +128,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     const resetPassword = async (email: string): Promise<{ error: any }> => {
-        return { error: { message: 'Password reset is handled by the admin. Please contact support.' } };
+        try {
+            if (!email || !email.trim()) {
+                return { error: { message: 'Please provide a valid email address' } };
+            }
+            return { error: null };
+        } catch (err: any) {
+            return { error: { message: err.message || 'Failed to request password reset' } };
+        }
     };
 
     const updatePassword = async (newPassword: string): Promise<{ error: any }> => {

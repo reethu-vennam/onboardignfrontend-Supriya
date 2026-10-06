@@ -1,4 +1,4 @@
-﻿import { authService } from './auth-service';
+import { authService } from './auth-service';
 
 export const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
@@ -21,13 +21,20 @@ class ApiClient {
             method: 'GET',
             headers
         });
-        if (!response.ok) {
-            const error = await response.json().catch(() => ({
-                message: `Request failed with status ${response.status}`
-            }));
-            throw new Error(error.message || error.error?.message || `Request failed with status ${response.status}`);
+        const text = await response.text();
+        let data: any = null;
+        if (text) {
+            try {
+                data = JSON.parse(text);
+            } catch {
+                data = text;
+            }
         }
-        return response.json();
+        if (!response.ok) {
+            const errorMsg = data?.message || data?.error?.message || `Request failed with status ${response.status}`;
+            throw new Error(errorMsg);
+        }
+        return data !== null ? data : {};
     }
 
     async post(url: string, body?: any) {
@@ -38,13 +45,20 @@ class ApiClient {
             headers,
             body: JSON.stringify(body)
         });
-        if (!response.ok) {
-            const error = await response.json().catch(() => ({
-                message: `Request failed with status ${response.status}`
-            }));
-            throw new Error(error.message || error.error?.message || `Request failed with status ${response.status}`);
+        const text = await response.text();
+        let data: any = null;
+        if (text) {
+            try {
+                data = JSON.parse(text);
+            } catch {
+                data = text;
+            }
         }
-        return response.json();
+        if (!response.ok) {
+            const errorMsg = data?.message || data?.error?.message || `Request failed with status ${response.status}`;
+            throw new Error(errorMsg);
+        }
+        return data !== null ? data : {};
     }
 
     async submitMerchantApplication(data: any) {

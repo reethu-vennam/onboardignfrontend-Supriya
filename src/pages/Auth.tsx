@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AlertCircle, Mail, Lock, User, Phone, ArrowLeft } from 'lucide-react';
+import { AlertCircle, Mail, Lock, User, Phone, ArrowLeft, Check, X, Circle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Logo } from '@/components/ui/logo';
 import { useToast } from '@/hooks/use-toast';
@@ -32,6 +32,38 @@ const Auth = () => {
         fullName: '',
         mobileNumber: '',
     });
+    const [isConfirmFocused, setIsConfirmFocused] = useState(false);
+
+    const passwordRequirements = [
+        {
+            id: 'length',
+            label: 'At least 6 characters',
+            satisfied: signUpData.password.length >= 6,
+        },
+        {
+            id: 'uppercase',
+            label: 'At least 1 uppercase letter (A-Z)',
+            satisfied: /[A-Z]/.test(signUpData.password),
+        },
+        {
+            id: 'lowercase',
+            label: 'At least 1 lowercase letter (a-z)',
+            satisfied: /[a-z]/.test(signUpData.password),
+        },
+        {
+            id: 'number',
+            label: 'At least 1 numerical digit (0-9)',
+            satisfied: /[0-9]/.test(signUpData.password),
+        },
+        {
+            id: 'special',
+            label: 'At least 1 special character (@, #, $, %, !, etc.)',
+            satisfied: /[^A-Za-z0-9]/.test(signUpData.password),
+        },
+    ];
+
+    const isPasswordValid = passwordRequirements.every((req) => req.satisfied);
+    const showRequirements = (!isConfirmFocused && signUpData.confirmPassword.length === 0) || !isPasswordValid;
 
     useEffect(() => {
         const role = sessionStorage.getItem('selected_role') as 'merchant' | 'distributor' | 'employee' | null;
@@ -91,13 +123,28 @@ const Auth = () => {
         setIsLoading(true);
         setError(null);
 
-        if (signUpData.password !== signUpData.confirmPassword) {
-            setError("Passwords don't match");
+        if (!isPasswordValid) {
+            const missing = passwordRequirements
+                .filter((r) => !r.satisfied)
+                .map((r) => r.label.toLowerCase());
+            const errorMsg = `Password must satisfy all requirements: missing ${missing.join(', ')}.`;
+            setError(errorMsg);
+            toast({
+                variant: "destructive",
+                title: "Invalid password",
+                description: errorMsg,
+            });
             setIsLoading(false);
             return;
         }
-        if (signUpData.password.length < 6) {
-            setError("Password must be at least 6 characters");
+
+        if (signUpData.password !== signUpData.confirmPassword) {
+            setError("Passwords don't match");
+            toast({
+                variant: "destructive",
+                title: "Passwords don't match",
+                description: "Password and Confirm Password must match.",
+            });
             setIsLoading(false);
             return;
         }
@@ -233,18 +280,124 @@ const Auth = () => {
                                         <Label htmlFor="signup-password">Password</Label>
                                         <div className="relative">
                                             <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                                            <Input id="signup-password" type="password" placeholder="Create a password" className="pl-10" value={signUpData.password} onChange={(e) => setSignUpData({ ...signUpData, password: e.target.value })} required />
+                                            <Input
+                                                id="signup-password"
+                                                type="password"
+                                                placeholder="Create a password"
+                                                className="pl-10"
+                                                value={signUpData.password}
+                                                onChange={(e) => {
+                                                    setSignUpData({ ...signUpData, password: e.target.value });
+                                                    if (error) setError(null);
+                                                }}
+                                                required
+                                            />
                                         </div>
+
+                                        {/* Password Requirements Checklist - visible while typing password, hidden while confirming password once valid */}
+                                        {showRequirements && (
+                                            <div className="rounded-lg border border-border/70 bg-muted/40 p-3 space-y-2 text-xs transition-all duration-200">
+                                                <p className="font-medium text-foreground/85 text-xs">Password Requirements:</p>
+                                                <ul className="space-y-1.5" aria-label="Password requirements">
+                                                    {passwordRequirements.map((req) => {
+                                                        const isTyped = signUpData.password.length > 0;
+                                                        return (
+                                                            <li
+                                                                key={req.id}
+                                                                className={`flex items-center gap-2 text-xs transition-colors duration-150 ${
+                                                                    req.satisfied
+                                                                        ? 'text-emerald-600 dark:text-emerald-400 font-medium'
+                                                                        : isTyped
+                                                                        ? 'text-rose-600/90 dark:text-rose-400'
+                                                                        : 'text-muted-foreground'
+                                                                }`}
+                                                            >
+                                                                {req.satisfied ? (
+                                                                    <Check className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                                                                ) : isTyped ? (
+                                                                    <X className="h-3.5 w-3.5 text-rose-500 dark:text-rose-400 shrink-0" />
+                                                                ) : (
+                                                                    <Circle className="h-3.5 w-3.5 text-muted-foreground/60 shrink-0" />
+                                                                )}
+                                                                <span>{req.label}</span>
+                                                            </li>
+                                                        );
+                                                    })}
+                                                </ul>
+                                                {signUpData.password.length > 0 && (
+                                                    <div className={`pt-1 border-t border-border/40 text-[11px] font-medium flex items-center gap-1 ${
+                                                        isPasswordValid
+                                                            ? 'text-emerald-600 dark:text-emerald-400'
+                                                            : 'text-rose-500 dark:text-rose-400'
+                                                    }`}>
+                                                        {isPasswordValid ? (
+                                                            <>
+                                                                <Check className="h-3.5 w-3.5 shrink-0" />
+                                                                <span>All password requirements satisfied</span>
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <X className="h-3.5 w-3.5 shrink-0" />
+                                                                <span>Password does not satisfy all requirements</span>
+                                                            </>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
                                     </div>
                                     <div className="space-y-2">
                                         <Label htmlFor="signup-confirm">Confirm Password</Label>
                                         <div className="relative">
                                             <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                                            <Input id="signup-confirm" type="password" placeholder="Confirm your password" className="pl-10" value={signUpData.confirmPassword} onChange={(e) => setSignUpData({ ...signUpData, confirmPassword: e.target.value })} required />
+                                            <Input
+                                                id="signup-confirm"
+                                                type="password"
+                                                placeholder="Confirm your password"
+                                                className="pl-10"
+                                                value={signUpData.confirmPassword}
+                                                onFocus={() => setIsConfirmFocused(true)}
+                                                onBlur={() => setIsConfirmFocused(false)}
+                                                onChange={(e) => {
+                                                    setSignUpData({ ...signUpData, confirmPassword: e.target.value });
+                                                    if (error) setError(null);
+                                                }}
+                                                required
+                                            />
                                         </div>
+                                        {signUpData.confirmPassword.length > 0 && (
+                                            <div className={`text-[11px] font-medium flex items-center gap-1 ${
+                                                signUpData.password === signUpData.confirmPassword
+                                                    ? 'text-emerald-600 dark:text-emerald-400'
+                                                    : 'text-rose-500 dark:text-rose-400'
+                                            }`}>
+                                                {signUpData.password === signUpData.confirmPassword ? (
+                                                    <>
+                                                        <Check className="h-3.5 w-3.5 shrink-0" />
+                                                        <span>Passwords match</span>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <X className="h-3.5 w-3.5 shrink-0" />
+                                                        <span>Passwords do not match</span>
+                                                    </>
+                                                )}
+                                            </div>
+                                        )}
                                     </div>
                                     {error && (<Alert variant="destructive"><AlertCircle className="h-4 w-4" /><AlertDescription>{error}</AlertDescription></Alert>)}
-                                    <Button type="submit" className="w-full" disabled={isLoading}>{isLoading ? "Creating account..." : "Sign Up"}</Button>
+                                    <Button
+                                        type="submit"
+                                        className="w-full"
+                                        disabled={
+                                            isLoading ||
+                                            !isPasswordValid ||
+                                            !signUpData.confirmPassword ||
+                                            signUpData.password !== signUpData.confirmPassword
+                                        }
+                                    >
+                                        {isLoading ? "Creating account..." : "Sign Up"}
+                                    </Button>
                                 </form>
                             </TabsContent>
                         </Tabs>
