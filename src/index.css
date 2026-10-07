@@ -8,60 +8,62 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* SabbPe Fintech Design System */
+    --background: 214 45% 98%;
+    --foreground: 222 47% 11%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 222 47% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 222 47% 11%;
 
-    /* SabbPe Brand Colors - Inspired by Logo */
-    --primary: 214 88% 51%;
+    /* SabbPe Brand Colors */
+    --primary: 216 91% 53%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 214 88% 65%;
+    --primary-glow: 216 91% 65%;
 
-    --secondary: 194 100% 91%;
-    --secondary-foreground: 214 100% 15%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222 47% 11%;
 
     --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted-foreground: 215 16% 47%;
 
-    --accent: 191 100% 50%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 216 91% 95%;
+    --accent-foreground: 216 91% 40%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 214 88% 51%;
+    --success: 152 76% 36%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 216 91% 53%;
 
     /* SabbPe Design Tokens */
     --radius: 0.75rem;
-    --gradient-primary: linear-gradient(135deg, hsl(214 88% 51%), hsl(191 100% 50%));
-    --gradient-secondary: linear-gradient(45deg, hsl(191 100% 50%), hsl(214 88% 65%));
-    --shadow-elegant: 0 10px 30px -10px hsl(214 88% 51% / 0.25);
-    --shadow-glow: 0 0 40px hsl(191 100% 50% / 0.3);
-    --shadow-card: 0 4px 20px -4px hsl(var(--foreground) / 0.1);
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --gradient-primary: linear-gradient(135deg, hsl(216 91% 53%), hsl(200 95% 48%));
+    --gradient-subtle: linear-gradient(180deg, hsl(216 91% 98%) 0%, hsl(214 45% 98%) 100%);
+    --gradient-secondary: linear-gradient(45deg, hsl(200 95% 48%), hsl(216 91% 65%));
+    --shadow-soft: 0 1px 3px 0 rgba(16, 24, 40, 0.05), 0 1px 2px 0 rgba(16, 24, 40, 0.03);
+    --shadow-card: 0 4px 20px -2px rgba(16, 24, 40, 0.05), 0 2px 6px -1px rgba(16, 24, 40, 0.03);
+    --shadow-elegant: 0 12px 32px -4px rgba(26, 115, 245, 0.18);
+    --shadow-glow: 0 0 32px rgba(26, 115, 245, 0.15);
+    --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 222 47% 11%;
+    --sidebar-primary: 216 91% 53%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 214 45% 96%;
+    --sidebar-accent-foreground: 216 91% 53%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 216 91% 53%;
   }
 
   .dark {

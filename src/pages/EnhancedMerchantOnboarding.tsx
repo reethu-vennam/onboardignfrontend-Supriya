@@ -36,11 +36,16 @@ import { DoingBusinessAddress } from '@/components/onboarding/DoingBusinessAddre
 import { BankDetails } from '@/components/onboarding/BankDetails';
 import { KYCVerification } from '@/components/onboarding/KYCVerification';
 import { ReviewSubmit } from '@/components/onboarding/ReviewSubmit';
-import { OnboardingDashboard } from '@/components/onboarding/OnboardingDashboard';
 import { MandatePopup } from '@/components/onboarding/MandatePopup';
 import { MandateFlowModal } from '@/components/onboarding/MandateFlowModal';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { OnboardingChatbot } from '@/components/OnboardingChatbot';
+import {
+    TopBar,
+    StepperSidebar,
+    ContextualPanel,
+    SkeletonLoader,
+} from '@/components/onboarding/ui';
 
 import {
     OnboardingData,
@@ -96,21 +101,23 @@ interface BaseStepProps {
 interface StepInfo {
     id: string;
     title: string;
+    shortTitle?: string;
+    phaseId: string;
     description: string;
     component: React.ComponentType<BaseStepProps>;
 }
 
 const ONBOARDING_STEPS: StepInfo[] = [
-    { id: 'welcome', title: 'Welcome', description: 'Introduction to SabbPe', component: WelcomeScreen as unknown as React.ComponentType<BaseStepProps> },
-    { id: 'entity-type', title: 'Entity Type', description: 'Business Structure', component: EntityTypeSelection as unknown as React.ComponentType<BaseStepProps> },
-    { id: 'products', title: 'Products', description: 'Choose Your Products', component: ProductSelection as unknown as React.ComponentType<BaseStepProps> },
-    { id: 'business-details', title: 'Business Details', description: 'Business Information', component: BusinessDetails as unknown as React.ComponentType<BaseStepProps> },
-    { id: 'person-kyc', title: 'Person KYC', description: 'Identity Verification', component: PersonKYC as unknown as React.ComponentType<BaseStepProps> },
-    { id: 'entity-documents', title: 'Documents', description: 'Business Documents', component: EntityDocuments as unknown as React.ComponentType<BaseStepProps> },
-    { id: 'doing-business', title: 'Address Proof', description: 'Operating Address', component: DoingBusinessAddress as unknown as React.ComponentType<BaseStepProps> },
-    { id: 'bank-details', title: 'Bank Details', description: 'Payment Settlement Setup', component: BankDetails as unknown as React.ComponentType<BaseStepProps> },
-    { id: 'kyc', title: 'KYC', description: 'Video & Location Verification', component: KYCVerification as unknown as React.ComponentType<BaseStepProps> },
-    { id: 'review', title: 'Review & Submit', description: 'Final Review', component: ReviewSubmit as unknown as React.ComponentType<BaseStepProps> },
+    { id: 'welcome', title: 'Welcome', shortTitle: 'Welcome', phaseId: 'business', description: 'Introduction to SabbPe', component: WelcomeScreen as unknown as React.ComponentType<BaseStepProps> },
+    { id: 'entity-type', title: 'Entity Type', shortTitle: 'Entity', phaseId: 'business', description: 'Business Constitution', component: EntityTypeSelection as unknown as React.ComponentType<BaseStepProps> },
+    { id: 'products', title: 'Products & Solutions', shortTitle: 'Products', phaseId: 'business', description: 'Hardware & Payment Suite', component: ProductSelection as unknown as React.ComponentType<BaseStepProps> },
+    { id: 'business-details', title: 'Business Details', shortTitle: 'Business', phaseId: 'business', description: 'Address & Tax Identification', component: BusinessDetails as unknown as React.ComponentType<BaseStepProps> },
+    { id: 'person-kyc', title: 'Promoters & Directors', shortTitle: 'Promoters', phaseId: 'people', description: 'Authorized Signatory KYC', component: PersonKYC as unknown as React.ComponentType<BaseStepProps> },
+    { id: 'entity-documents', title: 'Business Documents', shortTitle: 'Documents', phaseId: 'documents', description: 'Entity Documentation Proofs', component: EntityDocuments as unknown as React.ComponentType<BaseStepProps> },
+    { id: 'doing-business', title: 'Operating Address', shortTitle: 'Address', phaseId: 'documents', description: 'Operating Address Verification', component: DoingBusinessAddress as unknown as React.ComponentType<BaseStepProps> },
+    { id: 'bank-details', title: 'Settlement Bank', shortTitle: 'Bank', phaseId: 'bank', description: 'Payout Account & Penny Drop', component: BankDetails as unknown as React.ComponentType<BaseStepProps> },
+    { id: 'kyc', title: 'Digital Verification', shortTitle: 'V-KYC', phaseId: 'review', description: 'Video & Geo-tag Verification', component: KYCVerification as unknown as React.ComponentType<BaseStepProps> },
+    { id: 'review', title: 'Review & Agreement', shortTitle: 'Submit', phaseId: 'review', description: 'Final E-Sign & Submission', component: ReviewSubmit as unknown as React.ComponentType<BaseStepProps> },
 ];
 
 const SuccessPopup: React.FC<{
@@ -367,7 +374,9 @@ const EnhancedOnboardingFlow: React.FC = () => {
                     payload.operatingAddressDifferent = merged.operatingAddressDifferent;
                     // Persist scan results
                     if (merged.scanResults) {
-                        payload.scanResults = merged.scanResults;
+                        payload.scanResults = typeof merged.scanResults === 'string'
+                            ? merged.scanResults
+                            : JSON.stringify(merged.scanResults);
                     }
                     const addr = merged.registeredAddress || merged.operatingAddress;
                     if (addr) {
@@ -732,7 +741,14 @@ const EnhancedOnboardingFlow: React.FC = () => {
 
                 // Restore scan results from DB
                 scanResults: (() => {
-                    const sr = (mp as any).scanResults || (mp as any).scan_results;
+                    let sr = (mp as any).scanResults || (mp as any).scan_results;
+                    if (typeof sr === 'string') {
+                        try {
+                            sr = JSON.parse(sr);
+                        } catch {
+                            sr = undefined;
+                        }
+                    }
                     if (sr && typeof sr === 'object' && Object.keys(sr).length > 0) {
                         return sr;
                     }
@@ -895,23 +911,22 @@ const EnhancedOnboardingFlow: React.FC = () => {
                         description: `Application status: ${profile.onboardingStatus?.replace(/_/g, ' ')}`,
                     });
                 }
-            } catch {}
+            } catch (err) {
+                // Polling error is non-blocking
+                console.debug('Status poll skipped:', err);
+            }
         }, 30000);
         return () => clearInterval(interval);
     }, [user?.id, merchantProfile?.id, merchantProfile?.onboardingStatus, toast]);
 
+    const completedStepIds = React.useMemo(() => {
+        return ONBOARDING_STEPS.filter(s => isStepCompleted(s.id)).map(s => s.id);
+    }, [isStepCompleted]);
+
     if (profileLoading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 to-accent/5">
-                <Card className="p-8">
-                    <CardContent className="flex items-center space-x-4">
-                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                        <div>
-                            <h3 className="font-semibold text-foreground">Loading…</h3>
-                            <p className="text-sm text-muted-foreground">Fetching your onboarding progress</p>
-                        </div>
-                    </CardContent>
-                </Card>
+            <div className="min-h-screen flex items-center justify-center bg-[#F5F8FC] p-4">
+                <SkeletonLoader type="profile" className="w-full max-w-xl" />
             </div>
         );
     }
@@ -923,10 +938,18 @@ const EnhancedOnboardingFlow: React.FC = () => {
     const currentStepInfo = ONBOARDING_STEPS.find(s => s.id === currentStep);
     const CurrentStepComponent = currentStepInfo?.component || WelcomeScreen;
 
+    if (currentStep === 'welcome') {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-primary/5 to-accent/5">
+                <CurrentStepComponent {...stepProps} />
+            </div>
+        );
+    }
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-primary/5 to-accent/5">
             {currentStep !== 'welcome' && (
-                <div className="sticky top-0 z-50 bg-card/95 backdrop-blur border-b">
+                <div className="sticky top-0 z-50 bg-card/95 backdrop-blur border-b shadow-sm">
                     <div className="container max-w-6xl mx-auto px-4 py-4">
                         <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center gap-3">
@@ -957,14 +980,14 @@ const EnhancedOnboardingFlow: React.FC = () => {
 
                         <Progress value={progress} className="h-1.5 mb-3" />
 
-                        <div className="flex justify-between items-center overflow-x-auto pb-1">
+                        <div className="flex justify-between items-center overflow-x-auto pb-1 gap-2">
                             {ONBOARDING_STEPS.map((step, index) => {
                                 const isActive = step.id === currentStep;
                                 const isCompleted = isStepCompleted(step.id);
                                 const isPast = index < currentStepIndex;
 
                                 return (
-                                    <div key={step.id} className="flex flex-col items-center min-w-[40px]">
+                                    <div key={step.id} className="flex flex-col items-center min-w-[48px] flex-1">
                                         <button
                                             onClick={() => handleGoToStep(step.id)}
                                             disabled={!isPast && !isActive}
@@ -972,12 +995,12 @@ const EnhancedOnboardingFlow: React.FC = () => {
                                                 w-8 h-8 rounded-full flex items-center justify-center
                                                 text-xs font-semibold transition-all duration-200
                                                 ${isActive
-                                                    ? 'bg-primary text-primary-foreground ring-4 ring-primary/20 scale-110'
+                                                    ? 'bg-primary text-primary-foreground ring-4 ring-primary/20 scale-110 shadow-sm'
                                                     : isCompleted
                                                         ? 'bg-green-500 text-white hover:bg-green-600'
                                                         : isPast
                                                             ? 'bg-muted-foreground/20 text-muted-foreground hover:bg-muted-foreground/30'
-                                                            : 'bg-muted text-muted-foreground cursor-not-allowed'
+                                                            : 'bg-muted text-muted-foreground cursor-not-allowed opacity-60'
                                                 }
                                             `}
                                         >
@@ -986,8 +1009,8 @@ const EnhancedOnboardingFlow: React.FC = () => {
                                                 : index + 1
                                             }
                                         </button>
-                                        <span className={`text-xs mt-1 hidden lg:block text-center ${isActive ? 'text-primary font-medium' : 'text-muted-foreground'}`}>
-                                            {step.title}
+                                        <span className={`text-[11px] mt-1 hidden lg:block text-center truncate max-w-[80px] ${isActive ? 'text-primary font-medium' : 'text-muted-foreground'}`}>
+                                            {step.shortTitle || step.title}
                                         </span>
                                     </div>
                                 );
@@ -997,10 +1020,12 @@ const EnhancedOnboardingFlow: React.FC = () => {
                 </div>
             )}
 
+            {/* Main Content Area */}
             <div className="container max-w-6xl mx-auto px-4 py-8">
                 <CurrentStepComponent {...stepProps} />
             </div>
 
+            {/* Success & Mandate Modals */}
             <SuccessPopup
                 isOpen={showSuccessPopup}
                 onClose={() => setShowSuccessPopup(false)}
